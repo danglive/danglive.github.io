@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[ARTICLE TITLE] - Van Tuan Dang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+<body>
+    <!-- Standard Header Navigation -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">VTD</a>
+                <ul class="nav-links">
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="blog.html" class="nav-link active">Blog</a></li>
+                    <li><a href="index.html#skills" class="nav-link">Skills</a></li>
+                    <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+                    <li><a href="index.html#achievements" class="nav-link">Achievements</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="social-nav">
+                    <a href="https://github.com/danglive" target="_blank" class="social-nav-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="social-nav-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://huggingface.co/dangvantuan" target="_blank" class="social-nav-link">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Blog Post Header -->
+    <section class="blog-post-header">
+        <div class="container">
+            <h1 class="blog-post-title">[ARTICLE TITLE]</h1>
+            <div class="blog-post-meta">
+                <div class="blog-post-date">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>[DATE]</span>
+                </div>
+                <div class="blog-post-author">
+                    <i class="far fa-user"></i>
+                    <span>Van Tuan Dang</span>
+                </div>
+                <div class="blog-post-category">
+                    <i class="far fa-folder"></i>
+                    <span>[CATEGORY]</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Post Content with Table of Contents -->
+    <section class="blog-post-content">
+        <div class="container">
+            <div class="blog-post-container">
+                <!-- Table of Contents Sidebar -->
+                <aside class="blog-post-toc">
+                    <div class="toc-container">
+                        <h3 class="toc-title">Table of Contents</h3>
+                        <ul class="toc-list">
+                            <!-- Generated dynamically from h2 and h3 elements -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Additional sidebar elements like related posts -->
+                    <div class="related-posts">
+                        <h3 class="sidebar-title">Related Posts</h3>
+                        <ul class="related-posts-list">
+                            <!-- Related posts here -->
+                        </ul>
+                    </div>
+                </aside>
+                
+                <!-- Main Content -->
+                <div class="blog-post-body">
+                    <!-- Article content here -->
+                    
+                    <!-- Post Navigation -->
+                    <div class="blog-post-nav">
+                        <a href="#" class="blog-post-nav-link blog-post-nav-prev">
+                            <i class="fas fa-arrow-left"></i> Previous Post
+                        </a>
+                        <a href="../blog.html" class="blog-post-nav-link blog-post-nav-back">
+                            <i class="fas fa-th-large"></i> All Posts
+                        </a>
+                        <a href="#" class="blog-post-nav-link blog-post-nav-next">
+                            Next Post <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standard Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Van Tuan Dang</div>
+                <div class="footer-links">
+                    <a href="index.html#about" class="footer-link">About</a>
+                    <a href="blog.html" class="footer-link">Blog</a>
+                    <a href="index.html#skills" class="footer-link">Skills</a>
+                    <a href="index.html#projects" class="footer-link">Projects</a>
+                    <a href="index.html#achievements" class="footer-link">Achievements</a>
+                    <a href="index.html#contact" class="footer-link">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/danglive" target="_blank" class="footer-social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="footer-social-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://huggingface.co/dangvantuan" target="_blank" class="footer-social-link">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                </div>
+                <p class="footer-copyright">
+                    &copy; 2025 Van Tuan Dang. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for TOC generation and other functionalities -->
+    <script>
+        // Generate Table of Contents
+        document.addEventListener('DOMContentLoaded', function() {
+            const headings = document.querySelectorAll('.blog-post-body h2, .blog-post-body h3');
+            const tocList = document.querySelector('.toc-list');
+            
+            if (headings.length > 0 && tocList) {
+                headings.forEach((heading, index) => {
+                    // Create unique ID if not present
+                    if (!heading.id) {
+                        heading.id = 'heading-' + index;
+                    }
+                    
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = '#' + heading.id;
+                    link.textContent = heading.textContent;
+                    
+                    // Add class based on heading level
+                    if (heading.tagName === 'H3') {
+                        listItem.classList.add('toc-subitem');
+                    }
+                    
+                    listItem.appendChild(link);
+                    tocList.appendChild(listItem);
+                });
+            }
+            
+            // Highlight current section in TOC when scrolling
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        document.querySelectorAll('.toc-list a').forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === '#' + id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+            
+            headings.forEach(heading => {
+                observer.observe(heading);
+            });
+        });
+    </script>
+</body>
+</html>

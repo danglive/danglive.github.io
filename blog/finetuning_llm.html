@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine-tuning Large Language Models - Van Tuan Dang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    
+    <!-- Thêm Prism.js CSS cho syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- CSS styles -->
+    <style>
+        /* Sao chép phần CSS từ index.html và thêm style mới cho blog post */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #4f46e5;
+            --text-color: #1f2937;
+            --light-bg: #f9fafb;
+            --dark-bg: #111827;
+            --accent-color: #4f46e5;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        /* CSS cho bài viết */
+        .blog-post-header {
+            padding: 5rem 0;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+        
+        .blog-post-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .blog-post-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1rem;
+        }
+        
+        .blog-post-date, .blog-post-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blog-post-content {
+            padding: 5rem 0;
+            background-color: white;
+        }
+        
+        .blog-post-body {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .blog-post-body h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .blog-post-body h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .blog-post-body p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .blog-post-body ul, .blog-post-body ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .blog-post-body li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .blog-post-body code {
+            background-color: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            color: #1e293b;
+        }
+        
+        /* Code block styling */
+        .blog-post-body pre {
+            background-color: #1e293b;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        .blog-post-body pre code {
+            background-color: transparent;
+            padding: 0;
+            color: white;
+            font-family: 'Courier New', monospace;
+            border-radius: 0;
+        }
+        
+        .blog-post-body img {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .blog-post-nav {
+            display: flex;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .blog-post-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            color: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-social-link {
+            color: #d1d5db;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social-link:hover {
+            color: white;
+        }
+
+        .footer-copyright {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header id="header-container">
+        <!-- Thanh điều hướng sẽ được thêm ở đây bằng JavaScript -->
+    </header>
+
+    <section class="blog-post-header">
+        <div class="container">
+            <h1 class="blog-post-title">Fine-tuning Large Language Models for Specific Domains</h1>
+            <div class="blog-post-meta">
+                <div class="blog-post-date">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>March 20, 2025</span>
+                </div>
+                <div class="blog-post-author">
+                    <i class="far fa-user"></i>
+                    <span>Van Tuan Dang</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="diagram-container" style="margin: 2rem 0; text-align: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 275" style="max-width: 100%; height: auto;">
+          <!-- Definitions for gradients and patterns -->
+          <defs>
+            <linearGradient id="pretrained-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4338ca" />
+              <stop offset="100%" stop-color="#2563eb" />
+            </linearGradient>
+            <linearGradient id="finetuned-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7e22ce" />
+              <stop offset="100%" stop-color="#c026d3" />
+            </linearGradient>
+            <linearGradient id="domain-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#059669" />
+              <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+            <linearGradient id="arrow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#4f46e5" />
+              <stop offset="100%" stop-color="#8b5cf6" />
+            </linearGradient>
+            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="3" dy="3" stdDeviation="5" flood-opacity="0.2"/>
+            </filter>
+          </defs>
+      
+          <!-- Title -->
+          <text x="450" y="40" font-family="Inter, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1e293b">Fine-tuning Large Language Models for Specific Domains</text>
+      
+          <!-- Pre-trained LLM Section -->
+          <g transform="translate(100, 100)">
+            <rect x="0" y="0" width="200" height="300" rx="15" fill="url(#pretrained-gradient)" filter="url(#shadow)" />
+            <text x="100" y="40" font-family="Inter, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">Pre-trained LLM</text>
+            
+            <!-- Knowledge representation -->
+            <g transform="translate(30, 70)">
+              <rect x="0" y="0" width="140" height="20" rx="5" fill="white" fill-opacity="0.2" />
+              <rect x="0" y="30" width="140" height="20" rx="5" fill="white" fill-opacity="0.2" />
+              <rect x="0" y="60" width="140" height="20" rx="5" fill="white" fill-opacity="0.2" />
+              <rect x="0" y="90" width="140" height="20" rx="5" fill="white" fill-opacity="0.2" />
+              <rect x="0" y="120" width="140" height="20" rx="5" fill="white" fill-opacity="0.2" />
+              <rect x="0" y="150" width="140" height="20" rx="5" fill="white" fill-opacity="0.2" />
+              <rect x="0" y="180" width="140" height="20" rx="5" fill="white" fill-opacity="0.2" />
+              
+              <text x="70" y="210" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="white">General Knowledge</text>
+            </g>
+          </g>
+      
+          <!-- Domain-Specific Data Section -->
+          <g transform="translate(350, 100)">
+            <rect x="0" y="0" width="200" height="300" rx="15" fill="url(#domain-gradient)" filter="url(#shadow)" />
+            <text x="100" y="40" font-family="Inter, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">Domain-Specific Data</text>
+            
+            <!-- Domain data representation -->
+            <g transform="translate(30, 70)">
+              <g transform="translate(0, 0)">
+                <rect x="0" y="0" width="140" height="30" rx="5" fill="white" fill-opacity="0.2" />
+                <text x="70" y="20" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="white">Medical Terminology</text>
+              </g>
+              <g transform="translate(0, 40)">
+                <rect x="0" y="0" width="140" height="30" rx="5" fill="white" fill-opacity="0.2" />
+                <text x="70" y="20" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="white">Legal Documents</text>
+              </g>
+              <g transform="translate(0, 80)">
+                <rect x="0" y="0" width="140" height="30" rx="5" fill="white" fill-opacity="0.2" />
+                <text x="70" y="20" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="white">Financial Reports</text>
+              </g>
+              <g transform="translate(0, 120)">
+                <rect x="0" y="0" width="140" height="30" rx="5" fill="white" fill-opacity="0.2" />
+                <text x="70" y="20" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="white">Scientific Research</text>
+              </g>
+              <g transform="translate(0, 160)">
+                <rect x="0" y="0" width="140" height="30" rx="5" fill="white" fill-opacity="0.2" />
+                <text x="70" y="20" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="white">Technical Manuals</text>
+              </g>
+            </g>
+          </g>
+      
+          <!-- Fine-tuned LLM Section -->
+          <g transform="translate(600, 100)">
+            <rect x="0" y="0" width="200" height="300" rx="15" fill="url(#finetuned-gradient)" filter="url(#shadow)" />
+            <text x="100" y="40" font-family="Inter, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">Fine-tuned LLM</text>
+            
+            <!-- Knowledge representation with highlights -->
+            <g transform="translate(30, 70)">
+              <rect x="0" y="0" width="140" height="20" rx="5" fill="white" fill-opacity="0.15" />
+              <rect x="0" y="30" width="140" height="20" rx="5" fill="white" fill-opacity="0.15" />
+              <rect x="0" y="60" width="140" height="20" rx="5" fill="white" fill-opacity="0.15" />
+              <rect x="0" y="90" width="140" height="20" rx="5" fill="white" fill-opacity="0.15" />
+              <rect x="0" y="120" width="140" height="20" rx="5" fill="white" fill-opacity="0.15" />
+              <rect x="0" y="150" width="140" height="20" rx="5" fill="white" fill-opacity="0.15" />
+              <rect x="0" y="180" width="140" height="20" rx="5" fill="white" fill-opacity="0.15" />
+              
+              <!-- Highlighted domain knowledge -->
+              <rect x="20" y="30" width="100" height="20" rx="5" fill="white" fill-opacity="0.5" />
+              <rect x="20" y="90" width="100" height="20" rx="5" fill="white" fill-opacity="0.5" />
+              <rect x="20" y="150" width="100" height="20" rx="5" fill="white" fill-opacity="0.5" />
+              
+              <text x="70" y="210" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="white">Domain-Adapted</text>
+            </g>
+          </g>
+      
+          <!-- Arrows -->
+          <g>
+            <!-- Arrow from Pre-trained to Fine-tuned -->
+            <path d="M 310 220 C 340 220, 365 150, 390 150 L 540 150 C 565 150, 590 220, 590 220" stroke="url(#arrow-gradient)" stroke-width="3" fill="none" marker-end="url(#arrow-head)" />
+            <polygon points="590,220 580,210 580,230" fill="#8b5cf6" />
+            
+            <!-- Arrow from Domain-Specific to Fine-tuned -->
+            <path d="M 560 250 L 590 250" stroke="url(#arrow-gradient)" stroke-width="3" fill="none" marker-end="url(#arrow-head)" />
+            <polygon points="590,250 580,245 580,255" fill="#8b5cf6" />
+          </g>
+      
+          <!-- Fine-tuning Methods Box -->
+          <g transform="translate(100, 430)">
+            <rect x="0" y="0" width="700" height="100" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" />
+            <text x="350" y="30" font-family="Inter, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1e293b">Fine-tuning Methods</text>
+            
+            <g transform="translate(50, 60)">
+              <!-- Full Fine-tuning -->
+              <g transform="translate(0, 0)">
+                <rect x="0" y="-15" width="150" height="30" rx="5" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-width="1" />
+                <text x="75" y="5" font-family="Inter, sans-serif" font-size="14" text-anchor="middle" fill="#1e40af">Full Fine-tuning</text>
+              </g>
+              
+              <!-- LoRA/QLoRA -->
+              <g transform="translate(200, 0)">
+                <rect x="0" y="-15" width="150" height="30" rx="5" fill="#8b5cf6" fill-opacity="0.1" stroke="#8b5cf6" stroke-width="1" />
+                <text x="75" y="5" font-family="Inter, sans-serif" font-size="14" text-anchor="middle" fill="#5b21b6">LoRA / QLoRA</text>
+              </g>
+              
+              <!-- Instruction Fine-tuning -->
+              <g transform="translate(400, 0)">
+                <rect x="0" y="-15" width="200" height="30" rx="5" fill="#ec4899" fill-opacity="0.1" stroke="#ec4899" stroke-width="1" />
+                <text x="100" y="5" font-family="Inter, sans-serif" font-size="14" text-anchor="middle" fill="#9d174d">Instruction Fine-tuning</text>
+              </g>
+            </g>
+          </g>
+        </svg>
+        <p style="margin-top: 1rem; font-style: italic; color: #64748b;">Figure: The process of fine-tuning LLMs for domain-specific applications</p>
+      </div>
+    <section class="blog-post-content">
+        <div class="container">
+            <div class="blog-post-body">
+                <p>
+                    Fine-tuning large language models (LLMs) for specific domains has become an essential technique
+                    for organizations looking to leverage the power of AI for specialized applications. This process
+                    allows pre-trained models to adapt to domain-specific language, terminology, and knowledge,
+                    resulting in significantly improved performance on targeted tasks.
+                </p>
+                
+                <h2>Why Domain-Specific Fine-tuning Matters</h2>
+                
+                <p>
+                    While foundation models like GPT-4, Claude, and Llama provide impressive general capabilities,
+                    they often lack the specialized knowledge and language patterns required for specific industries.
+                    Fine-tuning addresses this gap by:
+                </p>
+                
+                <ul>
+                    <li>Adapting to domain-specific terminology and jargon</li>
+                    <li>Learning industry-specific formats and conventions</li>
+                    <li>Improving accuracy on specialized tasks</li>
+                    <li>Reducing hallucinations related to domain knowledge</li>
+                </ul>
+                
+                <h2>Key Approaches to Fine-tuning LLMs</h2>
+                
+                <h3>1. Full Fine-tuning</h3>
+                
+                <p>
+                    Full fine-tuning involves updating all parameters of the pre-trained model. While this approach
+                    can yield excellent results, it requires significant computational resources and a large dataset
+                    of high-quality examples.
+                </p>
+                
+                <pre><code class="language-python"># Example of full fine-tuning with Transformers library
+from transformers import Trainer, TrainingArguments
+
+training_args = TrainingArguments(
+    output_dir="./results",
+    num_train_epochs=3,
+    per_device_train_batch_size=8,
+    save_steps=500,
+    save_total_limit=2,
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=dataset,
+)
+
+trainer.train()</code></pre>
+                
+                <h3>2. Parameter-Efficient Fine-tuning (PEFT)</h3>
+                
+                <p>
+                    PEFT methods like LoRA (Low-Rank Adaptation) and QLoRA have revolutionized fine-tuning by making
+                    it possible to adapt models with limited computational resources. These techniques freeze most of
+                    the model parameters and add small trainable components.
+                </p>
+                
+                <pre><code class="language-python"># Example of LoRA fine-tuning
+from peft import LoraConfig, get_peft_model
+
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["q_proj", "v_proj"],
+    lora_dropout=0.05,
+    bias="none",
+)
+
+peft_model = get_peft_model(model, lora_config)
+# Continue with training as above</code></pre>
+                
+                <h3>3. Instruction Fine-tuning</h3>
+                
+                <p>
+                    This approach focuses on teaching the model to follow specific instructions within your domain.
+                    It's particularly effective for creating assistants that need to understand and execute
+                    domain-specific tasks.
+                </p>
+                
+                <h2>Best Practices for Domain Adaptation</h2>
+                
+                <h3>Data Preparation</h3>
+                
+                <p>
+                    The quality of your fine-tuning dataset is the most critical factor for success. Consider these
+                    guidelines:
+                </p>
+                
+                <ul>
+                    <li>Collect diverse examples covering all aspects of your domain</li>
+                    <li>Ensure high-quality, accurate information</li>
+                    <li>Format data consistently with clear instruction/response pairs</li>
+                    <li>Include edge cases and challenging examples</li>
+                    <li>Consider data augmentation techniques to expand limited datasets</li>
+                </ul>
+                
+                <h3>Evaluation Strategy</h3>
+                
+                <p>
+                    Traditional metrics like perplexity or accuracy may not fully capture domain-specific performance.
+                    Develop a comprehensive evaluation framework that includes:
+                </p>
+                
+                <ul>
+                    <li>Domain-specific benchmarks</li>
+                    <li>Human evaluation for qualitative assessment</li>
+                    <li>Task-specific metrics relevant to your application</li>
+                    <li>Comparison with human expert performance</li>
+                </ul>
+                
+                <h2>Case Study: Fine-tuning for Financial Services</h2>
+                
+                <p>
+                    In a recent project, we fine-tuned a model for financial document analysis. The process involved:
+                </p>
+                
+                <ul>
+                    <li>Collecting 10,000 examples of financial statements, reports, and analyses</li>
+                    <li>Creating instruction-response pairs for specific financial tasks</li>
+                    <li>Using QLoRA fine-tuning to minimize computational requirements</li>
+                    <li>Implementing a staged training approach, starting with general financial knowledge and gradually focusing on specific tasks</li>
+                </ul>
+                
+                
+                <h2>Conclusion</h2>
+                
+                <p>
+                    Domain-specific fine-tuning represents a powerful approach to harness the capabilities of LLMs
+                    for specialized applications. By carefully preparing your data, selecting appropriate fine-tuning
+                    techniques, and implementing robust evaluation methods, you can create AI systems that deliver
+                    exceptional performance in your specific domain.
+                </p>
+                
+                <p>
+                    As we continue to advance in this field, we can expect even more efficient fine-tuning methods
+                    and better ways to inject domain knowledge into these powerful models.
+                </p>
+                
+                <div class="blog-post-nav">
+                    <a href="../blog.html" class="blog-post-nav-link">
+                        <i class="fas fa-arrow-left"></i> Back to Blog
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Van Tuan Dang</div>
+                <div class="footer-links">
+                    <a href="../index.html#about" class="footer-link">About</a>
+                    <a href="../blog.html" class="footer-link">Blog</a>      
+                    <a href="../mindfulness.html" class="footer-link">The Giving Journey</a>              
+                    <a href="../index.html#skills" class="footer-link">Skills</a>
+                    <a href="../index.html#achievements" class="footer-link">Achievements</a>
+                    <a href="../index.html#contact" class="footer-link">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/danglive" target="_blank" class="footer-social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="footer-social-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://huggingface.co/dangvantuan" target="_blank" class="footer-social-link">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                </div>
+                <p class="footer-copyright">
+                    &copy; 2025 Van Tuan Dang. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Thêm Prism.js Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tạo nội dung thanh điều hướng
+            const navHTML = `
+            <nav class="navbar">
+                <div class="container">
+                    <a href="../index.html" class="logo">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <ul class="nav-links">
+                        <li><a href="../index.html#about" class="nav-link">About</a></li>
+                        <li><a href="../blog.html" class="nav-link active">Blog</a></li> 
+                        <li><a href="../mindfulness.html" class="nav-link">The Giving Journey</a></li>
+                        <li><a href="../index.html#achievements" class="nav-link">Achievements</a></li>
+                        <li><a href="../index.html#skills" class="nav-link">Skills</a></li>
+                        <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                    </ul>
+                    <div class="social-nav">
+                        <a href="https://github.com/danglive" target="_blank" class="social-nav-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="social-nav-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://huggingface.co/dangvantuan" target="_blank" class="social-nav-link">
+                            <i class="fas fa-robot"></i>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            `;
+            
+            document.getElementById('header-container').innerHTML = navHTML;
+            
+            // Ensure Prism highlights all code blocks
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+        });
+    </script>
+</body>
+</html>

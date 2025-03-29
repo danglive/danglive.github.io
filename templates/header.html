@@ -1,0 +1,39 @@
+<header id="header-container">
+    <!-- Thanh điều hướng sẽ được thêm ở đây bằng JavaScript -->
+</header>
+
+<script>
+    // Tạo nội dung thanh điều hướng dựa trên mẫu ban đầu
+    document.addEventListener('DOMContentLoaded', function() {
+        const navHTML = `
+        <nav class="navbar">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="../index.html" class="logo">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <ul class="nav-links">
+                    <li><a href="../index.html#about" class="nav-link">About</a></li>
+                    <li><a href="../blog.html" class="nav-link active">Blog</a></li> 
+                    <li><a href="../mindfulness.html" class="nav-link">The Giving Journey</a></li>
+                    <li><a href="../index.html#achievements" class="nav-link">Achievements</a></li>
+                    <li><a href="../index.html#skills" class="nav-link">Skills</a></li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="social-nav">
+                    <a href="https://github.com/danglive" target="_blank" class="social-nav-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="social-nav-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://huggingface.co/dangvantuan" target="_blank" class="social-nav-link">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        `;
+        
+        document.getElementById('header-container').innerHTML = navHTML;
+    });
+</script>
