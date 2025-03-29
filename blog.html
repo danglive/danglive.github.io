@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Blog - Van Tuan Dang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #4f46e5;
+            --text-color: #1f2937;
+            --light-bg: #f9fafb;
+            --dark-bg: #111827;
+            --accent-color: #4f46e5;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* Hero Section with Background Image */
+        .blog-hero {
+            height: 60vh;
+            background: url('images/blogtech.png') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .blog-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+            z-index: 1;
+        }
+
+        .blog-hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .blog-hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .blog-hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        /* Main Content Area */
+        .blog-container {
+            display: flex;
+            margin-top: 3rem;
+            margin-bottom: 5rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        /* Sidebar */
+        .blog-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            padding-right: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .recent-posts {
+            margin-bottom: 3rem;
+        }
+
+        .post-list {
+            list-style: none;
+        }
+
+        .sidebar-post {
+            margin-bottom: 1.5rem;
+            border-radius: var(--border-radius);
+            background-color: white;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sidebar-post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-post-link {
+            display: block;
+            padding: 1rem;
+        }
+
+        .sidebar-post-date {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 0.3rem;
+        }
+
+        .sidebar-post-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-post-link:hover .sidebar-post-title {
+            color: var(--primary-color);
+        }
+
+        .categories {
+            margin-bottom: 3rem;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .category-link {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .category-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .category-count {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .category-link:hover .category-count {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        /* Main Blog Content */
+        .blog-content {
+            flex: 1;
+        }
+
+        .featured-posts {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-card-img-container {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .blog-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .blog-card:hover .blog-card-img {
+            transform: scale(1.1);
+        }
+
+        .blog-card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-category {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .blog-card:hover .blog-card-title {
+            color: var(--primary-color);
+        }
+
+        .blog-card-excerpt {
+            margin-bottom: 1.5rem;
+            color: #4b5563;
+            flex-grow: 1;
+        }
+
+        .blog-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .blog-card-date {
+            font-size: 0.85rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+        }
+
+        .blog-card-date i {
+            margin-right: 0.5rem;
+        }
+
+        .blog-card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .blog-card-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .blog-card:hover .blog-card-link i {
+            transform: translateX(5px);
+        }
+
+        /* Latest Posts Section */
+        .latest-posts {
+            margin-bottom: 4rem;
+        }
+
+        .post-list-item {
+            display: flex;
+            margin-bottom: 2rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-list-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-list-img-container {
+            width: 200px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .post-list-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .post-list-item:hover .post-list-img {
+            transform: scale(1.1);
+        }
+
+        .post-list-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .post-list-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .post-list-item:hover .post-list-title {
+            color: var(--primary-color);
+        }
+
+        .post-list-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .post-list-date, .post-list-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .post-list-excerpt {
+            margin-bottom: 1rem;
+            color: #4b5563;
+        }
+
+        /* Subscribe Section */
+        .subscribe-section {
+            background-color: var(--primary-color);
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .subscribe-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .subscribe-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .subscribe-text {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .subscribe-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .subscribe-input {
+            flex-grow: 1;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 30px 0 0 30px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .subscribe-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .subscribe-btn:hover {
+            background-color: #4338ca;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social-link:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-heading {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-link {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-link a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .footer-link a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-contact-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer-contact-item i {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .blog-container {
+                flex-direction: column;
+            }
+
+            .blog-sidebar {
+                width: 100%;
+                padding-right: 0;
+                margin-bottom: 3rem;
+            }
+
+            .post-list-img-container {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .blog-hero-title {
+                font-size: 2.5rem;
+            }
+
+            .blog-hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .post-list-item {
+                flex-direction: column;
+            }
+
+            .post-list-img-container {
+                width: 100%;
+                height: 200px;
+            }
+
+            .subscribe-form {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .subscribe-input, .subscribe-btn {
+                width: 100%;
+                border-radius: 30px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header-container">
+        <!-- Thanh điều hướng sẽ được thêm ở đây bằng JavaScript -->
+    </header>
+
+    <section class="blog-hero">
+        <div class="blog-hero-content">
+            <h1 class="blog-hero-title">AI & Tech Insights</h1>
+            <p class="blog-hero-subtitle">Exploring the frontiers of artificial intelligence, machine learning, and data science</p>
+        </div>
+    </section>
+
+    <div class="blog-container">
+        <aside class="blog-sidebar">
+            <div class="recent-posts">
+                <h3 class="sidebar-title">Recent Posts</h3>
+                <ul class="post-list">
+                    <li class="sidebar-post">
+                        <a href="#" class="sidebar-post-link">
+                            <div class="sidebar-post-date">Mars 27, 2025</div>
+                            <h4 class="sidebar-post-title">AIaaS Solution Architecture: Asset Management Platform </h4>
+                        </a>
+                    </li>
+                    <li class="sidebar-post">
+                        <a href="blog/finetuning_llm.html" class="sidebar-post-link">
+                            <div class="sidebar-post-date">March 20, 2025</div>
+                            <h4 class="sidebar-post-title">Fine-tuning Large Language Models for Specific Domains</h4>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="categories">
+                <h3 class="sidebar-title">Categories</h3>
+                <ul class="category-list">
+                    <li class="category-item">
+                        <a href="#" class="category-link">
+                            <span>Large Language Models</span>
+                            <span class="category-count">4</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link">
+                            <span>Embeddings</span>
+                            <span class="category-count">3</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link">
+                            <span>AI Deployment</span>
+                            <span class="category-count">5</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link">
+                            <span>Natural Language Processing</span>
+                            <span class="category-count">7</span>
+                        </a>
+                    </li>
+                    <li class="category-item">
+                        <a href="#" class="category-link">
+                            <span>Computer Vision</span>
+                            <span class="category-count">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="blog-content">
+            <section class="featured-posts">
+                <h2 class="section-title">Featured Articles</h2>
+                <div class="featured-grid">
+                    <article class="blog-card">
+                        <div class="blog-card-img-container">
+                            <img src="/api/placeholder/600/400" alt="Fine-tuning LLMs" class="blog-card-img">
+                        </div>
+                        <div class="blog-card-content">
+                            <div class="blog-category">LLMs</div>
+                            <h3 class="blog-card-title">Fine-tuning Large Language Models for Specific Domains</h3>
+                            <p class="blog-card-excerpt">
+                                Learn effective techniques for fine-tuning large language models to perform better on domain-specific tasks and applications.
+                            </p>
+                            <div class="blog-card-footer">
+                                <div class="blog-card-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    March 20, 2025
+                                </div>
+                                <a href="blog/finetuning_llm.html" class="blog-card-link">
+                                    Read Article <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card">
+                        <div class="blog-card-img-container">
+                            <img src="/api/placeholder/600/400" alt="Multilingual Embeddings" class="blog-card-img">
+                        </div>
+                        <div class="blog-card-content">
+                            <div class="blog-category">Embeddings</div>
+                            <h3 class="blog-card-title">Multilingual Embeddings: Challenges and Solutions</h3>
+                            <p class="blog-card-excerpt">
+                                Exploring the challenges of creating effective multilingual embeddings and the approaches that can help overcome them.
+                            </p>
+                            <div class="blog-card-footer">
+                                <div class="blog-card-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    February 12, 2025
+                                </div>
+                                <a href="#" class="blog-card-link">
+                                    Coming Soon <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="latest-posts">
+                <h2 class="section-title">Latest Posts</h2>
+                <div class="latest-posts-list">
+                    <article class="post-list-item">
+                        <div class="post-list-img-container">
+                            <img src="/api/placeholder/400/300" alt="Multimodal AI" class="post-list-img">
+                        </div>
+                        <div class="post-list-content">
+                            <h3 class="post-list-title">The Rise of Multimodal AI: Text, Vision, and Beyond</h3>
+                            <div class="post-list-meta">
+                                <div class="post-list-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    January 28, 2025
+                                </div>
+                                <div class="post-list-author">
+                                    <i class="far fa-user"></i>
+                                    Van Tuan Dang
+                                </div>
+                            </div>
+                            <p class="post-list-excerpt">
+                                Examine how multimodal AI systems are revolutionizing the way machines understand and interact with the world through multiple data types.
+                            </p>
+                            <a href="#" class="blog-card-link">
+                                Coming Soon <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                    <article class="post-list-item">
+                        <div class="post-list-img-container">
+                            <img src="/api/placeholder/400/300" alt="French Language Models" class="post-list-img">
+                        </div>
+                        <div class="post-list-content">
+                            <h3 class="post-list-title">Building Better French Language Models: A Technical Deep Dive</h3>
+                            <div class="post-list-meta">
+                                <div class="post-list-date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    December 10, 2024
+                                </div>
+                                <div class="post-list-author">
+                                    <i class="far fa-user"></i>
+                                    Van Tuan Dang
+                                </div>
+                            </div>
+                            <p class="post-list-excerpt">
+                                A technical exploration of the challenges and solutions in developing advanced language models for the French language.
+                            </p>
+                            <a href="#" class="blog-card-link">
+                                Coming Soon <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <section class="subscribe-section">
+        <div class="container">
+            <div class="subscribe-content">
+                <h2 class="subscribe-title">Subscribe to My Newsletter</h2>
+                <p class="subscribe-text">
+                    Stay updated with the latest articles, research, and insights in AI and machine learning.
+                </p>
+                <form class="subscribe-form">
+                    <input type="email" class="subscribe-input" placeholder="Your email address" required>
+                    <button type="submit" class="subscribe-btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="footer-logo">Van Tuan Dang</div>
+                    <p class="footer-description">
+                        AI/ML Scientist and AI & Data Solution Architect focused on creating impactful AI solutions that bridge technology and business needs.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://github.com/danglive" target="_blank" class="footer-social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="footer-social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://huggingface.co/dangvantuan" target="_blank" class="footer-social-link">
+                            <i class="fas fa-robot"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="index.html#about">About</a></li>
+                        <li class="footer-link"><a href="blog.html">Blog</a></li>
+                        <li class="footer-link"><a href="mindfulness.html">The Giving Journey</a></li>
+                        <li class="footer-link"><a href="index.html#achievements">Achievements</a></li>
+                        <li class="footer-link"><a href="index.html#skills">Skills</a></li>
+                        <li class="footer-link"><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-heading">Blog Categories</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">Large Language Models</a></li>
+                        <li class="footer-link"><a href="#">Embeddings</a></li>
+                        <li class="footer-link"><a href="#">AI Deployment</a></li>
+                        <li class="footer-link"><a href="#">Natural Language Processing</a></li>
+                        <li class="footer-link"><a href="#">Computer Vision</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="footer-heading">Contact Info</h4>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Paris, France</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>vantuandang1990@gmail.com.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Van Tuan Dang. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tạo nội dung thanh điều hướng
+            const navHTML = `
+            <nav class="navbar">
+                <div class="container">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <ul class="nav-links">
+                        <li><a href="index.html#about" class="nav-link">About</a></li>
+                        <li><a href="blog.html" class="nav-link active">Blog</a></li> 
+                        <li><a href="mindfulness.html" class="nav-link">The Giving Journey</a></li>
+                        <li><a href="index.html#achievements" class="nav-link">Achievements</a></li>
+                        <li><a href="index.html#skills" class="nav-link">Skills</a></li>
+                        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    </ul>
+                    <div class="social-nav">
+                        <a href="https://github.com/danglive" target="_blank" class="social-nav-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="social-nav-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://huggingface.co/dangvantuan" target="_blank" class="social-nav-link">
+                            <i class="fas fa-robot"></i>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            `;
+            
+            document.getElementById('header-container').innerHTML = navHTML;
+        });
+    </script>
+</body>
+</html>

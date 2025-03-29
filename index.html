@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Van Tuan Dang - AI/ML Scientist & Solution Architect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #4f46e5;
+            --text-color: #1f2937;
+            --light-bg: #f9fafb;
+            --dark-bg: #111827;
+            --accent-color: #4f46e5;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            text-align: center;
+            padding: 3rem 0;
+            background: url('images/cover.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 2rem;
+            border: 4px solid white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(120deg, #ffffff, #e6e6e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .hero-location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .location-icon {
+            color: white;
+        }
+
+        .hero-location span {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 7px 10px rgba(0, 0, 0, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .about-section {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-paragraph {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .skills-section {
+            padding: 5rem 0;
+            background-color: var(--light-bg);
+        }
+
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .skill-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .skill-description {
+            color: #4b5563;
+        }
+
+        .mindfulness-section {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .mindfulness-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .mindfulness-card {
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .mindfulness-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .mindfulness-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .mindfulness-content {
+            padding: 1.5rem;
+        }
+
+        .mindfulness-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .mindfulness-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mindfulness-tag {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 30px;
+        }
+
+        .mindfulness-description {
+            margin-bottom: 1.5rem;
+            color: #4b5563;
+        }
+
+        .mindfulness-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .contact-section {
+            padding: 5rem 0;
+            background-color: var(--light-bg);
+            text-align: center;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer {
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            color: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-social-link {
+            color: #d1d5db;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social-link:hover {
+            color: white;
+        }
+
+        .footer-copyright {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .achievements-section {
+            padding: 5rem 0;
+            background-color: var(--light-bg);
+        }
+
+        .achievement-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .achievement-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-description {
+            color: #4b5563;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-link {
+            margin-top: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero, .about-content, .skills-container, .mindfulness-cards, .achievement-cards, .contact-content {
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .skills-container, .mindfulness-cards, .achievement-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header-container">
+        <!-- Thanh điều hướng sẽ được thêm ở đây bằng JavaScript -->
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <img src="images/profile.jpeg" alt="Van Tuan Dang" class="profile-img">
+            <h1>Van Tuan Dang</h1>
+            <h2>AI/ML Scientist | AI & Data Solution Architect | Open-Source</h2>
+            <div class="hero-location">
+                <i class="fas fa-map-marker-alt location-icon"></i>
+                <span>Paris, France</span>
+            </div>
+            <a href="#contact" class="cta-btn">Get in Touch</a>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <p class="about-paragraph">
+                    I am an <span class="highlight">AI/ML Scientist</span> and <span class="highlight">AI & Data Solution Architect</span> with a PhD in Engineering Optimization. My work focuses on researching, designing, and deploying AI-driven solutions that bridge technology and business needs.
+                </p>
+                <p class="about-paragraph">
+                    I specialize in transforming AI models (LLMs, Multimodal, ASR) into scalable, revenue-generating business solutions. My expertise spans AI model architecture, deployment optimization, and measuring business impact.
+                </p>
+                <p class="about-paragraph">
+                    As an active <span class="highlight">open-source contributor</span>, I've created widely used French, English, and Vietnamese embedding models available on Hugging Face. I'm passionate about developing AI solutions that solve real-world problems and create measurable value.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills-section">
+        <div class="container">
+            <h2 class="section-title">Core Expertise</h2>
+            <div class="skills-container">
+                <div class="skill-card">
+                    <i class="fas fa-brain skill-icon"></i>
+                    <h3 class="skill-title">Data & AI Model Architecture</h3>
+                    <p class="skill-description">Designing and optimizing advanced neural network architectures for NLP, computer vision, and multimodal applications.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fas fa-rocket skill-icon"></i>
+                    <h3 class="skill-title">AI Deployment</h3>
+                    <p class="skill-description">Transforming research models into production-ready systems with scalable, efficient architectures.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fas fa-language skill-icon"></i>
+                    <h3 class="skill-title">NLP, LLMs, vLLM and ASR</h3>
+                    <p class="skill-description">Developing and fine-tuning large language models (LLM)), Vision language models (VLMs) and ASR for specialized domains and multilingual applications.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fas fa-chart-line skill-icon"></i>
+                    <h3 class="skill-title">Business Impact</h3>
+                    <p class="skill-description">Translating technical capabilities into measurable business outcomes and ROI-driven solutions.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fas fa-microchip skill-icon"></i>
+                    <h3 class="skill-title">Optimization</h3>
+                    <p class="skill-description">Applying advanced optimization techniques to enhance model performance and computational efficiency.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fas fa-users skill-icon"></i>
+                    <h3 class="skill-title">Cross-functional Leadership</h3>
+                    <p class="skill-description">Bridging technical teams and business stakeholders to deliver impactful AI solutions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="achievements" class="achievements-section">
+        <div class="container">
+            <h2 class="section-title">Achievements & Contributions</h2>
+            <div class="achievement-cards">
+                <div class="achievement-card">
+                    <i class="fas fa-trophy achievement-icon"></i>
+                    <h3 class="achievement-title">L2RPN 2023 Winner</h3>
+                    <p class="achievement-description">
+                        Winner of the Paris Region AI Challenge for Energy Transition (L2RPN 2023), developing innovative AI solutions for grid management.
+                    </p>
+                    <a href="https://www.lejournaldugrandparis.fr/la-javaness-met-lia-au-service-de-la-gestion-du-reseau-electrique/" class="achievement-link">
+                        View Models <i class="fas fa-arrow-right"></i>
+                    </a> 
+                </div>
+                <div class="achievement-card">
+                    <i class="fas fa-code-branch achievement-icon"></i>
+                    <h3 class="achievement-title">Open Source Embedding Models</h3>
+                    <p class="achievement-description">
+                        Created widely used French, English, and Vietnamese embedding models that have been adopted by numerous organizations and researchers.
+                    </p>
+                    <a href="https://huggingface.co/dangvantuan" class="achievement-link">
+                        View Models <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="achievement-card">
+                    <i class="fas fa-graduation-cap achievement-icon"></i>
+                    <h3 class="achievement-title">PhD in Engineering Optimization</h3>
+                    <p class="achievement-description">
+                        Completed doctoral research focused on optimization techniques that now inform my approach to AI system design and deployment.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <p class="contact-text">
+                    Interested in collaborating or learning more about my work? Feel free to reach out through any of the platforms below.
+                </p>
+                <div class="social-links">
+                    <a href="https://github.com/danglive" target="_blank" class="social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="social-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://huggingface.co/dangvantuan" target="_blank" class="social-link">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                </div>
+                <a href="mailto:vantuandang1990@gmail.com" class="cta-btn">Send Email</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Van Tuan Dang</div>
+                <div class="footer-links">
+                    <a href="#about" class="footer-link">About</a>
+                    <a href="blog.html" class="footer-link">Blog</a>
+                    <a href="mindfulness.html" class="footer-link">The Giving Journey</a>
+                    <a href="#achievements" class="footer-link">Achievements</a>
+                    <a href="#skills" class="footer-link">Skills</a>
+                    <a href="#contact" class="footer-link">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/danglive" target="_blank" class="footer-social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="footer-social-link">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://huggingface.co/dangvantuan" target="_blank" class="footer-social-link">
+                        <i class="fas fa-robot"></i>
+                    </a>
+                </div>
+                <p class="footer-copyright">
+                    &copy; 2025 Van Tuan Dang. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tạo nội dung thanh điều hướng
+            const navHTML = `
+            <nav class="navbar">
+                <div class="container">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <ul class="nav-links">
+                        <li><a href="#about" class="nav-link">About</a></li>
+                        <li><a href="blog.html" class="nav-link">Blog</a></li> 
+                        <li><a href="mindfulness.html" class="nav-link">The Giving Journey</a></li>
+                        <li><a href="#achievements" class="nav-link">Achievements</a></li>
+                        <li><a href="#skills" class="nav-link">Skills</a></li>
+                        <li><a href="#contact" class="nav-link">Contact</a></li>
+                    </ul>
+                    <div class="social-nav">
+                        <a href="https://github.com/danglive" target="_blank" class="social-nav-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/van-tuan-dang-7b0b4444" target="_blank" class="social-nav-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://huggingface.co/dangvantuan" target="_blank" class="social-nav-link">
+                            <i class="fas fa-robot"></i>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            `;
+            
+            document.getElementById('header-container').innerHTML = navHTML;
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Add scroll animation for sections
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.skill-card, .mindfulness-card, .achievement-card').forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
