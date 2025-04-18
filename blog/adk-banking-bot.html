@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+  <!-- MermaidJS -->
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true });
+</script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -137,6 +142,48 @@
 
     <p>In today's fast-paced digital banking landscape, providing exceptional customer service 24/7 has become a competitive necessity rather than a luxury. Traditional chatbots often fall short of customer expectations, lacking the intelligence, security, and reliability needed to handle complex financial inquiries. Enter the ADK Banking Bot, a next-generation intelligent assistant built using Google's new Agent Development Kit (ADK).</p>
 
+    <div class="diagram">
+      <div class="mermaid">
+    flowchart TD
+        A([User Input 🧑‍💻]):::input --> B{{Root Banking Agent 🧠}}:::agent
+    
+        B --> C1{{Check before_model_callback}}:::check
+        C1 -- "Contains dangerous input 🚫" --> C2([Blocked 🔒]):::block
+        C1 -- "Valid Input ✅" --> D{{Intent Detection}}:::intent
+    
+        D -- "Greeting 🙋‍♂️" --> G1([Greeting Agent - say_hello 🤖]):::greet
+        D -- "Farewell 👋" --> G2([Farewell Agent - say_goodbye 🤖]):::farewell
+        D -- "Balance Inquiry 💰" --> F1([Get Balance 🏦]):::tool
+        D -- "Transfer 💸" --> F2([Transfer Money 💳]):::tool
+        D -- "Financial Advice 📊" --> F3([Finance Advisor 🧑‍🏫]):::tool
+    
+        F1 --> T1{{Check before_tool_callback 🔐}}:::check
+        T1 -- "OK ✅" --> X1([Run Get Balance Tool ✅]):::run
+    
+        F2 --> T2{{Check before_tool_callback 🔐}}:::check
+        T2 -- "Not authenticated or Over limit ❌" --> X2([Block ⛔]):::block
+        T2 -- "OK ✅" --> X3([Run Transfer Money ✅]):::run
+    
+        X1 & X3 --> Z1([Update Session State 📝]):::session
+        Z1 --> R1([Agent Responds and Saves Output Key 💬]):::respond
+    
+        G1 & G2 & X2 & R1 --> Z([Final Response to User 📨]):::output
+    
+        classDef input fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+        classDef agent fill:#fff3e0,stroke:#fb8c00,stroke-width:2px
+        classDef check fill:#ede7f6,stroke:#673ab7,stroke-width:2px
+        classDef block fill:#ffebee,stroke:#e53935,stroke-width:2px
+        classDef intent fill:#fffde7,stroke:#fdd835,stroke-width:2px
+        classDef greet fill:#e0f7fa,stroke:#00acc1,stroke-width:2px
+        classDef farewell fill:#f1f8e9,stroke:#7cb342,stroke-width:2px
+        classDef tool fill:#e8f5e9,stroke:#43a047,stroke-width:2px
+        classDef run fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+        classDef session fill:#ede7f6,stroke:#512da8,stroke-width:2px
+        classDef respond fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+        classDef output fill:#fffde7,stroke:#fbc02d,stroke-width:2px
+      </div>
+      <p class="caption">Flowchart-based execution of the ADK Banking Bot</p>
+    </div>
     <p>This article explores how the ADK Banking Bot leverages a multi-agent architecture, robust security guardrails, and comprehensive monitoring to create a banking assistant that customers might actually want to use. We'll dive into the architecture, key features, and the potential business impact of this innovative approach to conversational banking.</p>
 
     <h2>The Promise of Multi-Agent Banking Assistants</h2>
