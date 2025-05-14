@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Assistant for Power Grid Operation</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'forest',
+            securityLevel: 'loose',
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #d0e0f0 100%);
+        }
+        .article-container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        h1 {
+            color: #1a365d;
+            font-size: 2.8em;
+            border-bottom: 4px solid #3182ce;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+        h2 {
+            color: #2c5282;
+            margin-top: 50px;
+            font-size: 2em;
+            border-left: 5px solid #3182ce;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #2b6cb0;
+            margin-top: 30px;
+            font-size: 1.5em;
+        }
+        .title-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            margin: 30px 0;
+            transition: transform 0.3s ease;
+        }
+        .title-image:hover {
+            transform: scale(1.02);
+        }
+        .author-section {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            background: linear-gradient(to right, #ebf4ff, #ffffff);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .author-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 25px;
+            border: 3px solid #3182ce;
+            padding: 3px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .author-info {
+            flex: 1;
+        }
+        .author-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c5282;
+        }
+        .author-bio {
+            font-size: 16px;
+            color: #4a5568;
+            margin: 0;
+        }
+        .article-meta {
+            color: #718096;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .article-meta span {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .article-meta span svg {
+            margin-right: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px 18px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #edf2f7;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        tr:hover {
+            background: #f7fafc;
+        }
+        .kpi-matrix table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 2px solid #3182ce;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .kpi-matrix th {
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            border-bottom: 2px solid #2c5282;
+            padding: 15px 18px;
+        }
+        .kpi-matrix tr:nth-child(even) {
+            background: #ebf8ff;
+        }
+        .kpi-matrix tr:hover {
+            background: #e6f2ff;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        .kpi-matrix td:first-child {
+            font-weight: 600;
+            color: #2c5282;
+        }
+        .kpi-matrix td:nth-child(2) {
+            color: #2d3748;
+        }
+        .kpi-matrix td:nth-child(3) {
+            color: #e53e3e;
+            font-weight: 500;
+        }
+        .kpi-matrix td:last-child {
+            color: #2f855a;
+            font-weight: 500;
+        }
+        .threshold-highlight {
+            background: #fefcbf;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            border-left: 3px solid #ecc94b;
+        }
+        .action-highlight {
+            background: #c6f6d5;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #276749;
+            border-left: 3px solid #48bb78;
+        }
+        .mermaid {
+            margin: 30px 0;
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .highlight-box {
+            background: #ebf8ff;
+            border-left: 5px solid #3182ce;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .critical-challenge {
+            background: #fffaf0;
+            border-left: 5px solid #ed8936;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .philosophy-box {
+            background: #f0fff4;
+            border: 3px solid #68d391;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .quote {
+            font-style: italic;
+            color: #4a5568;
+            padding: 25px;
+            border-left: 5px solid #3182ce;
+            margin: 30px 0;
+            background: #f7fafc;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .commitments {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .commitment-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border-top: 4px solid #3182ce;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .commitment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+        .emoji-icon {
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: #ebf8ff;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .callout {
+            background: #f8f9fa;
+            border-left: 5px solid #3182ce;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .callout-success {
+            background: #f0fff4;
+            border-left: 5px solid #48bb78;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: #718096;
+        }
+        .key-takeaway {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .key-takeaway h3 {
+            color: white;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .key-takeaway p {
+            margin-bottom: 0;
+        }
+        .stats-highlight {
+            font-size: 3em;
+            color: #3182ce;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            line-height: 1;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .stat-title {
+            color: #718096;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .reference-list {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .reference-list ol {
+            padding-left: 20px;
+        }
+        .reference-list li {
+            margin-bottom: 15px;
+        }
+        .reference-list a {
+            color: #3182ce;
+            text-decoration: none;
+        }
+        .reference-list a:hover {
+            text-decoration: underline;
+        }
+        .timeline-container {
+            margin: 30px 0;
+        }
+        .indented-text {
+            padding-left: 25px;
+            border-left: 3px solid #e2e8f0;
+            margin: 15px 0;
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #3182ce, #4299e1, #63b3ed, #90cdf4);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .animated-gradient h3 {
+            color: white;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .animated-gradient p {
+            margin-bottom: 0;
+        }
+        .sticky-progress {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            height: 4px;
+            background: #e2e8f0;
+            width: 100%;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-indicator {
+            height: 100%;
+            background: linear-gradient(90deg, #3182ce, #63b3ed);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        /* Custom list styling */
+        .custom-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .custom-list li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .custom-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #3182ce;
+            font-weight: bold;
+        }
+        /* New table for key findings */
+        .findings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .findings-table th {
+            background: #2c5282;
+            color: white;
+            padding: 15px 20px;
+            text-align: left;
+        }
+        .findings-table tr:nth-child(odd) {
+            background: #f8fafc;
+        }
+        .findings-table tr:nth-child(even) {
+            background: white;
+        }
+        .findings-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .findings-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 20px;
+            }
+            .commitments, .stats-container {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            .author-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-img {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Added smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* New visual elements */
+        .stat-highlight {
+            display: inline-block;
+            background: #4299e1;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 0 3px;
+        }
+        
+        /* Pull quote styling */
+        .pull-quote {
+            float: right;
+            width: 300px;
+            background: #ebf8ff;
+            padding: 20px;
+            margin: 0 0 20px 20px;
+            border-radius: 12px;
+            font-style: italic;
+            color: #2c5282;
+            font-size: 1.2em;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .pull-quote:before {
+            content: '"';
+            font-size: 4em;
+            position: absolute;
+            left: 10px;
+            top: -10px;
+            color: #bee3f8;
+        }
+        
+        /* Fixing mobile view for pull quotes */
+        @media (max-width: 768px) {
+            .pull-quote {
+                float: none;
+                width: auto;
+                margin: 20px 0;
+            }
+        }
+        
+        /* Reading progress tracker */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: transparent;
+            z-index: 1000;
+        }
+        .reading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3182ce, #4299e1);
+            width: 0;
+        }
+        
+        /* Table of contents styling */
+        .table-of-contents {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .table-of-contents h3 {
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .table-of-contents ol {
+            counter-reset: item;
+            padding-left: 10px;
+        }
+        .table-of-contents li {
+            display: block;
+            margin-bottom: 10px;
+            list-style-type: none;
+        }
+        .table-of-contents li:before {
+            content: counters(item, ".") ". ";
+            counter-increment: item;
+            color: #3182ce;
+            font-weight: bold;
+        }
+        .table-of-contents a {
+            color: #4a5568;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .table-of-contents a:hover {
+            color: #3182ce;
+        }
+    </style>
+    <!-- Reading progress tracking script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.querySelector('.reading-progress-bar');
+            
+            window.addEventListener('scroll', function() {
+                const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrollPercentage = (scrollTop / scrollHeight) * 100;
+                
+                progressBar.style.width = scrollPercentage + '%';
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Reading progress indicator -->
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+    
+    <div class="article-container">
+        <h1>AI-Assistant for Power Grid Operation</h1>
+        
+        <div class="author-section">
+            <img src="https://raw.githubusercontent.com/danglive/adk-banking-bot/main/logo/logo.png" alt="Author" class="author-img">
+            <div class="author-info">
+                <p class="author-name">Van Tuan Dang</p>
+                <p class="author-bio">AI/ML Scientist & Data Solution Architect</p>
+                <div class="article-meta">
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        November 30, 2025
+                    </span>
+                    <span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        30 min read
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-takeaway">
+            <h3>Multi-Agent System Improved from L2RPN2023 Challenge Victory</h3>
+            <p>This article presents two main contributions: (1) A modular multi-agent system design for power grid management, and (2) Application of imitation learning to predict top-k actions from a knowledge base, improving decision-making speed and supporting real-time grid operations.</p>
+        </div>
+        
+        <div class="table-of-contents">
+            <h3>What You'll Learn</h3>
+            <ol>
+                <li><a href="#section_1">The Power Grid Management Challenge</a></li>
+                <li><a href="#section_2">System Architecture Overview</a></li>
+                <li><a href="#section_3">Key Components and Their Functions</a></li>
+                <li><a href="#section_4">Machine Learning for Grid Optimization</a></li>
+                <li><a href="#section_5">Decision Making Process</a></li>
+                <li><a href="#section_6">Performance Evaluation on L2RPN2023 Dataset</a></li>
+            </ol>
+        </div>
+
+        <img src="https://raw.githubusercontent.com/danglive/danglive.github.io/refs/heads/main/images/blog/PowerGrid.png" alt="Power Grid Operations" class="title-image">
+
+        <h2 id="section_1">The Power Grid Management Challenge</h2>
+        
+        <p>Modern power grids face unprecedented challenges: increasing renewable energy integration, volatile demand patterns, and the constant risk of equipment failures. Grid operators must make rapid decisions to prevent cascading failures while optimizing for efficiency, stability, and cost.</p>
+        
+        <div class="pull-quote">
+            The most critical challenge in power grid management is responding to unexpected events within seconds to prevent cascading blackouts.
+        </div>
+        
+        <p>Traditional approaches often fall short in handling the complexity and speed required for modern grid management. Manual decision-making processes can't keep up with the millisecond-level response times needed to prevent cascading failures, especially in large interconnected networks with hundreds of components.</p>
+
+        <div class="critical-challenge">
+            <h3>Critical Challenges in Power Grid Management</h3>
+            <ul class="custom-list">
+                <li><strong>N-1 Security:</strong> The grid must remain stable even if any single element fails.</li>
+                <li><strong>Overload Prevention:</strong> Power lines have thermal limits that must not be exceeded.</li>
+                <li><strong>Topology Optimization:</strong> Finding the optimal grid configuration among billions of possibilities.</li>
+                <li><strong>Real-Time Decision Making:</strong> Decisions must be made within seconds during critical events.</li>
+                <li><strong>Renewable Integration:</strong> Dealing with variability and uncertainty of renewable energy sources.</li>
+            </ul>
+        </div>
+        
+        <p>These challenges are the driving force behind the L2RPN (Learning to Run a Power Network) competitions, including the 2023 Paris Region AI Challenge for Energy Transition, which evaluates AI-based approaches to grid management under realistic conditions.</p>
+
+        <h2 id="section_2">System Architecture Overview</h2>
+        
+        <p>The AI-Assistant for Power Grid Operation employs a multi-agent architecture where specialized components work together to handle different aspects of grid management. Each agent is designed to excel at a specific task, creating a comprehensive system capable of addressing the diverse challenges of power grid operation.</p>
+
+        <div class="mermaid">
+        classDiagram
+            class PowerGridAgent {
+                +env: BaseEnv
+                +do_nothing: BaseAction
+                +config: dict
+                +rho_danger: float
+                +rho_safe: float
+                +action_space_n1: List[BaseAction]
+                +action_space_overload: List[BaseAction]
+                +imitation_N1: Imitation
+                +imitation_Overload: Imitation
+                +act(observation, reward, done)
+                -_load_mapping_dict()
+                -_load_topo_actions()
+                -_load_topk_actions()
+                -_handle_safe_rho()
+                -_reset_dispatcher()
+            }
+            
+            class AgentTopology {
+                +env: BaseEnv
+                +do_nothing: BaseAction
+                +config: dict
+                +line_to_sub_id: dict
+                +areas_by_sub_id: dict
+                +strategies: dict
+                +get_topology_action()
+                +recover_reference_topology()
+                +change_substation_topology()
+                +revert_topo()
+                +act()
+            }
+            
+            class AgentReconnection {
+                +env: BaseEnv
+                +action_space: ActionSpace
+                +lines_in_area: List[List[int]]
+                +area: bool
+                +time_step: int
+                +verbose: int
+                +recon_line_area()
+                +reco_line()
+                +combine_actions()
+                +act()
+            }
+            
+            class AgentRecoverTopo {
+                +env: BaseEnv
+                +find_best_line_to_reconnect()
+                +is_legal()
+                +check_convergence()
+                +revert_topo()
+                +act()
+                +get_from_dict_set_bus()
+                +extract_action_set_from_actions()
+            }
+            
+            class DispatcherAgent {
+                +env: BaseEnv
+                +do_nothing: BaseAction
+                +config: dict
+                +time_step: int
+                +verbose: int
+                +compute_optimum_unsafe()
+                +compute_optimum_safe()
+                +to_grid2op()
+                +run_dc()
+                +reset()
+                +act()
+            }
+            
+            class Imitation {
+                +config: dict
+                +mapping_dict: dict
+                +inverse_mapping_dict: dict
+                +n_class: int
+                +device: torch.device
+                +model: torch.nn.Module
+                +predict_actions()
+                +predict_actions_id()
+                +predict_from_obs()
+                +calculate_topk_accuracy()
+                +evaluate_dataset()
+            }
+            
+            class GraphTransformerModel {
+                +device: torch.device
+                +encoder: GraphTransformer
+                +node_feature_encoder: nn.Linear
+                +edge_feature_encoder: nn.Linear
+                +pred_heads: nn.ModuleList
+                +encode_features()
+                +forward()
+            }
+            
+            class PowerGridModel {
+                +gat1: TransformerConv
+                +gat2: TransformerConv
+                +gat3: TransformerConv
+                +fc: nn.Linear
+                +relu: nn.ReLU
+                +dropout: nn.Dropout
+                +forward()
+            }
+            
+            class EncodedTopologyAction {
+                +data: str
+                +to_action()
+                +encode_action()
+                +decode_action()
+            }
+            
+            PowerGridAgent --> AgentTopology : uses
+            PowerGridAgent --> AgentReconnection : uses
+            PowerGridAgent --> AgentRecoverTopo : uses
+            PowerGridAgent --> DispatcherAgent : uses
+            PowerGridAgent --> Imitation : uses (N-1)
+            PowerGridAgent --> Imitation : uses (Overload)
+            PowerGridAgent --> EncodedTopologyAction : uses
+            Imitation --> GraphTransformerModel : uses for N-1
+            Imitation --> PowerGridModel : uses for Overload
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <p class="stat-title">Decision Time</p>
+                <p class="stats-highlight">0.055s</p>
+                <p>95th percentile response time</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-title">Components</p>
+                <p class="stats-highlight">6+</p>
+                <p>Specialized agents</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-title">Success Rate</p>
+                <p class="stats-highlight">150/208</p>
+                <p>Scenarios with Sequential approach</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-title">Simulations</p>
+                <p class="stats-highlight">~69</p>
+                <p>Average per decision step</p>
+            </div>
+        </div>
+
+        <p>The system's architecture follows a hierarchical decision-making approach where the main PowerGridAgent orchestrates the actions of specialized sub-agents. This modular design allows each component to focus on its specific expertise while the main agent handles the integration of their outputs.</p>
+
+        <div class="mermaid">
+        flowchart TD
+            subgraph Input
+                obs[Grid Observation] --> grid_state{Grid State}
+            end
+            
+            subgraph PowerGridAgent
+                grid_state -->|rho > danger| danger[Overload State]
+                grid_state -->|rho < safe| safe[Safe State]
+                grid_state -->|safe < rho < danger| normal[Normal State]
+                
+                danger --> imit{Imitation Learning?}
+                imit -->|Yes| topk[Predict Top-k Actions]
+                imit -->|No| fullspace[Use Full Action Space]
+                
+                topk --> topology[AgentTopology]
+                fullspace --> topology
+                
+                topology --> topo_result{Action Found?}
+                topo_result -->|Yes| apply_topo[Apply Topology Action]
+                topo_result -->|No| dispatch{Dispatching?}
+                
+                dispatch -->|Yes| dispatcher[DispatcherAgent]
+                dispatch -->|No| do_nothing1[Do Nothing]
+                
+                safe --> recover[AgentRecoverTopo]
+                normal --> do_nothing2[Do Nothing]
+            end
+            
+            subgraph Actions
+                apply_topo --> final_action[Final Action]
+                dispatcher --> final_action
+                recover --> final_action
+                do_nothing1 --> final_action
+                do_nothing2 --> final_action
+            end
+            
+            subgraph Reconnection
+                recon[AgentReconnection] --> final_action
+            end
+            
+            obs --> recon
+        </div>
+
+        <h2 id="section_3">Key Components and Their Functions</h2>
+        
+        <p>The AI-Assistant for Power Grid Operation consists of several specialized components, each handling a specific aspect of grid management. Understanding these components is crucial to appreciating how the system tackles the complex challenges of power grid operation.</p>
+
+        <h3>PowerGridAgent (Main Controller)</h3>
+        
+        <p>The PowerGridAgent acts as the central orchestrator, coordinating all other components and making final decisions. It evaluates the grid state based on key indicators such as maximum load ratio (rho) and calls the appropriate specialized agents based on current conditions.</p>
+        
+        <div class="highlight-box">
+            <h3>Key Responsibilities:</h3>
+            <ul class="custom-list">
+                <li>Evaluating grid state using rho values (load ratios)</li>
+                <li>Managing action spaces for N-1 (contingency) and overload scenarios</li>
+                <li>Coordinating specialized agents based on grid conditions</li>
+                <li>Making final decisions on which actions to take</li>
+                <li>Handling reconnection of disconnected lines</li>
+            </ul>
+        </div>
+        
+        <p>The main agent uses two key thresholds to determine grid state:</p>
+        <ul>
+            <li><span class="threshold-highlight">rho_danger (typically 0.99)</span>: When exceeded, the grid is in an overload state requiring immediate intervention</li>
+            <li><span class="threshold-highlight">rho_safe (typically 0.9)</span>: When below this value, the grid is considered safe enough to revert to original topology</li>
+        </ul>
+
+        <h3>AgentTopology</h3>
+        
+        <p>The AgentTopology specializes in finding the optimal grid topology configurations to alleviate overloads. It can search through possible substation configurations to find actions that reduce line loads below critical thresholds.</p>
+        
+        <div class="callout">
+            <p>Changing grid topology (the configuration of how substations connect components) is one of the most effective ways to manage power flows without requiring expensive redispatching of generation. However, the search space is enormous, with billions of possible configurations.</p>
+        </div>
+        
+        <p>The AgentTopology implements three different strategies for handling zones within the grid:</p>
+        <ol>
+            <li><strong>SingleAgentStrategy</strong>: Treats the entire grid as a single zone</li>
+            <li><strong>MultiAgentIndependentStrategy</strong>: Each zone acts independently</li>
+            <li><strong>MultiAgentDependentStrategy</strong>: Zones coordinate actions based on priority</li>
+        </ol>
+
+        <h3>AgentReconnection</h3>
+        
+        <p>When power lines get disconnected due to failures or protective actions, the AgentReconnection is responsible for safely bringing them back online. This component ensures that reconnections don't create new overloads in the process.</p>
+        
+        <p>It supports two modes of operation:</p>
+        <ul>
+            <li><strong>Area-based reconnection</strong>: Considers lines within specific geographical areas</li>
+            <li><strong>Global reconnection</strong>: Evaluates all disconnected lines without area constraints</li>
+        </ul>
+        
+        <div class="callout-success">
+            <p>For each potential line reconnection, the agent simulates the resulting grid state and selects the option that minimizes the maximum line load ratio (rho). This ensures that reconnections improve grid resilience without creating new problems.</p>
+        </div>
+
+        <h3>AgentRecoverTopo</h3>
+        
+        <p>The AgentRecoverTopo focuses on returning the grid to its original configuration when conditions allow. Operating in non-standard topologies for extended periods can increase maintenance needs and operational complexity.</p>
+        
+        <p>This agent:</p>
+        <ul class="custom-list">
+            <li>Identifies when grid conditions are safe enough to revert to normal topology</li>
+            <li>Assesses which substations can be safely reconfigured</li>
+            <li>Checks for the legality of actions (considering equipment cooldown periods)</li>
+            <li>Validates that reverting won't cause new overloads</li>
+        </ul>
+
+        <h3>DispatcherAgent</h3>
+        
+        <p>When topology changes alone cannot resolve overloads, the DispatcherAgent steps in to optimize power generation, energy storage usage, and renewable energy curtailment through convex optimization techniques.</p>
+        
+        <div class="findings-table">
+            <table>
+                <tr>
+                    <th>Dispatcher Functions</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>Redispatching</td>
+                    <td>Adjusting conventional generator outputs to alleviate line overloads</td>
+                </tr>
+                <tr>
+                    <td>Storage Control</td>
+                    <td>Managing charge/discharge of energy storage systems to balance grid loads</td>
+                </tr>
+                <tr>
+                    <td>Curtailment</td>
+                    <td>Reducing renewable energy production when necessary to maintain grid stability</td>
+                </tr>
+                <tr>
+                    <td>DC Power Flow Optimization</td>
+                    <td>Using convex optimization (CVXPY) to calculate optimal power flows</td>
+                </tr>
+            </table>
+        </div>
+        
+        <p>The DispatcherAgent uses a sophisticated mathematical model to minimize a cost function that considers:</p>
+        <ul>
+            <li>Line thermal limits</li>
+            <li>Generator capabilities and constraints</li>
+            <li>Energy storage limits and state of charge</li>
+            <li>Penalty factors for different interventions (with curtailment being most expensive)</li>
+        </ul>
+
+        <h3>Machine Learning for Grid Optimization</h3>
+        
+        <div class="animated-gradient">
+            <h3>Imitation Learning: Rapid Top-k Action Recommendation</h3>
+            <p>One of the main contributions of this research is using imitation learning to quickly predict potential actions from an existing knowledge base, significantly reducing the search space and decision-making time.</p>
+        </div>
+        
+        <p>The system employs two specialized imitation learning models:</p>
+        
+        <h3>GraphTransformerModel for N-1 Scenarios</h3>
+        
+        <p>The GraphTransformerModel is specifically designed to handle N-1 contingency scenarios (where a single component has failed). It uses a graph-based transformer architecture that naturally captures the topology of the power grid.</p>
+        
+        <div class="indented-text">
+            <p>As implemented in the codebase, the GraphTransformerModel processes the power grid as follows:</p>
+            <ul>
+                <li>Node features (dimension: 8) include voltage, power generation/consumption data</li>
+                <li>Edge features (dimension: 26) include impedance, thermal limits, and current flow</li>
+                <li>The model uses a transformer architecture with self-attention mechanisms (with configurable depth=3)</li>
+                <li>Feature encoding is performed through dedicated linear layers for both nodes and edges</li>
+            </ul>
+        </div>
+        
+        <p>The model processes grid observations through:</p>
+        <ol>
+            <li>The <code>encode_features()</code> method transforms raw node and edge features into high-dimensional representations</li>
+            <li>These features are passed to the GraphTransformer encoder which applies multiple transformer layers</li>
+            <li>The resulting node embeddings are pooled using scatter_mean to produce a graph-level representation</li>
+            <li>Finally, prediction heads estimate the likelihood of different actions being optimal</li>
+        </ol>
+
+        <h3>PowerGridModel for Overload Scenarios</h3>
+        
+        <p>For overload situations, the system uses a specialized PowerGridModel that employs a multi-layer GNN architecture with TransformerConv layers. As implemented in the code, this model features:</p>
+        
+        <ul>
+            <li>Three TransformerConv layers with hidden units=256 and num_heads=8</li>
+            <li>ReLU activation functions and dropout (p=0.5) for regularization</li>
+            <li>Global mean pooling to aggregate node features into a graph representation</li>
+            <li>A final fully-connected layer for classification</li>
+        </ul>
+        
+        <p>This architecture has proven particularly effective at identifying actions that can quickly reduce overloads in critical situations, as evidenced by the performance metrics in the evaluation section.</p>
+        
+        <div class="critical-challenge">
+            <h3>Machine Learning Challenges in Power Grids</h3>
+            <p>Applying machine learning to power grids presents unique challenges:</p>
+            <ul>
+                <li>Power grids are highly complex dynamic systems with strict physical constraints</li>
+                <li>The action space is enormous, with many invalid or unsafe actions</li>
+                <li>Rare but critical events (blackouts) must be handled correctly despite limited training examples</li>
+                <li>Decisions must be interpretable for operator trust and regulatory compliance</li>
+            </ul>
+        </div>
+        
+        <p>The imitation learning approach addresses these challenges by:</p>
+        <ul class="custom-list">
+            <li>Learning from expert demonstrations rather than exploring randomly</li>
+            <li>Predicting only the most promising actions (top-k) to be evaluated further</li>
+            <li>Combining machine learning predictions with physics-based simulations</li>
+            <li>Maintaining human oversight and intervention capabilities</li>
+        </ul>
+
+        <div class="philosophy-box">
+            <h3>Key Innovation: Combining Machine Learning with Physics-Based Models</h3>
+            <p>The system's strength comes from combining the speed of machine learning predictions with the accuracy of physics-based simulations. The ML models quickly narrow down the search space, while the simulation-based evaluation ensures safety and optimality.</p>
+        </div>
+
+        <h2 id="section_5">Decision Making Process</h2>
+        
+        <p>The AI-Assistant follows a sophisticated decision-making process that adapts to different grid conditions. Understanding this process reveals how the system integrates its various components to maintain grid stability.</p>
+
+        <div class="mermaid">
+        sequenceDiagram
+            actor Environment
+            participant PowerGridAgent
+            participant AgentReconnection
+            participant Imitation
+            participant AgentTopology
+            participant DispatcherAgent
+            participant AgentRecoverTopo
+            
+            Environment->>PowerGridAgent: observation
+            
+            alt current_step == 0
+                PowerGridAgent->>PowerGridAgent: _reset_dispatcher()
+            end
+            
+            PowerGridAgent->>PowerGridAgent: _update_prev_por_error()
+            PowerGridAgent->>PowerGridAgent: action = action_space()
+            PowerGridAgent->>PowerGridAgent: _simulate_initial_action()
+            
+            PowerGridAgent->>AgentReconnection: act(observation, action)
+            AgentReconnection->>AgentReconnection: recon_line_area() or reco_line()
+            AgentReconnection-->>PowerGridAgent: updated action
+            
+            PowerGridAgent->>PowerGridAgent: Calculate max_rho
+            
+            alt max_rho > rho_danger
+                alt imitation is enabled
+                    PowerGridAgent->>Imitation: _load_topk_actions(observation, topk)
+                    Imitation->>Imitation: predict_from_obs()
+                    Imitation-->>PowerGridAgent: action_space_n1, action_space_overload
+                end
+                
+                PowerGridAgent->>AgentTopology: get_topology_action(observation, action, action_space_n1, action_space_overload)
+                AgentTopology->>AgentTopology: recover_reference_topology()
+                AgentTopology->>AgentTopology: change_substation_topology()
+                AgentTopology-->>PowerGridAgent: topo_action, topo_obs, etc.
+                
+                alt topo_action found
+                    PowerGridAgent->>PowerGridAgent: action += topo_action
+                else no topo_action and dispatching enabled
+                    PowerGridAgent->>DispatcherAgent: _update_storage_power_obs()
+                    PowerGridAgent->>DispatcherAgent: update_parameters()
+                    PowerGridAgent->>DispatcherAgent: act(observation, action)
+                    DispatcherAgent->>DispatcherAgent: compute_optimum_unsafe()
+                    DispatcherAgent->>DispatcherAgent: to_grid2op()
+                    DispatcherAgent-->>PowerGridAgent: updated action
+                end
+                
+            else max_rho < rho_safe
+                PowerGridAgent->>AgentRecoverTopo: act(observation)
+                AgentRecoverTopo->>AgentRecoverTopo: revert_topo()
+                AgentRecoverTopo-->>PowerGridAgent: action to recover topology
+                
+            else normal state
+                PowerGridAgent->>PowerGridAgent: action += do_nothing
+            end
+            
+            PowerGridAgent-->>Environment: final action
+        </div>
+        
+        <p>The decision process follows these key steps:</p>
+
+        <h3>1. Initial Assessment</h3>
+        
+        <p>When the system receives a new observation from the environment:</p>
+        <ul>
+            <li>The dispatcher is reset on the first step</li>
+            <li>Previous error values for redispatch decisions are updated</li>
+            <li>An initial "do nothing" action is created and simulated</li>
+        </ul>
+
+        <h3>2. Line Reconnection Check</h3>
+        
+        <p>Before addressing other issues, the system checks for disconnected lines that can be safely reconnected:</p>
+        <ul>
+            <li>The AgentReconnection evaluates all disconnected lines</li>
+            <li>It simulates reconnecting each line to assess the impact</li>
+            <li>If safe reconnections are found, they are added to the action</li>
+        </ul>
+
+        <h3>3. Grid State Evaluation</h3>
+        
+        <p>The system evaluates the maximum line load ratio (rho) to determine the grid state:</p>
+        <ul>
+            <li><span class="action-highlight">Overload State (rho > rho_danger)</span>: Requires immediate intervention</li>
+            <li><span class="action-highlight">Safe State (rho < rho_safe)</span>: Allows recovery of original topology</li>
+            <li><span class="action-highlight">Normal State (rho_safe ≤ rho ≤ rho_danger)</span>: Maintained with minimal intervention</li>
+        </ul>
+
+        <h3>4. Action Selection Based on Grid State</h3>
+        
+        <div class="kpi-matrix">
+            <table>
+                <tr>
+                    <th>Grid State</th>
+                    <th>First Response</th>
+                    <th>Fallback Strategy</th>
+                    <th>Expected Outcome</th>
+                </tr>
+                <tr>
+                    <td>Overload</td>
+                    <td>Find optimal topology action</td>
+                    <td>Apply dispatching if no topology solution</td>
+                    <td>Reduce max_rho below danger threshold</td>
+                </tr>
+                <tr>
+                    <td>Safe</td>
+                    <td>Recover original topology</td>
+                    <td>Maintain current state if recovery unsafe</td>
+                    <td>Return to standard operations when possible</td>
+                </tr>
+                <tr>
+                    <td>Normal</td>
+                    <td>Do nothing</td>
+                    <td>Monitor for changes</td>
+                    <td>Maintain stable operation</td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>5. Overload Handling Process</h3>
+        
+        <p>In overload situations, the system follows a sophisticated approach:</p>
+        <ol>
+            <li>If imitation learning is enabled, the system uses machine learning models to predict the most promising actions.</li>
+            <li>The AgentTopology evaluates these actions to find the best topology change.</li>
+            <li>If a suitable topology action is found, it is applied.</li>
+            <li>If no topology solution is found and dispatching is enabled, the DispatcherAgent calculates optimal redispatching, storage, and curtailment actions.</li>
+        </ol>
+
+        <div class="quote">
+            "The strength of our approach lies in its adaptive nature. By combining multiple specialized agents with machine learning, we can rapidly respond to changing grid conditions while maintaining stability and efficiency."
+        </div>
+
+        <h2 id="section_6">Performance Evaluation on L2RPN2023 Dataset</h2>
+        
+        <p>The AI-Assistant for Power Grid Operation has been evaluated using the dataset from the L2RPN2023 "The Paris Region AI Challenge for Energy Transition." This evaluation provides concrete performance metrics for different configurations of the system.</p>
+
+        <h3>Multi-Agent Strategy Comparison</h3>
+        
+        <p>For our evaluation, we used the L2RPN 2023 dataset consisting of 208 scenarios, with each scenario representing one week of grid operation and each step corresponding to 5 minutes of operational time. The Imitation Learning model was configured to predict the top-20 actions for each situation (N0 overload and N-1 attacked line scenarios). The results below compare three different coordination strategies:</p>
+        
+        <div class="kpi-matrix">
+            <table>
+                <tr>
+                    <th>Performance Metric</th>
+                    <th>Multi-Agent Independent</th>
+                    <th>Multi-Agent Sequential</th>
+                    <th>Single-Agent</th>
+                </tr>
+                <tr>
+                    <td>Overall Score</td>
+                    <td>57.65</td>
+                    <td>61.33</td>
+                    <td>60.80</td>
+                </tr>
+                <tr>
+                    <td>Operational Score</td>
+                    <td>58.93</td>
+                    <td>61.50</td>
+                    <td>61.29</td>
+                </tr>
+                <tr>
+                    <td>NRES Score</td>
+                    <td>90.14</td>
+                    <td>88.56</td>
+                    <td>88.65</td>
+                </tr>
+                <tr>
+                    <td>Assistant Score</td>
+                    <td>35.07</td>
+                    <td>44.61</td>
+                    <td>42.94</td>
+                </tr>
+                <tr>
+                    <td>Evaluation Duration</td>
+                    <td>14,986 seconds</td>
+                    <td>17,219 seconds</td>
+                    <td>17,349 seconds</td>
+                </tr>
+                <tr>
+                    <td>Maximum Decision Time</td>
+                    <td>6.72s</td>
+                    <td>6.99s</td>
+                    <td>7.23s</td>
+                </tr>
+                <tr>
+                    <td>99th Percentile Decision Time</td>
+                    <td>1.38s</td>
+                    <td>1.76s</td>
+                    <td>1.78s</td>
+                </tr>
+                <tr>
+                    <td>95th Percentile Decision Time</td>
+                    <td>0.057s</td>
+                    <td>0.055s</td>
+                    <td>0.055s</td>
+                </tr>
+                <tr>
+                    <td>Average Simulations Per Step</td>
+                    <td>58.32</td>
+                    <td>69.69</td>
+                    <td>68.84</td>
+                </tr>
+                <tr>
+                    <td>Successful Scenarios</td>
+                    <td>135</td>
+                    <td>150</td>
+                    <td>149</td>
+                </tr>
+                <tr>
+                    <td>Mean Steps Completed</td>
+                    <td>1,627.62</td>
+                    <td>1,685.17</td>
+                    <td>1,680.62</td>
+                </tr>
+            </table>
+        </div>
+        
+        <h3>Strategic Value and Implementation Roadmap</h3>
+        
+        <p>From a product strategy perspective, the AI-Assistant for Power Grid Operation represents not just a technical solution but a transformational approach to grid management that offers significant business value:</p>
+        
+        <div class="commitment-card">
+            <h3>Business Impact Assessment</h3>
+            <p>The implementation of this system could deliver value across multiple dimensions:</p>
+            <ul class="custom-list">
+                <li><strong>Operational Efficiency:</strong> Reduced need for manual analysis of complex grid scenarios</li>
+                <li><strong>Risk Mitigation:</strong> Lower probability of cascading failures through improved N-1 analysis</li>
+                <li><strong>Renewable Integration:</strong> Enhanced ability to accommodate variable generation sources</li>
+                <li><strong>Resource Optimization:</strong> More efficient use of generation, storage, and transmission assets</li>
+                <li><strong>Knowledge Preservation:</strong> Capture of expert knowledge in the imitation learning models</li>
+            </ul>
+        </div>
+        
+        <div class="animated-gradient">
+            <h3>Implementation Pathway</h3>
+            <p>A phased approach to implementation would maximize value while managing risk:</p>
+            
+            <ol>
+                <li><strong>Phase 1: Shadow Mode Deployment</strong> - Deploy the system as an advisory tool that runs alongside existing operations but has no direct control authority, allowing for performance validation in real conditions.</li>
+                <li><strong>Phase 2: Limited-Scope Integration</strong> - Integrate the recommendation engine with existing SCADA/EMS systems for specific use cases (e.g., day-ahead planning).</li>
+                <li><strong>Phase 3: Expanded Functionality</strong> - Extend to additional use cases, including real-time contingency analysis and post-disturbance recovery.</li>
+                <li><strong>Phase 4: Continuous Learning</strong> - Implement mechanisms for the system to learn from operator decisions and outcomes over time.</li>
+            </ol>
+        </div>
+        
+        <div class="critical-challenge">
+            <h3>Success Factors and Organizational Considerations</h3>
+            <p>Technical excellence alone will not ensure successful adoption. Key non-technical factors include:</p>
+            <ul class="custom-list">
+                <li><strong>Change Management:</strong> Structured approach to operator training and workflow integration</li>
+                <li><strong>Cross-Functional Collaboration:</strong> Partnership between IT, OT, and operational teams</li>
+                <li><strong>Regulatory Compliance:</strong> Ensuring alignment with grid codes and reliability standards</li>
+                <li><strong>Metrics and Evaluation:</strong> Clear KPIs for measuring system impact and value</li>
+                <li><strong>Feedback Mechanisms:</strong> Processes for continuous improvement based on operational experience</li>
+            </ul>
+        </div>
+        
+        <p>By addressing both the technical and organizational dimensions of implementation, utilities can maximize the value of AI-assisted grid management while managing the risks inherent in adopting new operational technology.</p>
+
+        <h3>Practical Implementation Considerations</h3>
+        
+        <p>When transitioning from the L2RPN competition environment to real-world power grid operations, several important distinctions must be considered:</p>
+        
+        <div class="findings-table">
+            <table>
+                <tr>
+                    <th>L2RPN Challenge Environment</th>
+                    <th>Real-world Grid Operation Application</th>
+                </tr>
+                <tr>
+                    <td>Fully autonomous system operation</td>
+                    <td>Human-in-the-loop decision support system</td>
+                </tr>
+                <tr>
+                    <td>Evaluation based on predefined metrics</td>
+                    <td>Operator selection from recommended actions</td>
+                </tr>
+                <tr>
+                    <td>Complete system optimization</td>
+                    <td>Focus on prediction and simulation</td>
+                </tr>
+                <tr>
+                    <td>Simplified contingency handling</td>
+                    <td>Complex N-1 analysis and day-ahead planning</td>
+                </tr>
+            </table>
+        </div>
+        
+        <p>In a practical implementation, the system would likely be deployed as a decision support tool rather than a fully autonomous controller. Based on the architecture described in this paper, such a tool could:</p>
+        
+        <ul class="custom-list">
+            <li><strong>Provide action recommendations:</strong> Use the Imitation Learning models to identify promising actions based on current grid conditions</li>
+            <li><strong>Present simulation results:</strong> Use Grid2Op to simulate the outcomes of recommended actions</li>
+            <li><strong>Support operator workflows:</strong> Integrate with existing SCADA and EMS systems</li>
+            <li><strong>Enable contingency analysis:</strong> Assist with N-1 security assessments</li>
+            <li><strong>Facilitate day-ahead planning:</strong> Support operators in planning future grid configurations</li>
+        </ul>
+        
+        <div class="callout-success">
+            <p>The primary advantage of this approach would be reducing the cognitive load on operators during complex grid events, while still ensuring human oversight of critical decisions. Integration with existing systems would need to be carefully designed to ensure seamless operation.</p>
+        </div>
+
+        <div class="key-takeaway">
+            <h3>Conclusion</h3>
+            <p>This research has successfully developed a modular multi-agent system for power grid management, combined with imitation learning to support rapid decision-making. Performance evaluation on the L2RPN 2023 dataset demonstrates the effectiveness of this approach, particularly the Multi-Agent Sequential coordination strategy.</p>
+            <p>The key contributions of this work are twofold: (1) A flexible, modular agent architecture that separates concerns between topology management, reconnection, recovery, and dispatching; and (2) An effective application of imitation learning that significantly speeds up the action selection process while maintaining high-quality outcomes.</p>
+            <p>For practical applications, these techniques can be integrated into operator decision support tools, providing recommended actions with detailed simulation results to assist with both daily operations and contingency management.</p>
+        </div>
+        
+
+        <h3>Future Research Directions</h3>
+        
+        <p>Despite its impressive capabilities, there are several promising directions for further development:</p>
+        
+        <div class="commitments">
+            <div class="commitment-card">
+                <div class="emoji-icon">🧠</div>
+                <h3>Reinforcement Learning Integration</h3>
+                <p>Extending the system with reinforcement learning capabilities to optimize for long-term objectives rather than just immediate response.</p>
+            </div>
+            <div class="commitment-card">
+                <div class="emoji-icon">🌐</div>
+                <h3>Multi-Area Coordination</h3>
+                <p>Enhancing coordination between neighboring grid areas to optimize power flows across regional boundaries.</p>
+            </div>
+            <div class="commitment-card">
+                <div class="emoji-icon">🔍</div>
+                <h3>Explainable AI Techniques</h3>
+                <p>Developing better explanations for system decisions to build operator trust and support regulatory compliance.</p>
+            </div>
+        </div>
+
+        <h3>Practical Implementation Considerations</h3>
+        
+        <p>Implementing the AI-Assistant in real-world environments requires addressing several practical considerations:</p>
+        
+        <ul class="custom-list">
+            <li><strong>Integration with SCADA Systems:</strong> Ensuring seamless communication with existing grid monitoring and control infrastructure</li>
+            <li><strong>Operator Training:</strong> Developing training programs for grid operators to effectively work with AI-assisted decision support</li>
+            <li><strong>Regulatory Compliance:</strong> Ensuring the system meets relevant regulatory requirements for grid operations</li>
+            <li><strong>Fallback Mechanisms:</strong> Implementing robust fallback strategies in case of system failures</li>
+        </ul>
+
+        <div class="key-takeaway">
+            <h3>Conclusion</h3>
+            <p>The AI-Assistant for Power Grid Operation represents a significant advancement in applying AI to critical infrastructure management. By combining specialized agents, machine learning, and physics-based simulations, it achieves a balance of speed, adaptability, and reliability that is essential for modern power grid operations.</p>
+            <p>As power systems continue to evolve with increasing renewable penetration and distributed resources, such intelligent management systems will become indispensable for maintaining grid stability while maximizing efficiency and sustainability.</p>
+        </div>
+        
+        <div class="reference-list">
+            <h3>References</h3>
+            <ol>
+                <li>Marot, A., et al. (2021). "Learning to Run a Power Network Challenge." <a href="https://arxiv.org/abs/2103.03104">arXiv:2103.03104</a></li>
+                <li>L2RPN (Learning to Run a Power Network) Competition. <a href="https://l2rpn.chalearn.org/">https://l2rpn.chalearn.org/</a></li>
+                <li>Grid2Op Framework Documentation. <a href="https://grid2op.readthedocs.io/">https://grid2op.readthedocs.io/</a></li>
+                <li>Donnot, B., et al. (2019). "Introducing machine learning for power system operation support." <a href="https://ieeexplore.ieee.org/document/8613889">IEEE Transactions on Smart Grid</a></li>
+            </ol>
+        <footer>
+            © 2025 Van Tuan Dang. All research and findings presented are based on the author's work and published data from the L2RPN2023 Challenge.
+        </footer>
+    </div>
+</body>
+</html>
