@@ -1,0 +1,3205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều Chỉnh Quy Hoạch Điện VIII - Quyết Định 768/QĐ-TTg (15/4/2025) | Van Tuan Dang</title>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@300;400;700&display=swap');
+        
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --light-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #0008f3;
+            --text-light: #f1f5f9;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+            padding: 80px 20px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') bottom center/cover no-repeat;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin-bottom: 10px;
+        }
+        
+        .header .meta {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            margin-top: 20px;
+        }
+        
+        .author-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-top: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .author-badge strong {
+            color: #fbbf24;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Executive Summary */
+        .executive-summary {
+            background: linear-gradient(135deg, #8a11c2ad 0%, #9b88c8 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        .executive-summary h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .executive-summary ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .executive-summary li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .executive-summary li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+        
+        .section-number {
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #c97200 !important;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-unit {
+            font-size: 0.9rem;
+            color: var(--text-secondary:#10b981);
+        }
+        
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Callout Box */
+        .callout {
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid;
+        }
+        
+        .callout-success {
+            background: #f0fdf4;
+            border-color: var(--success);
+            color: #166534;
+        }
+        
+        .callout-warning {
+            background: #fffbeb;
+            border-color: var(--warning);
+            color: #92400e;
+        }
+        
+        .callout-danger {
+            background: #fef2f2;
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+        
+        .callout-info {
+            background: #eff6ff;
+            border-color: #af921e !important;
+            color: #1e40af;
+        }
+        
+        .callout h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+        
+        .key-points h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .key-points ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .key-points li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .key-points li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline-item {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .timeline-year {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .comparison-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .comparison-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .comparison-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .highlight-box h4 {
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 2px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .author-info {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .author-info h3 {
+            margin-bottom: 10px;
+        }
+        
+        .author-info p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* CONTEXT SECTION - BỐI CẢNH & THÁCH THỨC                                    */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        
+        .context-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 50px 0;
+            margin: 40px 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .context-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .context-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .context-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .context-header h2 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .context-subtitle {
+            font-size: 1.2em;
+            color: #e0e7ff;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .context-subtitle strong {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* TIMELINE VISUALIZATION - ĐÃ SỬA LỖI ARROW ĐÈ TEXT                          */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .crisis-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 50px 0;
+            padding: 40px 30px 30px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            position: relative;
+        }
+
+        .crisis-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700 0%, #ff6b6b 50%, #ffd700 100%);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .timeline-point {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+            padding-top: 10px;
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: #ffd700;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 4px solid #1e3c72;
+            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+            animation: glow 2s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.6); }
+            50% { box-shadow: 0 0 40px rgba(255,215,0,0.9); }
+        }
+
+        .timeline-year {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .timeline-event {
+            font-size: 0.9em;
+            color: white;
+            line-height: 1.4;
+            padding-top: 5px;
+        }
+
+        .timeline-arrow {
+            color: #ffd700;
+            font-size: 1.8em;
+            flex: 0 0 40px;
+            animation: moveArrow 1.5s ease-in-out infinite;
+            margin-top: 30px;
+        }
+
+        @keyframes moveArrow {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* CHALLENGE CARDS GRID - ĐÃ SỬA LỖI TRÀN XUỐNG                               */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .challenge-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border-top: 5px solid;
+            position: relative;
+            overflow: hidden;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            font-size: 80px;
+            line-height: 100px;
+            text-align: center;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Card Types */
+        .challenge-crisis {
+            border-top-color: #ff6b6b;
+        }
+        .challenge-crisis::before {
+            content: '⚠️';
+        }
+
+        .challenge-financial {
+            border-top-color: #ffd93d;
+        }
+        .challenge-financial::before {
+            content: '💰';
+        }
+
+        .challenge-technical {
+            border-top-color: #4dabf7;
+        }
+        .challenge-technical::before {
+            content: '⚡';
+        }
+
+        .challenge-environmental {
+            border-top-color: #51cf66;
+        }
+        .challenge-environmental::before {
+            content: '🌱';
+        }
+
+        .challenge-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.3;
+        }
+
+        .challenge-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex: 1;
+        }
+
+        .challenge-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.5;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .challenge-card li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .challenge-card li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .challenge-card strong {
+            color: #e74c3c;
+            font-weight: 700;
+            display: inline;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* STATISTICS HIGHLIGHT                                                        */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .stats-highlight {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            padding: 35px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.8em;
+            font-weight: 800;
+            color: #ffd700;
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .stat-label {
+            font-size: 1em;
+            color: #e0e7ff;
+            font-weight: 400;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* CONCLUSION BOX                                                              */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .context-conclusion {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            padding: 25px 35px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .context-conclusion p {
+            margin: 0;
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #2c3e50;
+        }
+
+        .context-conclusion strong {
+            color: #c0392b;
+            font-weight: 700;
+        }
+
+        .context-conclusion .highlight-box {
+            background: rgba(255,255,255,0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* RESPONSIVE DESIGN - BỐI CẢNH SECTION                                       */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        @media (min-width: 1200px) {
+            .challenge-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1200px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .challenge-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 991px) {
+            .challenge-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .challenge-card {
+                min-height: 320px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .author-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-img {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }    
+            .section {
+                padding: 25px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 0.85rem;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+            
+            .context-header h2 {
+                font-size: 2em;
+            }
+            
+            .context-subtitle {
+                font-size: 1.1em;
+            }
+            
+            .crisis-timeline {
+                flex-direction: column;
+                gap: 25px;
+                padding: 30px 20px;
+            }
+            
+            .crisis-timeline::before {
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                height: 100%;
+                transform: translateX(-50%);
+            }
+            
+            .timeline-arrow {
+                transform: rotate(90deg);
+                margin-top: 0;
+            }
+            
+            .timeline-year {
+                font-size: 1.2em;
+            }
+            
+            .timeline-event {
+                font-size: 0.85em;
+            }
+            
+            .challenge-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .challenge-card {
+                min-height: auto;
+            }
+            
+            .stats-highlight {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .stat-number {
+                font-size: 2.5em;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* ANIMATION UTILITIES                                                         */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        .author-section {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            background: linear-gradient(to right, #1170e5, #7eb5ec);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .author-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 25px;
+            border: 3px solid #3182ce;
+            padding: 3px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+            }
+        }
+        .reference-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .reference-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .reference-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .reference-number {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            min-width: 40px;
+            flex-shrink: 0;
+        }
+
+        .reference-content {
+            flex: 1;
+            line-height: 1.7;
+        }
+
+        .reference-content strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .reference-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .reference-meta a {
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .reference-meta a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .reference-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .reference-number {
+                min-width: auto;
+            }
+        }
+        /* ============================================
+        CHALLENGE SECTION - Thách Thức Năng Lượng
+        (Giống Executive Summary - Co lại, có border-radius)
+        ============================================ */
+
+        .challenge-section {
+            background: linear-gradient(135deg, #0f62cf 0%, #059669 100%);
+            color: white;
+            padding: 60px 40px; /* ← Giống executive-summary */
+            border-radius: 20px; /* ← Bo góc */
+            margin: 60px auto; /* ← auto để căn giữa */
+            max-width: 1200px; /* ← Giới hạn chiều rộng */
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3); /* ← Shadow xanh lá */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hiệu ứng background pattern (optional) */
+        .challenge-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Container - BỎ max-width vì đã có ở parent */
+        .challenge-section .container {
+            margin: 0;
+            padding: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Tiêu đề section */
+        .challenge-section h2 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .challenge-section > .container > div:first-child p,
+        .challenge-section p {
+            color: rgba(255, 255, 255, 0.95); /* ← Tăng opacity */
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Timeline container */
+        .challenge-timeline {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0; /* ← Giảm margin */
+            backdrop-filter: blur(10px);
+        }
+
+        .challenge-timeline-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Đường kẻ nối timeline */
+        .challenge-timeline-line {
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 0;
+        }
+
+        /* Timeline item */
+        .challenge-timeline-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .challenge-timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: #fbbf24;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .challenge-timeline-year {
+            color: #fbbf24;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .challenge-timeline-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Stats Grid - 4 cards với số liệu nổi bật */
+        .challenge-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0; /* ← Giảm margin */
+        }
+
+        .challenge-stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .challenge-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .challenge-stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .challenge-stat-label {
+            color: #0f766e; /* ← Màu xanh đậm hơn cho dễ đọc */
+            font-weight: 600;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Challenge Cards Grid - 4 thẻ thách thức */
+        .challenge-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0; /* ← Giảm margin */
+        }
+
+        .challenge-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .challenge-card h4 {
+            color: #10b981;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .challenge-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .challenge-card li {
+            margin-bottom: 10px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .challenge-card li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .challenge-card li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Warning Box */
+        .challenge-warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0; /* ← Giảm margin */
+        }
+
+        .challenge-warning p {
+            margin: 0;
+            color: #78350f;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Mục tiêu Box */
+        .challenge-goal {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2); /* ← Thêm border */
+        }
+
+        .challenge-goal p {
+            margin: 0;
+            color: white;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        /* ============================================
+        RESPONSIVE - Tablet & Mobile
+        ============================================ */
+
+        @media (max-width: 1024px) {
+            .challenge-section {
+                padding: 50px 30px;
+                margin: 40px 20px; /* ← Thêm margin hai bên */
+            }
+            
+            .challenge-stats-grid,
+            .challenge-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .challenge-section h2 {
+                font-size: 2rem;
+            }
+            
+            .challenge-stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .challenge-section {
+                padding: 40px 25px;
+                margin: 30px 15px; /* ← Margin nhỏ hơn */
+                border-radius: 16px; /* ← Bo góc nhỏ hơn */
+            }
+            
+            .challenge-section h2 {
+                font-size: 1.75rem;
+            }
+            
+            .challenge-section p {
+                font-size: 1rem;
+            }
+            
+            .challenge-timeline {
+                padding: 20px;
+            }
+            
+            .challenge-timeline-inner {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .challenge-timeline-line {
+                display: none;
+            }
+            
+            .challenge-stats-grid,
+            .challenge-cards-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .challenge-stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .challenge-section {
+                padding: 30px 20px;
+                margin: 20px 10px;
+                border-radius: 12px;
+            }
+            
+            .challenge-section h2 {
+                font-size: 1.5rem;
+            }
+            
+            .challenge-stat-card,
+            .challenge-card {
+                padding: 20px;
+            }
+            
+            .challenge-stat-number {
+                font-size: 2rem;
+            }
+            
+            .challenge-card h4 {
+                font-size: 1rem;
+            }
+            
+            .challenge-card ul {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Thách Thức Năng Lượng Việt Nam -->
+    <div class="challenge-section">
+        <div class="container">
+    <!-- Header -->
+        <div class="header-content">
+            <h1>Quy Hoạch Điện VIII Điều Chỉnh: Cơ Hội và Thách Thức Cho Chuyển Đổi Năng Lượng Việt Nam</h1>
+            <div class="author-section">
+                <img src="https://raw.githubusercontent.com/danglive/adk-banking-bot/main/logo/logo.png" alt="Author" class="author-img">
+                <p class="author-badge"><strong>Van Tuan Dang</strong> | R&D Solution Architect | Energy Transition Strategy </p>
+            </div>
+        </div>
+            <!-- Tiêu đề -->
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2>Thách Thức Năng Lượng Việt Nam</h2>
+                <p>
+                    Việt Nam đang bước vào giai đoạn chuyển mình quan trọng trong lịch sử năng lượng, 
+                    khi nhu cầu điện tăng trưởng cao và quá trình chuyển dịch năng lượng diễn ra mạnh. 
+                    Tập đoàn Điện lực Việt Nam (EVN), điện tử cho đào quản lý vận hành hệ thống điện sẽ đối 
+                    mặt với nhiều thách thức về công nghệ, chính sách, tài chính và môi trường trong giai 
+                    đoạn 2026-2030. Trong bối cảnh nhu cầu điện tăng <strong style="color: #fbbf24;">~10%/năm</strong>, 
+                    EVN lỗ <strong style="color: #fbbf24;">47.500 tỷ đồng</strong>, và cam kết 
+                    <strong style="color: #fbbf24;">Net Zero 2050</strong>, Việt Nam đối mặt với những thách 
+                    thức chưa từng có trong lịch sử phát triển năng lượng.
+                </p>
+            </div>
+
+            <!-- Timeline -->
+            <div class="challenge-timeline">
+                <div class="challenge-timeline-inner">
+                    <div class="challenge-timeline-line"></div>
+                    
+                    <div class="challenge-timeline-item">
+                        <div class="challenge-timeline-dot"></div>
+                        <div class="challenge-timeline-year">2022-2023</div>
+                        <div class="challenge-timeline-text">EVN lỗ<br>47.500 tỷ đồng</div>
+                    </div>
+                    
+                    <div class="challenge-timeline-item">
+                        <div class="challenge-timeline-dot"></div>
+                        <div class="challenge-timeline-year">2023</div>
+                        <div class="challenge-timeline-text">Miền Bắc thiếu<br>6.300 MW</div>
+                    </div>
+                    
+                    <div class="challenge-timeline-item">
+                        <div class="challenge-timeline-dot"></div>
+                        <div class="challenge-timeline-year">2024-2025</div>
+                        <div class="challenge-timeline-text">Dự án điện<br>chậm tiến độ</div>
+                    </div>
+                    
+                    <div class="challenge-timeline-item">
+                        <div class="challenge-timeline-dot"></div>
+                        <div class="challenge-timeline-year">15/4/2025</div>
+                        <div class="challenge-timeline-text">Ban hành<br>QĐ 768</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="challenge-stats-grid">
+                <div class="challenge-stat-card">
+                    <div class="challenge-stat-number">>10%</div>
+                    <div class="challenge-stat-label">Tăng trưởng nhu cầu điện hàng năm</div>
+                </div>
+                
+                <div class="challenge-stat-card">
+                    <div class="challenge-stat-number">136,3</div>
+                    <div class="challenge-stat-label">tỷ USD đầu tư<br>(2026-2030)</div>
+                </div>
+                
+                <div class="challenge-stat-card">
+                    <div class="challenge-stat-number">28-36%</div>
+                    <div class="challenge-stat-label">Tỷ lệ năng lượng<br>tái tạo năm 2030</div>
+                </div>
+                
+                <div class="challenge-stat-card">
+                    <div class="challenge-stat-number">2050</div>
+                    <div class="challenge-stat-label">Mục tiêu<br>Net Zero</div>
+                </div>
+            </div>
+
+            <!-- Challenge Cards -->
+            <div class="challenge-cards-grid">
+                <!-- Card 1: Không Hoãn Cung Ứng Điện -->
+                <div class="challenge-card">
+                    <h4>Khủng Hoảng Cung Ứng Điện</h4>
+                    <ul>
+                        <li>Miền Bắc thiếu điện: <strong>6.300 MW</strong> (hạ 2023)</li>
+                        <li>Tăng trưởng nhu cầu: <strong>>10%/năm</strong> (2025-2030)</li>
+                        <li>Mất cân bằng cung: <strong>Bắc thiếu, Trung Thừa</strong></li>
+                        <li>Luật 60/2024 đặc trưng vận năm sẽ giảm bớt</li>
+                        <li>Các dự án xuân phiên điện chậm tiến độ khả 2025</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: Khủng Hoảng Tài Chính -->
+                <div class="challenge-card">
+                    <h4>Thách Thức Tài Chính</h4>
+                    <ul>
+                        <li>EVN lỗ lũy kế <strong>47.500 tỷ đồng</strong> (2022-2023)</li>
+                        <li>Lỗ sau thuế 2023: <strong>26.770 tỷ đồng</strong></li>
+                        <li>Cần vốn: <strong>136,3 tỷ USD</strong> cho giai đoạn 2026-2030</li>
+                        <li>Khó huy động vốn đầu tư từ khu vực tư nhân</li>
+                        <li>Giá điện chưa phản ánh đúng chi phí sản xuất</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3: Thách Thức Kỹ Thuật -->
+                <div class="challenge-card">
+                    <h4>Thách Thức Kỹ Thuật</h4>
+                    <ul>
+                        <li>Tích hợp 28-36%: điện tái tạo vào hệ thống</li>
+                        <li>Nguồn điện gió, Mặt trời không ổn định</li>
+                        <li>Thiếu hệ thống lưu trữ: <strong>1.000 MW BESS</strong> trở lên</li>
+                        <li>Lưới truyền tải quá tải, chậm sẵn sàng nhận điện</li>
+                        <li>Chưng cổ liền chuẩn kỹ thuật cho công nghệ mới</li>
+                    </ul>
+                </div>
+
+                <!-- Card 4: Cam Kết Môi Trường -->
+                <div class="challenge-card">
+                    <h4>Cam Kết Môi Trường</h4>
+                    <ul>
+                        <li>Mục tiêu <strong>Net Zero 2050</strong> (CO₂=0, JETP)</li>
+                        <li>Không xây nhà nhiệt điện than mới sau 2030</li>
+                        <li>Hạn phát thải 2030: <strong>197-199 triệu tấn</strong> CO₂</li>
+                        <li>Thay điện than bằng: <strong>~5.000 MW</strong> sinh khối</li>
+                        <li>Phải tạo hệ nguồn sạch và ổn định cùng lúc</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Warning Box -->
+            <div class="challenge-warning">
+                <p>
+                    <strong>→ Trong bối cảnh không hoàng hộ chính xác đó, Chính phủ Việt Nam đã ban hành Quyết định 768/QĐ-TTg ngày 15/4/2025 - Điều chỉnh Quy hoạch Phát triển Điện lực Quốc gia thời kỳ 2021-2030, tầm nhìn đến năm 2050 (Quy hoạch Điện VIII Điều chỉnh)</strong>
+                </p>
+            </div>
+
+            <!-- Mục tiêu Box -->
+            <div class="challenge-goal">
+                <p>
+                    <strong>Mục tiêu:</strong> Giải quyết triệt để các thách thức về an ninh năng lượng, tài chính, công nghệ và môi trường; 
+                    đồng thời đặt nền móng cho hệ thống điện xanh, hiện đại, bền vững đáp ứng sự phát triển kinh tế và cam kết quốc tế.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Executive Summary -->
+        <div class="executive-summary">
+            <h2>Tổng quan về Quy Hoạch Điện VIII</h2>
+            <p style="margin-bottom: 20px; font-size: 1.05rem; line-height: 1.8;">
+                Quyết định 768/QĐ-TTg đánh dấu bước ngoặt lịch sử trong chính sách năng lượng Việt Nam, 
+                cam kết chuyển đổi hoàn toàn sang năng lượng sạch với lộ trình loại bỏ nhiệt điện than vào năm 2050. 
+                Đây là văn bản pháp lý quan trọng nhất định hình chiến lược năng lượng quốc gia trong 25 năm tới.
+            </p>
+            <ul>
+                <li><strong>Mục tiêu 2030:</strong> 500-558 tỷ kWh điện thương phẩm, công suất cực đại 89-99 GW</li>
+                <li><strong>Định hướng 2050:</strong> 1.237-1.375 tỷ kWh, công suất 205-228 GW</li>
+                <li><strong>Chuyển đổi năng lượng:</strong> Loại bỏ hoàn toàn than (0% năm 2050), tăng tái tạo lên >70%</li>
+                <li><strong>Công nghệ mới:</strong> Hydrogen, Amoniac xanh, LNG, BESS, Smart Grid, HVDC</li>
+                <li><strong>Vốn đầu tư:</strong> Giai đoạn 2026-2030: 136,3 tỷ USD xác định; định hướng 2031-2050: ước tính 699,1 tỷ USD (tổng ước tính toàn bộ giai đoạn: khoảng 835,4 tỷ USD)</li>
+                <li><strong>Điện hạt nhân:</strong> Khởi động lại chương trình với 4-6,4 GW dự kiến vận hành trong giai đoạn 2030-2035; định hướng 2050 đạt 10,5-14 GW</li>
+            </ul>
+        </div>
+
+        <!-- Section I: MỤC TIÊU VÀ QUAN ĐIỂM -->
+        <div class="section">
+            <div class="section-header">               
+                <h2 class="section-title"><span class="section-number">I.</span> MỤC TIÊU VÀ QUAN ĐIỂM PHÁT TRIỂN</h2>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">Quan điểm Phát triển</h3>
+            
+            <div class="key-points">
+                <h3>Năm Trụ Cột Chiến Lược</h3>
+                <ul>
+                    <li><strong>Điện là ngành hạ tầng quan trọng:</strong> Phát triển điện phải đi trước một bước để thúc đẩy phát triển nhanh, bền vững đất nước, xây dựng nền kinh tế độc lập tự chủ, nâng cao đời sống Nhân dân và bảo đảm quốc phòng, an ninh</li>
+                    
+                    <li><strong>Phát triển theo nguyên tắc tối ưu tổng thể:</strong> Tối ưu các yếu tố về nguồn điện, truyền tải điện, phân phối điện, sử dụng điện tiết kiệm và hiệu quả, có lộ trình phù hợp đi đôi với bảo vệ tài nguyên, môi trường và chuyển đổi mô hình kinh tế, bảo đảm an ninh năng lượng quốc gia với chi phí thấp nhất</li>
+                    
+                    <li><strong>Dựa trên cơ sở khoa học:</strong> Có tính kế thừa, mang tính đồng bộ và mở. Khai thác và sử dụng có hiệu quả nguồn năng lượng hóa thạch trong nước kết hợp với xuất, nhập khẩu hợp lý, sử dụng tiết kiệm và hiệu quả năng lượng. Coi phát triển năng lượng tái tạo, năng lượng mới là cơ hội để phát triển tổng thể hệ sinh thái công nghiệp năng lượng</li>
+                    
+                    <li><strong>Nhà nước tập trung đầu tư:</strong> Khuyến khích các thành phần kinh tế để phát triển nhanh ngành điện trên nguyên tắc cạnh tranh lành mạnh và thực hiện cơ chế thị trường về giá bán điện, bảo đảm hài hòa lợi ích của các chủ thể tham gia đầu tư, sử dụng điện và đáp ứng yêu cầu phát triển của các vùng, miền</li>
+                    
+                    <li><strong>Phát triển điện gắn với chuyển đổi nền kinh tế:</strong> Phát triển khoa học - công nghệ trên thế giới, nhất là về năng lượng tái tạo, năng lượng mới, gắn với quá trình chuyển đổi nền kinh tế đất nước theo hướng kinh tế xanh, kinh tế tuần hoàn, kinh tế các-bon thấp. Chuyển dịch năng lượng phải phù hợp với xu hướng quốc tế và đảm bảo bền vững, công bằng, công lý</li>
+                </ul>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin: 40px 0 20px;">Kế hoạch phát triển lưới điện 5 năm, tầm nhìn đến 2050</h3>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">Mục Tiêu Đến Năm 2030</div>
+                    
+                    <h4 style="margin: 20px 0 15px; color: var(--info);">Về Bảo Đảm An Ninh Năng Lượng Quốc Gia</h4>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Điện Thương Phẩm</div>
+                            <div class="stat-value">500,4 - 557,8</div>
+                            <div class="stat-unit">tỷ kWh</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Điện Sản Xuất & Nhập Khẩu</div>
+                            <div class="stat-value">560,4 - 624,6</div>
+                            <div class="stat-unit">tỷ kWh</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Công Suất Cực Đại</div>
+                            <div class="stat-value">89.655 - 99.934</div>
+                            <div class="stat-unit">MW (~90-100 GW)</div>
+                        </div>
+                    </div>
+
+                    <div class="callout callout-success">
+                        <h4>Mục Tiêu An Ninh Năng Lượng</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Cung cấp đủ nhu cầu điện trong nước, đáp ứng mục tiêu phát triển kinh tế - xã hội với mức tăng trưởng GDP bình quân khoảng <strong>10,0%/năm</strong> trong giai đoạn 2026-2030, khoảng <strong>7,5%/năm</strong> trong giai đoạn 2031-2050</li>
+                            <li>Bảo đảm cung cấp điện an toàn, tin cậy, đáp ứng tiêu chí <strong>N-1</strong> đối với vùng phụ tải quan trọng và <strong>N-2</strong> đối với vùng phụ tải đặc biệt quan trọng, nguồn điện hạt nhân</li>
+                            <li>Đến năm 2030, độ tin cậy cung cấp điện năng thuộc <strong>TOP 4 nước dẫn đầu ASEAN</strong>, chỉ số tiếp cận điện năng thuộc TOP 3 nước dẫn đầu ASEAN</li>
+                            <li>Phân đầu đến năm 2030 có <strong>50% các tòa nhà công sở và 50% nhà dân sử dụng điện mặt trời mái nhà</strong>, tự tiêu thụ tại chỗ (không bán điện vào hệ thống điện quốc gia)</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="margin: 30px 0 15px; color: var(--info);">Về Chuyển Đổi Năng Lượng Công Bằng</h4>
+                    
+                    <div class="callout callout-info">
+                        <h4>Phát Triển Nguồn Năng Lượng Tái Tạo</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Phát triển mạnh các nguồn năng lượng tái tạo (không bao gồm thủy điện) phục vụ sản xuất điện, đạt tỷ lệ khoảng <strong>28-36%</strong> vào năm 2030. Định hướng đến năm 2050 tỷ lệ năng lượng tái tạo lên đến <strong>74-75%</strong></li>
+                            <li>Kiểm soát mức phát thải khí nhà kính từ sản xuất điện đạt khoảng <strong>197-199 triệu tấn</strong> năm 2030 và còn khoảng <strong>27 triệu tấn</strong> vào năm 2050</li>
+                            <li>Hướng tới đạt mức phát thải định không quá 170 triệu <strong>170 triệu tấn</strong> vào năm 2030 với điều kiện các cam kết theo JETP được các đối tác quốc tế thực hiện đầy đủ, thực chất</li>
+                        </ul>
+                    </div>
+
+                    <div class="callout callout-warning">
+                        <h4>Xây Dựng Hệ Thống Lưới Điện Thông Minh</h4>
+                        <p>Xây dựng hệ thống lưới điện thông minh, đủ khả năng tích hợp, vận hành an toàn hiệu quả nguồn năng lượng tái tạo quy mô lớn</p>
+                    </div>
+
+                    <h4 style="margin: 30px 0 15px; color: var(--info);">Về Phát Triển Hệ Sinh Thái Công Nghiệp và Dịch Vụ Năng Lượng Tái Tạo</h4>
+                    
+                    <div class="callout callout-success">
+                        <h4>Trung Tâm Công Nghiệp Năng Lượng</h4>
+                        <p>Dự kiến đến 2030, hình thành <strong>02 trung tâm công nghiệp, dịch vụ năng lượng tái tạo</strong> liên vùng bao gồm sản xuất, truyền tải và tiêu thụ điện; cộng nghiệp chế tạo thiết bị năng lượng tái tạo, xây dựng, lắp đặt, dịch vụ liên quan, xây dựng hệ sinh thái công nghiệp năng lượng tái tạo tại các khu vực có nhiều tiềm năng như <strong>Bắc Bộ, Nam Trung Bộ, Nam Bộ</strong> khi có các điều kiện thuận lợi</li>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>Xuất Khẩu Điện & Năng Lượng Mới</h4>
+                        <p><strong>Phát triển các nguồn điện từ năng lượng tái tạo và sản xuất năng lượng mới</strong> phục vụ xuất khẩu sang Singapore, Malaysia và các đối tác khác trong khu vực. Phấn đấu đến năm 2035, quy mô công suất xuất khẩu điện đạt khoảng <strong>5.000-10.000 MW</strong>, có thể cao hơn tùy theo nhu cầu của bên nhập khẩu trên cơ sở có hiệu quả kinh tế cao, đảm bảo an ninh năng lượng trong nước và an ninh quốc phòng</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">Định Hướng Đến Năm 2050</div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Điện Thương Phẩm</div>
+                            <div class="stat-value">1.237,7 - 1.375,1</div>
+                            <div class="stat-unit">tỷ kWh</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Công Suất Cực Đại</div>
+                            <div class="stat-value">205.732 - 228.570</div>
+                            <div class="stat-unit">MW (~206-229 GW)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Than Đá</div>
+                            <div class="stat-value">0%</div>
+                            <div class="stat-unit"><span class="badge badge-success">Net Zero Than</span></div>
+                        </div>
+                    </div>
+
+                    <div class="callout callout-success">
+                        <h4>Cam Kết Net Zero Nhiệt Điện Than</h4>
+                        <p><strong>Định hướng năm 2050, không còn sử dụng than để phát điện</strong>, chuyển hoàn toàn sang sử dụng sinh khối/amoniac với tổng công suất <strong>25.798 MW</strong></p>
+                    </div>
+
+                    <div class="callout callout-info">
+                        <h4>Về Việc Tham Gia DPPA và Sản Xuất Năng Lượng Mới</h4>
+                        <p>Theo thống kê, hiện nay số lượng khách hàng lớn tiêu thụ từ 1 triệu kWh/năm trở lên chiếm khoảng <strong>25%</strong> tổng sản lượng điện toàn hệ thống (với khoảng trên 1.500 khách hàng)</p>
+                        <p style="margin-top: 10px;">Duy trì xuất khẩu điện sang Singapore, Malaysia và các đối tác khác trong khu vực với quy mô khoảng <strong>10.000 MW</strong>, có thể cao hơn tùy theo nhu cầu của bên nhập khẩu trên cơ sở có hiệu quả kinh tế cao, đảm bảo an ninh năng lượng trong nước và an ninh quốc phòng</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section II: QUAN ĐIỂM, MỤC TIÊU PHÁT TRIỂN -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="section-number">II.</span> PHƯƠNG ÁN PHÁT TRIỂN ĐIỆN LỰC QUỐC GIA</h2>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">1. Phương Án Phát Triển Nguồn Điện</h3>
+
+            <h4 style="margin: 25px 0 15px; color: var(--info);">a) Định Hướng Phát Triển</h4>
+            
+            <div class="key-points">
+                <h3>Năm Định Hướng Chiến Lược</h3>
+                <ul>
+                    <li><strong>Phát triển đồng bộ, đa dạng hóa:</strong> Phát triển đồng bộ, đa dạng hóa các loại hình nguồn điện với cơ cấu hợp lý để bảo đảm an ninh năng lượng, nâng cao tính tự chủ của ngành điện, giảm sự phụ thuộc vào nhiên liệu nhập khẩu</li>
+                    
+                    <li><strong>Tiếp tục đẩy mạnh phát triển:</strong> Tiếp tục đẩy mạnh phát triển các nguồn năng lượng tái tạo (thủy điện, điện gió trên bờ, gần bờ và ngoài khơi, mặt trời, sinh khối...), năng lượng mới, năng lượng xanh (hydrogen, amoniac xanh...) phù hợp với khả năng bảo đảm an toàn hệ thống với giá thành điện năng hợp lý, đặc biệt là các nguồn điện tự sản xuất, tự tiêu thụ, điện mặt trời mái nhà</li>
+                    
+                    <li><strong>Khai thác và sử dụng hiệu quả:</strong> Khai thác và sử dụng hiệu quả các nguồn năng lượng hóa thạch trong nước kết hợp với nhập khẩu: giảm dần tỷ trọng nhiệt điện than, ưu tiên phát triển điện khí trong nước, phát triển các nguồn điện khí LNG nhập khẩu với quy mô phù hợp. Thực hiện chuyển dịch năng lượng bám sát xu thế phát triển công nghệ và giá thành trên thế giới</li>
+                    
+                    <li><strong>Phát triển nguồn điện cân đối:</strong> Phát triển nguồn điện cân đối theo vùng, miền, hướng tới cân bằng cung - cầu nội vùng. Bố trí hợp lý các nguồn điện ở các địa phương trong vùng nhằm khai thác hiệu quả các nguồn điện, bảo đảm tin cậy cung cấp điện tại chỗ, giảm tổn thất kỹ thuật, giảm truyền tải điện đi xa</li>
+                    
+                    <li><strong>Phát triển nguồn điện mới:</strong> Phát triển nguồn điện mới với công nghệ hiện đại đi đôi với đối mới công nghệ các nhà máy đang vận hành. Chấm dứt hoạt động với các nhà máy không đáp ứng tiêu chuẩn môi trường</li>
+                </ul>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">b) Phương Án Phát Triển Chi Tiết</h4>
+
+            <div class="callout callout-info">
+                <h4>(i) Phát Triển Tối Đa Nguồn Điện Từ Năng Lượng Tái Tạo</h4>
+                <p style="margin-top: 10px;"><strong>Điện gió, điện mặt trời, điện sinh khối:</strong> Tiếp tục gia tăng tỷ trọng của năng lượng tái tạo trong cơ cấu nguồn điện và điện năng sản xuất</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Điện Gió Trên Bờ & Gần Bờ</h4>
+                <p><strong>Đẩy mạnh phát triển điện gió trên bờ, gần bờ và ngoài khơi</strong>, điện mặt trời, đặc biệt là điện mặt trời mái nhà phù hợp với khả năng hấp thụ của hệ thống, khả năng giải tóa công suất của lưới điện, giá thành điện năng và chi phí truyền tải hợp lý gắn với bảo đảm an toàn vận hành và tính kinh tế chung của hệ thống điện, tận dụng tối đa cơ sở hạ tầng lưới điện hiện có</p>
+                <p style="margin-top: 10px;"><strong>Ưu tiên, khuyến khích phát triển điện gió, điện mặt trời</strong> (trong đó có điện mặt trời trên mái nhà dân, mái các công trình xây dựng, mái nhà xưởng, khu công nghiệp, điện mặt trời tại các cơ sở sản xuất kinh doanh) tiêu thụ tại chỗ, không đấu nối hoặc không bán điện vào lưới điện quốc gia</p>
+                <p style="margin-top: 10px;"><strong>Phát triển điện mặt trời tập trung</strong> phải kết hợp với lắp đặt pin lưu trữ với tỷ lệ tối thiểu 10% công suất và tích trữ 2 giờ</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Điện Gió 2030</div>
+                    <div class="stat-value">26.066 - 38.029</div>
+                    <div class="stat-unit">MW (14,2 - 16,1%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Điện Gió 2050</div>
+                    <div class="stat-value">84.696 - 91.400</div>
+                    <div class="stat-unit">MW (10,9%)</div>
+                </div>
+            </div>
+
+            <div class="callout callout-success">
+                <h4>Điện Gió Ngoài Khơi - Tiềm Năng Kỹ Thuật 600 GW</h4>
+                <p><strong>Phát huy tối đa tiềm năng kỹ thuật điện gió ngoài khơi</strong> của nước ta (khoảng 600.000 MW) để sản xuất điện và năng lượng mới:</p>
+                <p style="margin-top: 10px;">Tổng công suất điện gió ngoài khơi phục vụ nhu cầu điện trong nước đạt khoảng <strong>6.000-17.032 MW</strong>, dự kiến vận hành giai đoạn 2030-2035. Định hướng đến năm 2050 đạt <strong>113.503-139.097 MW</strong></p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Điện Mặt Trời - Tiềm Năng ~963 GW</h4>
+                <p><strong>Tiềm năng điện mặt trời của Việt Nam khoảng 963.000 MW</strong> (mặt đất 837.400 MW, mặt nước 77.400 MW và mái nhà 48.200 MW)</p>
+                <p style="margin-top: 10px;">Đến năm 2030, tổng công suất các nguồn điện mặt trời (gồm điện mặt trời tập trung và điện mặt trời mái nhà, không tính đến các nguồn điện mặt trời theo khoản 5 Điều 10 Luật Điện lực số 61/2024/QH15) đạt <strong>46.459-73.416 MW</strong>; định hướng đến năm 2050, tổng công suất <strong>293.088-295.646 MW</strong></p>
+            </div>
+
+            <div class="callout callout-info">
+                <h4>Điện Sinh Khối & Năng Lượng Mới</h4>
+                <p><strong>Ưu tiên, khuyến khích phát triển các loại hình điện sinh khối</strong>, điện sản xuất từ rác, chất thải rắn nhằm tận dụng phụ phẩm nông lâm nghiệp, chế biến gỗ, thúc đẩy trồng rừng, xử lý môi trường ở Việt Nam</p>
+                <p style="margin-top: 10px;">Năm 2030: Điện sinh khối <strong>1.523-2.699 MW</strong>; điện sản xuất từ rác, chất thải rắn <strong>1.441-2.137 MW</strong>; điện địa nhiệt và năng lượng mới khác khoảng <strong>45 MW</strong></p>
+                <p style="margin-top: 10px;">Năm 2050: Điện sinh khối <strong>4.829-6.960 MW</strong>; điện sản xuất từ rác, chất thải rắn <strong>1.784-2.137 MW</strong>; điện địa nhiệt và năng lượng mới khác khoảng <strong>464 MW</strong></p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(ii) Khai Thác Tối Đa Tiềm Năng Kinh Tế - Kỹ Thuật Thủy Điện</h4>
+
+            <div class="callout callout-success">
+                <h4>Thủy Điện - Tổng Tiềm Năng ~40 GW</h4>
+                <p><strong>Khai thác tối đa tiềm năng kinh tế - kỹ thuật các nguồn thủy điện</strong> (tổng tiềm năng tới đa ở Việt Nam khoảng 40.000 MW) trên cơ sở bảo đảm môi trường, bảo vệ rừng, bảo vệ an ninh nguồn nước</p>
+                <p style="margin-top: 10px;">Mở rộng có chọn lọc các nhà máy thủy điện hiện có để dự phòng công suất; khai thác thủy điện trên các hồ thủy lợi, hồ chứa nước để tận dụng nguồn thủy năng</p>
+                <p style="margin-top: 10px;"><strong>Năm 2030:</strong> Tổng công suất các nguồn thủy điện, bao gồm cả thủy điện nhỏ đạt <strong>33.294-34.667 MW</strong></p>
+                <p style="margin-top: 10px;"><strong>Năm 2050:</strong> Tổng công suất đạt <strong>40.624 MW</strong></p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(iii) Nguồn Điện Lưu Trữ - Pin & Thủy Điện Tích Năng</h4>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-header">Năm 2030</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Thủy điện tích năng:</span>
+                        <span class="comparison-value">2.400 - 6.000 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Pin lưu trữ:</span>
+                        <span class="comparison-value">10.000 - 16.300 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tổng nguồn lưu trữ:</span>
+                        <span class="comparison-value"><strong>~10-16 GW</strong></span>
+                    </div>
+                </div>
+                
+                <div class="comparison-card">
+                    <div class="comparison-header">Năm 2050</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Thủy điện tích năng:</span>
+                        <span class="comparison-value">20.691 - 21.327 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Pin lưu trữ:</span>
+                        <span class="comparison-value">95.983 - 96.120 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tổng nguồn lưu trữ:</span>
+                        <span class="comparison-value"><strong>~96-117 GW</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout callout-info">
+                <h4>Vai Trò Nguồn Lưu Trữ</h4>
+                <p><strong>Phát triển các nhà máy thủy điện tích năng với quy mô khoảng 2.400-6.000 MW</strong> đến năm 2030; định hướng đến năm 2050, công suất thủy điện tích năng đạt <strong>20.691-21.327 MW</strong> để điều hòa phụ tải, dự phòng công suất và hỗ trợ tích hợp các nguồn năng lượng tái tạo với quy mô lớn</p>
+                <p style="margin-top: 10px;"><strong>Pin lưu trữ phát triển phục vụ nhu cầu hệ thống và kết hợp với năng lượng tái tạo</strong>, bố trí phân tán gần các trung tâm nguồn điện gió, điện mặt trời hoặc trên hệ thống điện tại các trung tâm phụ tải. Đến năm 2030 dự kiến đạt công suất khoảng <strong>10.000-16.300 MW</strong>; định hướng đến năm 2050, công suất pin lưu trữ đạt <strong>95.983-96.120 MW</strong> để phù hợp với tỷ trọng cao của năng lượng tái tạo</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(iv) Ưu Tiên Phát Triển Các Nhà Máy Điện Đồng Phát</h4>
+
+            <div class="callout callout-warning">
+                <h4>Nhà Máy Điện Đồng Phát & Nhiệt Dư</h4>
+                <p><strong>Ưu tiên, khuyến khích phát triển các nhà máy điện đồng phát</strong>, nhà máy điện sử dụng nhiệt dư, khí lò cao, các sản phẩm phụ của dây chuyền công nghệ trong các cơ sở công nghiệp</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(v) Phát Triển Điện Hạt Nhân - Khởi Động Lại Chương Trình</h4>
+
+            <div class="callout callout-danger">
+                <h4>Điện Hạt Nhân Ninh Thuận</h4>
+                <p><strong>Phát triển nguồn điện hạt nhân theo đúng định hướng đã được Quốc hội thông qua</strong> tại Nghị quyết số 174/2024/QH15 ngày 30 tháng 11 năm 2024, Nghị quyết số 189/2025/QH15 ngày 19 tháng 02 năm 2025 về cơ chế, chính sách đặc biệt đầu tư xây dựng Dự án điện hạt nhân Ninh Thuận, Chỉ thị số 01/CT-TTg ngày 03 tháng 01 năm 2025 của Thủ tướng Chính phủ</p>
+                <p style="margin-top: 10px;"><strong>Giai đoạn 2030-2035 sẽ đưa vào vận hành các Nhà máy điện hạt nhân Ninh Thuận 1 và Ninh Thuận 2</strong> với quy mô đạt <strong>4.000-6.400 MW</strong></p>
+                <p style="margin-top: 10px;"><strong>Giai đoạn đến năm 2050 hệ thống cần bổ sung khoảng 8.000 MW</strong> nguồn điện hạt nhân để cung cấp nguồn điện nền và có thể tăng lên theo nhu cầu</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Điện Hạt Nhân 2030</div>
+                    <div class="stat-value">4.000 - 6.400</div>
+                    <div class="stat-unit">MW <span class="badge badge-info">Ninh Thuận 1 và 2</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Điện Hạt Nhân 2050</div>
+                    <div class="stat-value">10.500 - 14.000</div>
+                    <div class="stat-unit">MW <span class="badge badge-info">Bổ sung 8 GW</span></div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Đối Với Ba Dự Án Gặp Khó Khăn (5.300 MW)</h4>
+                <p><strong>Nam Định 1, Sông Hậu 2, Vĩnh Tân 3:</strong> Những dự án đang gặp khó khăn trong thu xếp vốn, thay đổi cơ cấu chủ đầu tư, Bộ Công Thương sẽ tiếp tục trao đổi, đàm phán với các nhà đầu tư, để xuất phương án xử lý theo quy định</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(vi) Nhiệt Điện Than - Ưu Tiên Các Dự Án Đang Triển Khai</h4>
+
+            <div class="callout callout-danger">
+                <h4>Nhiệt Điện Than - Không Đầu Tư Mới</h4>
+                <p><strong>Chỉ thực hiện tiếp các dự án đã có trong quy hoạch và đang đầu tư xây dựng đến năm 2030</strong>. Định hướng thực hiện chuyển đổi nhiên liệu sang sinh khối/amoniac với các nhà máy đã vận hành được 20 năm khi giá thành phù hợp. Dừng hoạt động các nhà máy có tuổi thọ trên 40 năm nếu không thể chuyển đổi nhiên liệu</p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Chỉ Tiêu</th>
+                            <th>Năm 2030</th>
+                            <th>Năm 2050</th>
+                            <th>Thay Đổi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nhiệt điện than</strong></td>
+                            <td>31.055 MW</td>
+                            <td><strong>0 MW</strong></td>
+                            <td><span class="badge badge-success">-100%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tỷ lệ</td>
+                            <td>13,1 - 16,9%</td>
+                            <td><strong>0%</strong></td>
+                            <td><span class="badge badge-success">Net Zero Than</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chuyển đổi sang sinh khối/amoniac</strong></td>
+                            <td>-</td>
+                            <td><strong>25.798 MW</strong></td>
+                            <td><span class="badge badge-info">Chuyển Đổi</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Năm Dự Án Nhiệt Điện Than Đang Xây Dựng (31.055 MW)</h4>
+                    <p><strong>Năm 2030, tổng công suất các nhà máy đang vận hành và các dự án đang triển khai</strong>, khả năng sẽ hoàn thành và đưa vào vận hành khoảng <strong>31.055 MW</strong>; khẩn trương hoàn thành 5 dự án/4.360 MW đang xây dựng, gồm:</p>                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Nà Dương II</strong></li>
+                    <li><strong>An Khánh - Bắc Giang</strong></li>
+                    <li><strong>Vũng Áng 2</strong></li>
+                    <li><strong>Quảng Trạch I</strong></li>
+                    <li><strong>Long Phú 1</strong></li>
+                </ul>
+            </div>
+
+            <div class="callout callout-success">
+                <h4>Định Hướng Năm 2050 - Chuyển Đổi Hoàn Toàn</h4>
+                <p><strong>Định hướng năm 2050, không còn sử dụng than để phát điện</strong>, chuyển hoàn toàn sang sử dụng sinh khối/amoniac, tổng công suất <strong>25.798 MW</strong></p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(vii) Nhiệt Điện Khí - Ưu Tiên Khí Trong Nước</h4>
+
+            <div class="callout callout-info">
+                <h4>Nhiệt Điện Khí Trong Nước</h4>
+                <p><strong>Ưu tiên sử dụng tối đa khí trong nước cho phát điện.</strong> Trong trường hợp sản lượng khí trong nước suy giảm thì nhập khẩu bổ sung bằng khí thiên nhiên hoặc LNG. Phát triển các dự án sử dụng LNG và hạ tầng nhập khẩu LNG đồng bộ với quy mô phù hợp, sử dụng công nghệ hiện đại</p>
+                <p style="margin-top: 10px;"><strong>Thực hiện lộ trình chuyển đổi nhiên liệu sang hydrogen</strong> khi công nghệ được thương mại hóa và giá thành phù hợp</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Nhiệt Điện Khí Trong Nước - Các Dự Án Quan Trọng</h4>
+                <p><strong>Tập trung đẩy nhanh các dự án khai thác khí:</strong></p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Lô B, Cá Voi Xanh:</strong> 6.900 MW các dự án hạ nguồn bám sát tiến độ các dự án thượng nguồn</li>
+                    <li><strong>Nhiệt điện Ô Môn II, III, IV:</strong> 3.750 MW (chuyển Ô Môn I sang sử dụng khí Lô B)</li>
+                    <li><strong>Miền Trung I, II và Dung Quất I, II, III:</strong> 3.750 MW</li>
+                    <li><strong>Chuyển Ô Môn I (660 MW)</strong> sang sử dụng khí Lô B</li>
+                    <li><strong>Turbine khí hỗn hợp (TBKHH) Quảng Trị:</strong> 340 MW sử dụng khí mỏ Báo Vàng</li>
+                </ul>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Nhiệt Điện Khí Trong Nước 2030</div>
+                    <div class="stat-value">10.861 - 14.930</div>
+                    <div class="stat-unit">MW (5,9 - 6,3%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Nhiệt Điện Khí 2050</div>
+                    <div class="stat-value">7.900</div>
+                    <div class="stat-unit">MW <span class="badge badge-info">Tiếp tục hoặc LNG</span></div>
+                </div>
+            </div>
+
+            <div class="callout callout-warning">
+                <h4>Khu Vực Đông Nam Bộ & Tây Nam Bộ</h4>
+                <p><strong>Thực hiện các giải pháp, chủ trọng xây dựng hạ tầng</strong>, nghiên cứu kết nối trong nước và khu vực phục vụ nhập khẩu khí thiên nhiên và LNG để đảm bảo nguồn khí cho các nhà máy điện Phú Mỹ, Bà Rịa, Nhơn Trạch</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(viii) Nhiệt Điện LNG - Phát Triển Phù Hợp</h4>
+
+            <div class="callout callout-success">
+                <h4>Nhiệt Điện LNG - Phát Triển Hệ Thống Cảng LNG</h4>
+                <p><strong>Phát triển phù hợp các nguồn điện sử dụng LNG</strong> nếu có phương án thay thế để giảm sự phụ thuộc vào nhiên liệu nhập khẩu</p>
+                <p style="margin-top: 10px;"><strong>Năm 2030, tổng công suất các nguồn điện LNG đạt 22.524 MW</strong>; giai đoạn 2031-2035 sẽ đưa vào vận hành dự án điện khí LNG Long Sơn, Long An II đã được phê duyệt hoặc có thể đẩy sớm tiến độ nếu điều kiện thuận lợi, đưa một số dự án vào danh mục dự phòng các dự án khác chậm tiến độ trên khai hoặc phụ tải tăng cao để đón làn sóng đầu tư vào Việt Nam</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Chuyển Đổi Sang Hydrogen Năm 2050</h4>
+                <p><strong>Định hướng năm 2050, các nhà máy sử dụng LNG</strong> đốt kèm hydrogen <strong>18.200-26.123 MW</strong>; nhiệt điện khí LNG chuyển chạy hoàn toàn bằng hydrogen <strong>8.576-11.325</strong>; nhiệt điện khí LNG CCS (xây mới, lắp đặt thiết bị thu giữ và lưu trữ các-bon), tổng công suất <strong>1.887-2.269 MW</strong></p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Loại Nhiệt Điện LNG</th>
+                            <th>Năm 2030</th>
+                            <th>Năm 2050</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>LNG thuần túy</strong></td>
+                            <td>22.524 MW</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LNG đốt kèm hydrogen</strong></td>
+                            <td>-</td>
+                            <td>18.200 - 26.123 MW</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LNG chuyển sang hydrogen hoàn toàn</strong></td>
+                            <td>-</td>
+                            <td>8.576 - 11.325 MW</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LNG CCS (Carbon Capture Storage)</strong></td>
+                            <td>-</td>
+                            <td>1.887 - 2.269 MW</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tiếp tục sử dụng khí trong nước hoặc chuyển LNG</strong></td>
+                            <td>-</td>
+                            <td>7.900 MW</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Chuyển sang hydrogen (từ khí trong nước)</strong></td>
+                            <td>-</td>
+                            <td>7.030 MW</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout callout-info">
+                <h4>Hệ Thống Kho, Cảng Nhập Khẩu LNG</h4>
+                <p><strong>Tiếp tục thực hiện các dự án kho, cảng nhập khẩu LNG</strong> tại Thị Vài (cung cấp khí cho Nhơn Trạch 3 và Nhơn Trạch 4 và bổ sung khí cho các nhà máy khu vực Đông Nam Bộ), Sơn Mỹ (cung cấp khí cho Sơn Mỹ I, II). Phát triển hệ thống kho, cảng nhập khẩu LNG đồng bộ với các nhà máy điện trong quy hoạch</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">(ix) Xuất Nhập Khẩu Điện - Tăng Cường Liên Kết Khu Vực</h4>
+
+            <div class="callout callout-success">
+                <h4>Nhập Khẩu Điện Từ Lào & Trung Quốc</h4>
+                <p><strong>(ix) Xuất nhập khẩu điện:</strong> Thực hiện kết nối, trao đổi điện năng có hiệu quả với các nước trong khu vực, bảo đảm lợi ích của các bên, tăng cường an toàn hệ thống điện</p>
+                <p style="margin-top: 10px;"><strong>Đầu tư cơ sở hạ tầng kỹ thuật phục vụ nhập khẩu khí thiên nhiên, LNG</strong>, nhập khẩu than, phù hợp với cơ cấu nguồn nhiệt điện và xu thế chuyển dịch năng lượng</p>
+                <p style="margin-top: 10px;"><strong>Quan tâm đầu tư, khai thác các nguồn điện tại nước ngoài để cung ứng điện về Việt Nam.</strong> Năm 2030, nhập khẩu khoảng <strong>9.360-12.100 MW</strong> từ Lào theo Hiệp định giữa hai Chính phủ và tận dụng khả năng nhập khẩu phù hợp với điều kiện đầu nối từ Trung Quốc với quy mô hợp lý; định hướng năm 2050, nhập khẩu khoảng <strong>14.688 MW</strong>. Nếu điều kiện thuận lợi, giá thành hợp lý, có thể tăng thêm quy mô tối đa hoặc đẩy sớm thời gian nhập khẩu điện từ Lào về khu vực miền Bắc nếu điều kiện thuận lợi</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Xuất Khẩu Điện & Năng Lượng Mới</h4>
+                <p><strong>Ưu tiên phát triển các nguồn điện từ năng lượng tái tạo phục vụ xuất khẩu.</strong> Đến năm 2030, tăng quy mô xuất khẩu điện sang Campuchia lên khoảng 400 MW. Dự kiến đến năm 2035, quy mô công suất xuất khẩu điện sang Singapore, Malaysia và các đối tác khác trong khu vực đạt khoảng <strong>5.000-10.000 MW</strong> và duy trì với quy mô <strong>10.000 MW</strong> đến năm 2050, có thể cao hơn tùy theo nhu cầu của bên nhập khẩu trên cơ sở có hiệu quả kinh tế cao, đảm bảo an ninh năng lượng trong nước và an ninh quốc phòng</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--primary-color);">Tổng Hợp Cơ Cấu Nguồn Điện</h4>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-header">Năm 2030</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tổng công suất lắp đặt trong nước:</span>
+                        <span class="comparison-value"><strong>183.291 - 236.363 MW</strong></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện gió trên bờ & gần bờ:</span>
+                        <span class="comparison-value">26.066 - 38.029 MW (14,2-16,1%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện gió ngoài khơi:</span>
+                        <span class="comparison-value">6.000 - 17.032 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện mặt trời:</span>
+                        <span class="comparison-value">46.459 - 73.416 MW (25,3-31,1%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện sinh khối:</span>
+                        <span class="comparison-value">1.523 - 2.699 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện từ rác:</span>
+                        <span class="comparison-value">1.441 - 2.137 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Thủy điện:</span>
+                        <span class="comparison-value">33.294 - 34.667 MW (14,7-18,2%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện hạt nhân:</span>
+                        <span class="comparison-value">4.000 - 6.400 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nguồn lưu trữ:</span>
+                        <span class="comparison-value">10.000 - 16.300 MW (5,5-6,9%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện than:</span>
+                        <span class="comparison-value">31.055 MW (13,1-16,9%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện khí trong nước:</span>
+                        <span class="comparison-value">10.861 - 14.930 MW (5,9-6,3%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện LNG:</span>
+                        <span class="comparison-value">22.524 MW (9,5-12,3%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nguồn điện linh hoạt:</span>
+                        <span class="comparison-value">2.000 - 3.000 MW (1,1 - 1,3%)</span>
+                    </div>                    
+                    <div class="comparison-item">
+                        <span class="comparison-label">Thủy điện tích năng:</span>
+                        <span class="comparison-value">2.400 - 6.000 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhập khẩu điện:</span>
+                        <span class="comparison-value">9.360 - 12.100 MW (4,0-5,1%)</span>
+                    </div>
+                </div>
+                
+                <div class="comparison-card">
+                    <div class="comparison-header">Năm 2050</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tổng công suất trong nước:</span>
+                        <span class="comparison-value"><strong>774.503 - 838.681 MW</strong></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện gió trên bờ & gần bờ:</span>
+                        <span class="comparison-value">84.696 - 91.400 MW (10,9%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện gió ngoài khơi:</span>
+                        <span class="comparison-value">113.503 - 139.097 MW (14,7-16,6%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện mặt trời:</span>
+                        <span class="comparison-value">293.088 - 295.646 MW (35,3-37,8%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện sinh khối:</span>
+                        <span class="comparison-value">4.829 - 6.960 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện từ rác:</span>
+                        <span class="comparison-value">1.784 - 2.137 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Thủy điện:</span>
+                        <span class="comparison-value">40.624 MW (4,8-5,2%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Điện hạt nhân:</span>
+                        <span class="comparison-value">10.500 - 14.000 MW (1,4-1,7%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nguồn lưu trữ:</span>
+                        <span class="comparison-value">95.983 - 96.120 MW (11,5-12,4%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện than:</span>
+                        <span class="comparison-value"><strong>0 MW (0%)</strong> <span class="badge badge-success">Net Zero</span></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện sinh khối/amoniac:</span>
+                        <span class="comparison-value">25.798 MW (3,1-3,3%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện khí & LNG:</span>
+                        <span class="comparison-value">7.900 MW (0,9-1,0%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Chuyển sang hydrogen:</span>
+                        <span class="comparison-value">7.030 MW (0,8-0,9%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">LNG đốt kèm hydrogen:</span>
+                        <span class="comparison-value">18.200 - 26.123 MW (2,3-3,1%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">LNG chuyển hydrogen hoàn toàn:</span>
+                        <span class="comparison-value">8.576 - 11.325 MW (1,1-1,4%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện linh hoạt:</span>
+                        <span class="comparison-value">21.333 - 38.641 MW (2,8-4,6%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Thủy điện tích năng:</span>
+                        <span class="comparison-value">20.691 - 21.327 MW</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhập khẩu điện:</span>
+                        <span class="comparison-value">14.688 MW (1,8-1,9%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section III: PHƯƠNG ÁN PHÁT TRIỂN LƯỚI ĐIỆN -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="section-number">III.</span> PHƯƠNG ÁN PHÁT TRIỂN LƯỚI ĐIỆN TRUYỀN TẢI</h2>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">2. Phương Án Phát Triển Lưới Điện</h3>
+
+            <h4 style="margin: 25px 0 15px; color: var(--info);">a) Định Hướng Phát Triển</h4>
+
+            <div class="key-points">
+                <h3>Định Hướng Chiến Lược Lưới Điện</h3>
+                <ul>
+                    <li><strong>Phát triển hệ thống truyền tải điện đồng bộ:</strong> Với tiến độ các nguồn điện, nhu cầu phát triển phụ tải của các địa phương, sử dụng công nghệ hiện đại, đảm bảo tiêu chuẩn quốc tế, sẵn sàng kết nối khu vực. Phát triển lưới điện thông minh (Smart Grid) để tích hợp các nguồn năng lượng tái tạo quy mô lớn, đáp ứng yêu cầu vận hành hệ thống điện an toàn, ổn định và kinh tế</li>
+                    
+                    <li><strong>Phát triển lưới điện truyền tải 500 kV và 220 kV:</strong> Bảo đảm khả năng giải tóa công suất các nhà máy điện, nâng cao độ tin cậy cung cấp điện, giảm tổn thất điện năng, đáp ứng tiêu chí N-1 đối với vùng phụ tải quan trọng và N-2 đối với vùng phụ tải đặc biệt quan trọng và nguồn điện hạt nhân</li>
+                    
+                    <li><strong>Phát triển lưới điện truyền tải có dự phòng lâu dài:</strong> Tăng cường sử dụng cột nhiều mạch, nhiều cấp điện áp đi chung để giảm diện tích chiếm đất. Khuyến khích xây dựng các trạm biến áp truyền tải kết hợp cung cấp điện cho phụ tải lân cận</li>
+                    
+                    <li><strong>Lưới điện truyền tải 500 kV giữ vai trò xương sống:</strong> Liên kết các hệ thống điện miền và trao đổi điện năng với các nước trong khu vực. Giới hạn truyền tải liên miền ở mức hợp lý, giảm truyền tải điện đi xa, hạn chế tối đa xây dựng mới các đường dây truyền tải liên miền trước năm 2030</li>
+                    
+                    <li><strong>Xây dựng lưới điện 220 kV:</strong> Bảo đảm độ tin cậy, các trạm biến áp trong khu vực có mật độ phụ tải cao thiết kế theo sơ đồ đảm bảo vận hành linh hoạt. Xây dựng các trạm biến áp 220 kV đủ điều kiện vận hành không người trực. Đẩy mạnh xây dựng các trạm biến áp GIS, trạm biến áp 220/22 kV, trạm ngầm tại các trung tâm phụ tải</li>
+                </ul>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">b) Khối Lượng Xây Dựng Lưới Truyền Tải</h4>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">Giai Đoạn 2025-2030</div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hạng Mục</th>
+                                    <th>Xây Dựng Mới</th>
+                                    <th>Cải Tạo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Trạm biến áp 500 kV</strong></td>
+                                    <td>102.900 MVA</td>
+                                    <td>23.250 MVA</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây 500 kV</strong></td>
+                                    <td>12.944 km</td>
+                                    <td>1.404 km</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạm biến áp 220 kV</strong></td>
+                                    <td>105.565 MVA</td>
+                                    <td>17.509 MVA</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây 220 kV</strong></td>
+                                    <td>15.307 km</td>
+                                    <td>5.483 km</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">Giai Đoạn 2031-2035</div>
+                    
+                    <div class="callout callout-info">
+                        <h4>HVDC - Truyền Tải Cao Áp Một Chiều</h4>
+                        <p><strong>Xây dựng 26.000-36.000 MW dung lượng trạm chuyển đổi điện cao áp một chiều (trạm HVDC)</strong> và <strong>3.500-6.600 km đường dây truyền tải cao áp một chiều (HVDC)</strong></p>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hạng Mục</th>
+                                    <th>Xây Dựng Mới</th>
+                                    <th>Cải Tạo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Trạm HVDC</strong></td>
+                                    <td>26.000 - 36.000 MW</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây HVDC</strong></td>
+                                    <td>3.500 - 6.600 km</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạm biến áp 500 kV</strong></td>
+                                    <td>73.800 MVA</td>
+                                    <td>36.600 MVA</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây 500 kV</strong></td>
+                                    <td>7.480 km</td>
+                                    <td>650 km</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạm biến áp 220 kV</strong></td>
+                                    <td>44.500 MVA</td>
+                                    <td>34.625 MVA</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây 220 kV</strong></td>
+                                    <td>4.296 km</td>
+                                    <td>624 km</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">Giai Đoạn 2036-2050</div>
+                    
+                    <div class="callout callout-info">
+                        <h4>HVDC & HVAC Siêu Cao Áp</h4>
+                        <p><strong>Xây dựng 26.000-36.000 MW dung lượng trạm HVDC</strong> và <strong>3.600-6.700 km đường dây HVDC</strong></p>
+                        <p style="margin-top: 10px;"><strong>Xây dựng 24.000 MVA dung lượng trạm chuyển đổi điện cao áp xoay chiều (trạm HVAC)</strong> trên 500 kV và <strong>2.500 km đường dây truyền tải cao áp xoay chiều HVAC</strong> trên 500kV</p>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Hạng Mục</th>
+                                    <th>Xây Dựng Mới</th>
+                                    <th>Cải Tạo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Trạm HVDC</strong></td>
+                                    <td>26.000 - 36.000 MW</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây HVDC</strong></td>
+                                    <td>3.600 - 6.700 km</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạm HVAC >500kV</strong></td>
+                                    <td>24.000 MVA</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây HVAC >500kV</strong></td>
+                                    <td>2.500 km</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạm biến áp 500 kV</strong></td>
+                                    <td>72.900 MVA</td>
+                                    <td>102.600 MVA</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây 500 kV</strong></td>
+                                    <td>7.846 km</td>
+                                    <td>750 km</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạm biến áp 220 kV</strong></td>
+                                    <td>81.875 MVA</td>
+                                    <td>103.125 MVA</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Đường dây 220 kV</strong></td>
+                                    <td>5.370 km</td>
+                                    <td>830 km</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="callout callout-success">
+                        <h4>Định Hướng Sau 2030 - Kết Nối Siêu Cao Áp</h4>
+                        <p><strong>Phát triển các đường dây truyền tải siêu cao áp một chiều kết nối</strong> khu vực Trung Trung Bộ, Nam Trung Bộ và Bắc Bộ để khai thác mạnh tiềm năng điện gió ngoài khơi</p>
+                        <p style="margin-top: 10px;"><strong>Nghiên cứu các kết nối xuyên châu Á - Thái Bình Dương</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">c) Công Nghệ Lưới Điện Hiện Đại</h4>
+
+            <div class="key-points">
+                <h3>Các Công Nghệ Tiên Tiến</h3>
+                <ul>
+                    <li><strong>Smart Grid (Lưới điện thông minh):</strong> Như HVDC, SVC, SVG, thiết bị FACTS, BESS, DLR phù hợp với nhu cầu hệ thống để đáp ứng các yêu cầu kỹ thuật và tăng hiệu quả vận hành</li>
+                    
+                    <li><strong>Back-to-Back:</strong> Nghiên cứu ứng dụng hệ thống Back-to-Back, thiết bị truyền tải điện linh hoạt để nâng cao khả năng truyền tải, giảm thiểu diện tích chiếm đất. Tổ chức nghiên cứu, ứng dụng công nghệ truyền tải điện xoay chiều và một chiều điện áp trên 500 kV</li>
+                    
+                    <li><strong>HVDC (Truyền tải cao áp một chiều):</strong> Xây dựng các đường dây truyền tải siêu cao áp một chiều kết nối khu vực Trung Trung Bộ, Nam Trung Bộ và Bắc Bộ để khai thác mạnh tiềm năng điện gió ngoài khơi. Nghiên cứu các kết nối xuyên châu Á - Thái Bình Dương</li>
+                    
+                    <li><strong>HVAC (Truyền tải cao áp xoay chiều):</strong> Xây dựng mới 24.000 MVA dung lượng trạm chuyển đổi điện cao áp xoay chiều (trạm HVAC) trên 500 kV và 2.500 km đường dây truyền tải cao áp xoay chiều HVAC trên 500kV</li>
+                    
+                    <li><strong>Nghiên cứu, ứng dụng các công nghệ mới:</strong> Giải pháp lưới điện thông minh (Smart Grid) như HVDC, SVC, SVG, thiết bị FACTS, BESS, DLR phù hợp với nhu cầu hệ thống để đáp ứng các yêu cầu kỹ thuật và tăng hiệu quả vận hành</li>
+                </ul>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">3. Liên Kết Lưới Điện Với Các Nước Trong Khu Vực</h4>
+
+            <div class="callout callout-info">
+                <h4>Kết Nối Khu Vực ASEAN</h4>
+                <p><strong>Tiếp tục nghiên cứu hợp tác, liên kết lưới điện với các nước tiểu vùng sông Mê Kông và các nước ASEAN</strong> ở các cấp điện áp 500 kV và 220 kV để tăng cường khả năng liên kết hệ thống, trao đổi điện năng, tận dụng thế mạnh tài nguyên của các quốc gia</p>
+            </div>
+
+            <div class="callout callout-success">
+                <h4>Kết Nối Với Lào & Trung Quốc</h4>
+                <p><strong>Thực hiện liên kết lưới điện với Lào</strong> bằng các tuyến đường dây 500 kV, 220 kV để nhập khẩu điện từ các nhà máy điện tại Lào theo Hiệp định và Biên bản ghi nhớ hợp tác đã ký kết giữa hai Chính phủ</p>
+                <p style="margin-top: 10px;"><strong>Duy trì liên kết lưới điện với các nước láng giềng</strong> qua các cấp điện áp 220 kV, 110 kV, trung thế hiện có; nghiên cứu thực hiện giải pháp hòa đồng bộ giữa các hệ thống điện bằng trạm chuyển đổi một chiều - xoay chiều ở cấp điện áp 220 - 500 kV</p>
+            </div>
+
+            <div class="callout callout-warning">
+                <h4>Nghiên Cứu Kết Nối Xuyên Châu Lục</h4>
+                <p><strong>Thực hiện kết nối lưới điện bằng các tuyến đường dây 500 kV, 220 kV</strong> để nhập khẩu điện từ Trung Quốc về các tỉnh phía Bắc trong giai đoạn đến năm 2030, trong đó nghiên cứu phương án liên kết theo hình thức chuyển đổi một chiều - xoay chiều hoặc siêu cao áp một chiều</p>
+                <p style="margin-top: 10px;"><strong>Nghiên cứu, ứng dụng liên kết lưới điện siêu cao áp với các nước trong khu vực ASEAN</strong> phục vụ xuất, nhập khẩu điện. Phương án cụ thể được cấp có thẩm quyền chấp thuận theo từng dự án</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">4. Định Hướng Phát Triển Điện Nông Thôn</h4>
+
+            <div class="callout callout-success">
+                <h4>Chương Trình Cấp Điện Nông Thôn</h4>
+                <p><strong>Xây dựng mới Chương trình cấp điện nông thôn, miền núi và hải đảo</strong> để cấp cho các hộ dân chưa có điện và cải tạo lưới điện nông thôn hiện có. Thực hiện cung cấp điện từ lưới điện quốc gia, kết hợp với cung cấp điện từ nguồn năng lượng tái tạo cho khu vực nông thôn, miền núi, hải đảo; phấn đầu <strong>100% số hộ dân nông thôn có điện đến năm 2025</strong></p>
+            </div>
+        </div>
+
+        <!-- Section IV: NHU CẦU VỐN ĐẦU TƯ -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="section-number">IV.</span> NHU CẦU VỐN ĐẦU TƯ - ƯỚC TÍNH ~835,4 TỶ USD</h2>
+            </div>
+
+            <div class="executive-summary" style="margin-bottom: 30px;">
+                <h2>Tổng Quan Đầu Tư 2026-2050</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    <strong>Tổng vốn đầu tư phát triển nguồn và lưới điện truyền tải:</strong> 
+                    <span style="font-size: 1.3rem; color: #fbbf24;">~835,4 tỷ USD</span>
+                </p>
+                <p>Đây là quy mô đầu tư chưa từng có trong lịch sử ngành điện Việt Nam, thể hiện quyết tâm chuyển đổi năng lượng toàn diện</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Giai Đoạn 2026-2030</div>
+                    <div class="stat-value">136,3</div>
+                    <div class="stat-unit">tỷ USD</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Giai Đoạn 2031-2035</div>
+                    <div class="stat-value">130,0</div>
+                    <div class="stat-unit">tỷ USD</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Giai Đoạn 2036-2050</div>
+                    <div class="stat-value">569,1</div>
+                    <div class="stat-unit">tỷ USD</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tổng Vốn Đầu Tư</div>
+                    <div class="stat-value">835,4</div>
+                    <div class="stat-unit">tỷ USD </div>
+                </div>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin: 30px 0 20px;">Phân Bổ Vốn Theo Giai Đoạn</h3>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-header">Giai Đoạn 2026-2030</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tổng vốn:</span>
+                        <span class="comparison-value"><strong>136,3 tỷ USD</strong></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Đầu tư cho nguồn điện:</span>
+                        <span class="comparison-value">118,2 tỷ USD</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Lưới điện truyền tải:</span>
+                        <span class="comparison-value">18,1 tỷ USD</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tỷ lệ:</span>
+                        <span class="comparison-value">86,7% : 13,3%</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="comparison-header">Giai Đoạn 2031-2035</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tổng vốn:</span>
+                        <span class="comparison-value"><strong>130,0 tỷ USD</strong></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Đầu tư cho nguồn điện:</span>
+                        <span class="comparison-value">114,1 tỷ USD</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Lưới điện truyền tải:</span>
+                        <span class="comparison-value">15,9 tỷ USD</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tỷ lệ:</span>
+                        <span class="comparison-value">87,8% : 12,2%</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="comparison-header">Giai Đoạn 2036-2050</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tổng vốn:</span>
+                        <span class="comparison-value"><strong>569,1 tỷ USD</strong></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Đầu tư cho nguồn điện:</span>
+                        <span class="comparison-value">541,2 tỷ USD</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Lưới điện truyền tải:</span>
+                        <span class="comparison-value">27,9 tỷ USD</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Tỷ lệ:</span>
+                        <span class="comparison-value">95,1% : 4,9%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container" style="margin-top: 30px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hạng Mục</th>
+                            <th>2026-2030</th>
+                            <th>2031-2035</th>
+                            <th>2036-2050</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nguồn điện</strong></td>
+                            <td>118,2 tỷ USD</td>
+                            <td>114,1 tỷ USD</td>
+                            <td>541,2 tỷ USD</td>
+                            <td><strong>773,5 tỷ USD</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lưới điện truyền tải</strong></td>
+                            <td>18,1 tỷ USD</td>
+                            <td>15,9 tỷ USD</td>
+                            <td>27,9 tỷ USD</td>
+                            <td><strong>61,9 tỷ USD</strong></td>
+                        </tr>
+                        <tr style="background: rgba(59, 130, 246, 0.1); font-weight: bold;">
+                            <td><strong>TỔNG CỘNG</strong></td>
+                            <td><strong>136,3 tỷ USD</strong></td>
+                            <td><strong>130,0 tỷ USD</strong></td>
+                            <td><strong>569,1 tỷ USD</strong></td>
+                            <td><strong style="color: var(--primary-color); font-size: 1.2rem;">835,4 tỷ USD</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout callout-warning" style="margin-top: 30px;">
+                <h4>Lưu Ý Quan Trọng</h4>
+                <p><strong>Các con số trên sẽ được chuẩn xác trong các quy hoạch tiếp theo</strong> theo quy định của pháp luật về quy hoạch, điện lực, trong đó xác định rõ phạm vi nguồn điện, lưới điện trong phương án cấp điện đã được quy định tại <strong>Điều 4 và khoản 1 Điều 24 Nghị định số 56/2025/NĐ-CP</strong> ngày 03 tháng 3 năm 2025 của Chính phủ</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Cơ Cấu Vốn Đầu Tư</h4>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Nguồn điện chiếm 92,6%</strong> (773,5 tỷ USD) - Phản ánh ưu tiên phát triển năng lượng tái tạo</li>
+                    <li><strong>Lưới điện chiếm 7,4%</strong> (61,9 tỷ USD) - Đầu tư vào Smart Grid, HVDC, HVAC hiện đại</li>
+                    <li><strong>Giai đoạn 2036-2050 chiếm 68,1%</strong> tổng vốn - Bùng nổ năng lượng sạch</li>
+                    <li><strong>Trung bình ~33,4 tỷ USD/năm</strong> - Quy mô đầu tư khổng lồ</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="section-number">V.</span> BỐ TRÍ SỬ DỤNG ĐẤT CHO PHÁT TRIỂN ĐIỆN LỰC</h2>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Nhu Cầu Đất 2021-2030</div>
+                    <div class="stat-value">89,9 - 93,36</div>
+                    <div class="stat-unit">nghìn ha</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Định Hướng 2031-2050</div>
+                    <div class="stat-value">169,8 - 195,15</div>
+                    <div class="stat-unit">nghìn ha</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">So Với Quy Hoạch 39/2021</div>
+                    <div class="stat-value">Phù Hợp</div>
+                    <div class="stat-unit"><span class="badge badge-success">Đã Phê Duyệt</span></div>
+                </div>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin: 30px 0 20px;">Phân Bổ Đất Theo Giai Đoạn</h3>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Giai Đoạn</th>
+                            <th>Nhu Cầu Đất</th>
+                            <th>Ghi Chú</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>2021-2030</strong></td>
+                            <td><strong>89,9 - 93,36 nghìn ha</strong></td>
+                            <td>Phù hợp với chi tiêu phân bổ đất đai trong Nghị quyết số 39/2021/QH15</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2031-2050</strong></td>
+                            <td><strong>169,8 - 195,15 nghìn ha</strong></td>
+                            <td>Định hướng cho giai đoạn dài hạn</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout callout-info">
+                <h4>Căn Cứ Pháp Lý</h4>
+                <p><strong>Nhu cầu đất cho phát triển cơ sở và kết cấu hạ tầng điện lực khoảng 89,9 - 93,36 nghìn ha trong giai đoạn 2021-2030</strong> và khoảng <strong>169,8 - 195,15 nghìn ha giai đoạn 2031-2050</strong>, phù hợp với chi tiêu phân bổ đất dài trong <strong>Nghị quyết số 39/2021/QH15</strong>, để đảm bảo thực hiện các mục tiêu phát triển điện</p>
+            </div>
+        </div>
+
+        <!-- Section VI: BẢO VỆ MÔI TRƯỜNG -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="section-number">VI.</span> BẢO VỆ MÔI TRƯỜNG - LỘ TRÌNH NET ZERO 2050</h2>
+            </div>
+
+            <div class="executive-summary" style="margin-bottom: 30px;">
+                <h2>Cam Kết Net Zero Nhiệt Điện Than</h2>
+                <p style="font-size: 1.1rem;">
+                    Quy hoạch Điện VIII Điều chỉnh cam kết <strong>loại bỏ hoàn toàn nhiệt điện than vào năm 2050 (0%)</strong>, 
+                    đánh dấu bước ngoặt lịch sử trong chuyển đổi năng lượng Việt Nam
+                </p>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">Lộ Trình Giảm Phát Thải CO₂</h3>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-header">Năm 2030</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Phát thải CO₂:</span>
+                        <span class="comparison-value"><strong>197-199</strong> triệu tấn</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện than:</span>
+                        <span class="comparison-value">31.055 MW (13,1-16,9%)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Mục tiêu JETP:</span>
+                        <span class="comparison-value">170 triệu tấn</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Trạng thái:</span>
+                        <span class="comparison-value"><span class="badge badge-warning">Đang Chuyển Đổi</span></span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="comparison-header">Năm 2050</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Phát thải CO₂:</span>
+                        <span class="comparison-value"><strong>~27</strong> triệu tấn</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Nhiệt điện than:</span>
+                        <span class="comparison-value"><strong>0 MW (0%)</strong></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Giảm so với 2030:</span>
+                        <span class="comparison-value"><strong>-86%</strong></span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Trạng thái:</span>
+                        <span class="comparison-value"><span class="badge badge-success">Net Zero Than</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout callout-success" style="margin-top: 30px;">
+                <h4>Cam Kết JETP - Quan Hệ Đối Tác Chuyển Đổi Năng Lượng Công Bằng</h4>
+                <li>Hướng tới đạt mức phát thải đỉnh không quá <strong>170 triệu tấn</strong> vào năm 2030 với điều kiện các cam kết theo JETP được các đối tác quốc tế thực hiện đầy đủ, thực chất</li>
+                <p style="margin-top: 10px;"><em>JETP (Just Energy Transition Partnership): Quan hệ đối tác chuyển đổi năng lượng công bằng với các đối tác quốc tế</em></p>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin: 40px 0 20px;">2. Các Hoạt Động Bảo Vệ Môi Trường</h3>
+
+            <div class="key-points">
+                <h3>Bốn Hoạt Động Bảo Vệ Môi Trường Chính</h3>
+                <ul>
+                    <li><strong>Chuyển đổi năng lượng mạnh mẽ:</strong> Thực hiện chuyển dịch năng lượng mạnh mẽ từ nhiên liệu hóa thạch sang năng lượng tái tạo và năng lượng mới để giảm phát thải khí ô nhiễm và khí gây hiệu ứng nhà kính, đáp ứng mục tiêu phát thải ròng bằng "0" vào năm 2050</li>
+                    
+                    <li><strong>Áp dụng công nghệ hiện đại:</strong> Áp dụng công nghệ mới, hiện đại theo hướng chuyển dịch sang nền kinh tế các-bon thấp, giảm tiêu thụ năng lượng, giảm phát thải, hướng đến đáp ứng các quy định về phát thải các-bon trên đơn vị sản phẩm hàng hóa xuất khẩu và thị trường các-bon. Chuyển dịch năng lượng phải phù hợp với xu hướng quốc tế và đảm bảo bền vững, công bằng, công lý</li>
+                    
+                    <li><strong>Tránh và hạn chế tối đa:</strong> Tránh và hạn chế tối đa việc phát triển các công trình điện và cơ sở hạ tầng năng lượng ở những vị trí có nguy cơ ảnh hưởng đến rừng, khu bảo tồn tự nhiên và đa dạng sinh học, di sản thiên nhiên, di tích và di sản văn hóa đã được xếp hạng, phù hợp với phần vùng bảo vệ môi trường quốc gia</li>
+                    
+                    <li><strong>Chống biến đổi khí hậu:</strong> Cần tính đến các giải pháp chống biến đổi khí hậu và ứng phó với các hiện tượng thời tiết cực đoạn như hạn hán, ngập lụt, bão lũ, sạt lở, nắng nóng, lượng mưa, nước biển dâng... trong quá trình triển khai dự án điện lực để công trình vận hành an toàn, ổn định, giảm tối đa những rủi ro và thiệt hại</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Chuyển Đổi Năng Lượng Công Bằng (Just Energy Transition)</h4>
+                <p><strong>Thực hiện chuyển dịch năng lượng, trong đó trọng tâm là chuyển đổi từ nhiên liệu hóa thạch sang năng lượng tái tạo và năng lượng mới;</strong> tăng cường bề hấp thụ và nghiên cứu ứng dụng công nghệ thu giữ các-bon</p>
+                <p style="margin-top: 10px;"><strong>Nghiên cứu, ứng dụng và phát triển công nghệ xử lý chất thải</strong>, đặc biệt là chất thải từ điện năng lượng tái tạo theo nguyên tắc giảm thiểu, thu hồi, tái sử dụng, tái chế để giảm tối đa lượng chất thải, tận dụng vật liệu thải bỏ làm nguyên liệu cho các ngành kinh tế khác</p>
+            </div>
+
+            <div class="callout callout-info">
+                <h4>Tổng Hợp Các Mục Tiêu Môi Trường</h4>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;"><em>Ghi chú: Đây là tổng hợp từ các phần khác nhau trong quy hoạch, không phải nội dung trực tiếp từ Section VI</em></p>
+                <ul>
+                    <li><strong>Kiểm soát phát thải:</strong> Năm 2030: 197-199 triệu tấn CO₂ → Năm 2050: ~27 triệu tấn</li>
+                    <li><strong>Tỷ lệ năng lượng tái tạo:</strong> Năm 2030: 28-36% → Năm 2050: 74-75%</li>
+                    <li><strong>Loại bỏ nhiệt điện than:</strong> Từ 31.055 MW (2030) → 0 MW (2050)</li>
+                    <li><strong>Chuyển sang sinh khối/amoniac:</strong> 25.798 MW năm 2050</li>
+                    <li><strong>Phát triển hydrogen:</strong> 7.030 MW chuyển đổi + 8.576-11.325 MW LNG sang H₂</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section VII: DANH MỤC DỰ ÁN ƯU TIÊN -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="section-number">VII.</span> DANH MỤC DỰ ÁN QUAN TRỌNG & ƯU TIÊN</h2>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">1. Tiêu Chí Lựa Chọn Dự Án</h3>
+
+            <div class="key-points">
+                <h3>Bảy Tiêu Chí Ưu Tiên</h3>
+                <ul>
+                    <li><strong>Dự án có vai trò quan trọng:</strong> Trong cân đối cung - cầu điện quốc gia và các vùng, miền, các trung tâm phụ tải quan trọng nhằm đảm bảo an ninh cung cấp điện, đáp ứng nhu cầu phát triển kinh tế - xã hội</li>
+                    
+                    <li><strong>Dự án đảm bảo quốc phòng:</strong> Các dự án đảm bảo lợi ích tổng hợp kinh tế kết hợp quốc phòng an ninh</li>
+                    
+                    <li><strong>Dự án tăng cường nguồn điện:</strong> Các dự án tăng cường nguồn điện cho các khu vực có nguy cơ thiếu điện</li>
+                    
+                    <li><strong>Dự án nhằm đảm bảo an toàn:</strong> An ninh hệ thống điện quốc gia giữa nguồn điện chạy nền, nguồn điện năng lượng tái tạo và phụ tải (thủy điện tích năng, pin lưu trữ năng lượng...)</li>
+                    
+                    <li><strong>Dự án góp phần thích ứng:</strong> Với biến đổi khí hậu, giảm phát thải khí nhà kính, bảo vệ môi trường (điện sản xuất từ năng lượng tái tạo, điện sinh khối, điện sản xuất từ rác, chất thải rắn, đồng phát, sử dụng khí dư...)</li>
+                    
+                    <li><strong>Dự án góp phần tạo ra:</strong> Hệ sinh thái tổng thể về công nghiệp và dịch vụ năng lượng tái tạo</li>
+                    
+                    <li><strong>Dự án xuất khẩu điện:</strong> Xuất khẩu năng lượng mới sản xuất từ năng lượng tái tạo</li>
+                </ul>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin: 40px 0 20px;">2. Danh Mục Dự Án Ưu Tiên</h3>
+
+            <div class="callout callout-info">
+                <h4>Cơ Sở Pháp Lý</h4>
+                <p><strong>Danh mục dự kiến các dự án quan trọng quốc gia, dự án ưu tiên của ngành điện</strong> được xây dựng dựa trên các tiêu chí và luận chứng sau đây:</p>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">a) Dự Án Nguồn Điện Ưu Tiên</h4>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Loại Dự Án</th>
+                            <th>Tên Dự Án</th>
+                            <th>Quy Mô</th>
+                            <th>Thời Gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: rgba(239, 68, 68, 0.1);">
+                            <td><strong>Nhiệt điện than đang xây dựng</strong></td>
+                            <td>
+                                1. Nà Dương II<br>
+                                2. An Khánh - Bắc Giang<br>
+                                3. Vũng Áng 2<br>
+                                4. Quảng Trạch I<br>
+                                5. Long Phú 1
+                            </td>
+                            <td>~4.360 MW</td>
+                            <td>Hoàn thành 2030</td>
+                        </tr>
+                        <tr style="background: rgba(59, 130, 246, 0.1);">
+                            <td><strong>Điện hạt nhân</strong></td>
+                            <td>Ninh Thuận 1 & 2</td>
+                            <td>4.000 - 6.400 MW</td>
+                            <td>Vận hành 2030-2035</td>
+                        </tr>
+                        <tr style="background: rgba(16, 185, 129, 0.1);">
+                            <td><strong>Nhiệt điện khí trong nước</strong></td>
+                            <td>
+                                1. Lô B, Cá Voi Xanh (6.900 MW)<br>
+                                2. Ô Môn II, III, IV (3.750 MW)<br>
+                                3. Miền Trung I, II (3.750 MW)<br>
+                                4. TBKHH Quảng Trị (340 MW)
+                            </td>
+                            <td>10.861 - 14.930 MW</td>
+                            <td>2030</td>
+                        </tr>
+                        <tr style="background: rgba(245, 158, 11, 0.1);">
+                            <td><strong>Nhiệt điện LNG</strong></td>
+                            <td>
+                                1. Long Sơn<br>
+                                2. Long An II<br>
+                                3. Thị Vài (Nhơn Trạch 3&4)<br>
+                                4. Sơn Mỹ I, II
+                            </td>
+                            <td>22.524 MW</td>
+                            <td>2030-2035</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Thủy điện tích năng</strong></td>
+                            <td>Các dự án được phê duyệt</td>
+                            <td>2.400 - 6.000 MW</td>
+                            <td>2030</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pin lưu trữ</strong></td>
+                            <td>Phân tán gần nguồn điện gió, mặt trời</td>
+                            <td>10.000 - 16.300 MW</td>
+                            <td>2030</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="margin: 30px 0 15px; color: var(--info);">b) Dự Án Lưới Điện Truyền Tải Ưu Tiên</h4>
+
+            <div class="key-points">
+                <h3>Các Dự Án Trọng Điểm</h3>
+                <ul>
+                    <li><strong>Giai đoạn 2025-2030:</strong> 102.900 MVA và cải tạo 23.250 MVA trạm biến áp 500kV; 12.944 km và cải tạo 1.404 km đường dây 500kV</li>
+                    
+                    <li><strong>Giai đoạn 2031-2035:</strong> Xây dựng 26.000-36.000 MW dung lượng trạm HVDC và 3.500-6.600 km đường dây HVDC</li>
+                    
+                    <li><strong>Giai đoạn 2036-2050:</strong> Tiếp tục xây dựng 26.000-36.000 MW HVDC và 24.000 MVA trạm HVAC >500kV</li>
+                    
+                    <li><strong>Đường dây truyền tải siêu cao áp:</strong> Kết nối Trung Trung Bộ, Nam Trung Bộ và Bắc Bộ để khai thác điện gió ngoài khơi</li>
+                    
+                    <li><strong>Kết nối khu vực:</strong> Tuyến 500kV, 220kV với Lào, Trung Quốc; nghiên cứu kết nối xuyên châu Á - Thái Bình Dương</li>
+                </ul>
+            </div>
+
+            <div class="callout callout-warning">
+                <h4>Lưu Ý Quan Trọng</h4>
+                <p><strong>Thứ tự ưu tiên thực hiện:</strong> Danh mục dự kiến các dự án quan trọng quốc gia, dự án ưu tiên của ngành điện nêu tại các <a href="https://moit.gov.vn/upload/2005517/fck/files/768_QD-TTg_15042025-signed_1__9548d.pdf" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; text-decoration: underline;">Phụ lục I, III</a> được sắp xếp theo thứ tự như sau:</p>
+                <ol style="margin-top: 10px; padding-left: 20px;">
+                    <li>Các dự án có vai trò quan trọng trong cân đối cung - cầu điện quốc gia</li>
+                    <li>Các dự án đảm bảo quốc phòng; các dự án đảm bảo lợi ích tổng hợp kinh tế kết hợp quốc phòng an ninh</li>
+                    <li>Các dự án tăng cường nguồn điện cho các khu vực có nguy cơ thiếu điện</li>
+                    <li>Các dự án nhằm đảm bảo an toàn, an ninh hệ thống điện quốc gia</li>
+                    <li>Các dự án góp phần thích ứng với biến đổi khí hậu</li>
+                    <li>Các dự án xuất khẩu điện, xuất khẩu năng lượng mới</li>
+                    <li>Các dự án lưới điện 500 kV và 220 kV</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Section VIII: GIẢI PHÁP THỰC HIỆN -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title"><span class="section-number">VIII.</span> GIẢI PHÁP THỰC HIỆN QUY HOẠCH</h2>
+            </div>
+
+            <div class="executive-summary" style="margin-bottom: 30px;">
+                <h2>11 Nhóm Giải Pháp Chiến Lược</h2>
+                <p style="font-size: 1.05rem;">
+                    Để triển khai thành công Quy hoạch Điện VIII Điều chỉnh, cần thực hiện đồng bộ và toàn diện 11 nhóm giải pháp, 
+                    từ pháp luật, chính sách đến công nghệ, tài chính và hợp tác quốc tế
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1 - Giải Pháp Bảo Đảm An Ninh Cung Cấp Điện</div>
+                    
+                    <div class="key-points">
+                        <h3>Định Hướng Chủ Chốt</h3>
+                        <ul>
+                            <li><strong>Đa dạng hóa nguồn nhiên liệu:</strong> Đa dạng hóa nguồn nhiên liệu sử dụng cho phát điện, kết hợp hài hòa nguồn năng lượng sơ cấp trong nước và nhập khẩu</li>
+                            
+                            <li><strong>Tìm kiếm và khai thác:</strong> Đẩy mạnh tìm kiếm, thăm dò và khai thác than, dầu khí trong nước phục vụ sản xuất điện để giảm phụ thuộc vào nhiên liệu nhập khẩu</li>
+                            
+                            <li><strong>Đầu tư cơ sở hạ tầng:</strong> Đầu tư cơ sở hạ tầng kỹ thuật phục vụ nhập khẩu khí thiên nhiên, LNG, nhập khẩu than, phù hợp với cơ cấu nguồn nhiệt điện và xu thế chuyển dịch năng lượng</li>
+                            
+                            <li><strong>Phát triển mạnh nguồn năng lượng tái tạo:</strong> Phát triển mạnh các nguồn năng lượng tái tạo nhằm thay thế tối đa các nguồn năng lượng hóa thạch. Kịp thời cập nhật tiến bộ khoa học - công nghệ trên thế giới về các nguồn năng lượng mới (hydrogen, amoniac xanh...) để sử dụng cho phát điện</li>
+                            
+                            <li><strong>Nghiên cứu ứng dụng công nghệ:</strong> Nghiên cứu ứng dụng công nghệ chuyển đổi nhiên liệu các nhà máy nhiệt điện chạy than, khí sang nhiên liệu sinh khối, amoniac xanh, hydrogen</li>
+                            
+                            <li><strong>Tổ chức nghiên cứu:</strong> Tổ chức nghiên cứu, đánh giá tiềm năng các nguồn năng lượng phi truyền thống</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2 - Giải Pháp Tạo Nguồn Vốn và Huy Động Vốn Đầu Tư</div>
+                    
+                    <div class="callout callout-info">
+                        <h4>Huy Động Đa Dạng Nguồn Vốn</h4>
+                        <p><strong>Nghiên cứu, hoàn thiện các cơ chế tài chính và huy động vốn cho đầu tư phát triển ngành điện</strong></p>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>Đa dạng hóa nguồn vốn:</h3>
+                        <ul>
+                            <li><strong>Đa dạng hóa nguồn vốn:</strong> Đa dạng hóa các nguồn vốn, các hình thức huy động vốn, thu hút có hiệu quả các nguồn vốn trong và ngoài nước vào phát triển điện lực, đảm bảo quốc phòng, an ninh và cạnh tranh trong thị trường điện. Tăng cường kêu gọi, sử dụng có hiệu quả các cam kết hỗ trợ của quốc tế (ví dụ JETP, AZEC...), các nguồn tín dụng xanh, tín dụng khí hậu, trái phiếu xanh...</li>
+                            
+                            <li><strong>Đa dạng hóa hình thức đầu tư:</strong> Đa dạng hóa hình thức đầu tư (nhà nước, tư nhân, đối tác hợp tác công - tư...), đối với các dự án điện. Phát huy vai trò của gia doanh nghiệp nhà nước, thu hút mạnh khu vực tư nhân trong và ngoài nước tham gia đầu tư phát triển điện. Tiếp tục đàm phán, sử dụng có hiệu quả các nguồn tài trợ, hỗ trợ thu xếp vốn của các đối tác quốc tế trong quá trình thực hiện chuyển dịch năng lượng và hướng tới phát thải ròng bằng "0" của Việt Nam</li>
+                            
+                            <li><strong>Tạo lập môi trường thuận lợi:</strong> Tạo lập môi trường thuận lợi, minh bạch, thu hút, khuyến khích tư nhân tham gia đầu tư, phát triển các dự án điện. Tiếp tục đàm phán, sử dụng có hiệu quả các cam kết hỗ trợ của quốc tế trong quá trình thực hiện chuyển dịch năng lượng và hướng tới phát thải ròng bằng "0" của Việt Nam</li>
+                            
+                            <li><strong>Từng bước tăng khả năng huy động:</strong> Từng bước tăng khả năng huy động tài chính của các doanh nghiệp trong lĩnh vực điện lực theo yêu cầu của các tổ chức tài chính trong nước và quốc tế</li>
+                            
+                            <li><strong>Hoàn thiện cơ chế:</strong> Hoàn thiện cơ chế, chính sách khuyến khích các doanh nghiệp trong nước tham gia phát triển năng lượng tái tạo, phát triển công nghiệp năng lượng tái tạo, năng lượng mới phục vụ trong nước và xuất khẩu, phát triển công nghiệp chế tạo thiết bị ngành điện</li>
+                            
+                            <li><strong>Xây dựng chính sách:</strong> Xây dựng chính sách nâng cao tỷ lệ nội địa hóa trong ngành điện để nâng cao tính độc lập tự chủ, giảm giá thành</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">3 - Giải Pháp Về Pháp Luật, Chính Sách</div>
+                    
+                    <div class="key-points">
+                        <h3>Hoàn Thiện Hệ Thống Pháp Luật</h3>
+                        <ul>
+                            <li><strong>Hoàn thiện cơ chế điều hành giá điện:</strong> Theo cơ chế thị trường có sự điều tiết của Nhà nước, bảo đảm kết hợp hài hòa giữa các mục tiêu chính trị - kinh tế - xã hội. Nhà nước và mục tiêu sản xuất kinh doanh, tự chủ tài chính của các doanh nghiệp ngành điện. Giá điện bảo đảm thu hồi chi phí, có mức lợi nhuận hợp lý, thu hút đầu tư phát triển điện, khuyến khích cạnh tranh trong các khâu sản xuất, truyền tải, phân phối, bán lẻ, sử dụng điện, chống lãng phí điện. Tiếp tục cải tiến và hoàn thiện biểu giá điện hiện hành. Nghiên cứu thực hiện giá điện hai thành phần vào thời điểm thích hợp. Tiếp tục thực hiện minh bạch giá điện</li>
+                            
+                            <li><strong>Sửa đổi Luật Sử dụng năng lượng:</strong> Sửa đổi Luật Sử dụng năng lượng tiết kiệm và hiệu quả để tạo sự chuyển biến mạnh mẽ trong việc giảm cường độ sử dụng năng lượng của nền kinh tế, ban hành chế tài và các tiêu chuẩn, quy chuẩn bắt buộc về sử dụng hiệu quả năng lượng, góp phần đổi mới mô hình tăng trưởng của nền kinh tế</li>
+                            
+                            <li><strong>Rà soát hệ thống pháp luật:</strong> Rà soát hệ thống pháp luật, các văn bản pháp lý để phát triển điện hạt nhân. Có lộ trình xây dựng hệ thống pháp quy để đảm bảo an toàn hạt nhân</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">4 - Giải Pháp Bảo Vệ Môi Trường, Phòng, Chống Thiên Tai</div>
+                    
+                    <div class="callout callout-success">
+                        <h4>Chuyển Đổi Năng Lượng Bền Vững</h4>
+                        <p><strong>Thực hiện chuyển dịch năng lượng, trong đó trọng tâm là chuyển đổi từ nhiên liệu hóa thạch sang năng lượng tái tạo và năng lượng mới;</strong> tăng cường bề hấp thụ và nghiên cứu ứng dụng công nghệ thu giữ các-bon</p>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>Năm Giải Pháp Môi Trường</h3>
+                        <ul>
+                            <li><strong>Nghiên cứu, ứng dụng và phát triển:</strong> Nghiên cứu, ứng dụng và phát triển công nghệ xử lý chất thải, đặc biệt là chất thải từ điện năng lượng tái tạo theo nguyên tắc giảm thiểu, thu hồi, tái sử dụng, tái chế để giảm tối đa lượng chất thải, tận dụng vật liệu thải bỏ làm nguyên liệu cho các ngành kinh tế khác</li>
+                            
+                            <li><strong>Thực hiện các giải pháp:</strong> Thực hiện các giải pháp phòng chống thiên tai, ứng phó với các hiện tượng thời tiết cực đoan ngay từ quá trình lựa chọn vị trí dự án, thiết kế, xây dựng công trình đến sản xuất vận hành</li>
+                            
+                            <li><strong>Hạn chế tối đa việc phát triển:</strong> Hạn chế tối đa việc phát triển các công trình điện và cơ sở hạ tầng ở những vị trí có nguy cơ ảnh hưởng đến rừng, khu bảo tồn tự nhiên và đa dạng sinh học, di sản thiên nhiên, di tích và di sản văn hóa đã được xếp hạng, phù hợp với phần vùng bảo vệ môi trường quốc gia</li>
+                            
+                            <li><strong>Áp dụng công nghệ mới:</strong> Áp dụng công nghệ mới, hiện đại theo hướng chuyển dịch sang nền kinh tế các-bon thấp, giảm tiêu thụ năng lượng, giảm phát thải, hướng đến đáp ứng các quy định về phát thải các-bon trên đơn vị sản phẩm hàng hóa xuất khẩu và thị trường các-bon</li>
+                            
+                            <li><strong>Cần tính đến các giải pháp:</strong> Cần tính đến các giải pháp chống biến đổi khí hậu và ứng phó với các hiện tượng thời tiết cực đoan như hạn hán, ngập lụt, bão lũ, sạt lở, nắng nóng, lượng mưa, nước biển dâng... trong quá trình triển khai dự án điện lực để công trình vận hành an toàn, ổn định, giảm tối đa những rủi ro và thiệt hại</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">5 - Giải Pháp Về Khoa Học và Công Nghệ</div>
+                    
+                    <div class="key-points">
+                        <h3>Đổi Mới Công Nghệ Toàn Diện</h3>
+                        <ul>
+                            <li><strong>Đầu tư thành lập trung tâm nghiên cứu:</strong> Đầu tư thành lập trung tâm nghiên cứu cơ bản và trung tâm phát triển về năng lượng tái tạo, năng lượng mới, công nghệ lưu trữ các-bon tại Việt Nam để nâng cao trình độ, tiếp nhận và chuyển giao công nghệ, quản trị nhằm đẩy nhanh và mở rộng quy mô triển khai năng lượng tái tạo và quản lý hệ thống điện sạch tại Việt Nam và khu vực</li>
+                            
+                            <li><strong>Đầu tư cho nghiên cứu và phát triển (R&D):</strong> Đầu tư cho nghiên cứu và phát triển (R&D) về điện lực</li>
+                            
+                            <li><strong>Sử dụng công nghệ hiện đại:</strong> Sử dụng công nghệ hiện đại cho các công trình điện xây dựng mới; từng bước nâng cấp, cải tạo các công trình hiện có</li>
+                            
+                            <li><strong>Cải tạo, nâng cấp hệ thống:</strong> Cải tạo, nâng cấp hệ thống truyền tải và phân phối điện, nâng cao độ tin cậy, giảm tổn thất điện năng. Đẩy nhanh lộ trình xây dựng lưới điện thông minh</li>
+                            
+                            <li><strong>Hiện đại hóa hệ thống:</strong> Hiện đại hóa hệ thống thông tin dữ liệu, các hệ thống tự động hóa, điều khiển phục vụ công tác điều độ, vận hành hệ thống điện và thị trường điện. Tiếp cận thành tựu khoa học công nghệ mới, trí tuệ nhân tạo, kết nối vạn vật, trong đó có chuyển đổi số trong ngành điện</li>
+                            
+                            <li><strong>Từng bước áp dụng các biện pháp:</strong> Từng bước áp dụng các biện pháp khuyến khích và bắt buộc đối mới công nghệ, thiết bị của các ngành kinh tế sử dụng nhiều điện</li>
+                            
+                            <li><strong>Thực hiện thắng lợi Nghị quyết:</strong> Thực hiện thắng lợi Nghị quyết số 57-NQ/TW ngày 22 tháng 12 năm 2024 của Bộ Chính trị về đột phá phát triển khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số quốc gia</li>
+                            
+                            <li><strong>Củng cố cơ sở hạ tầng:</strong> Củng cố cơ sở hạ tầng hỗ trợ kỹ thuật và tiềm lực khoa học và công nghệ quốc gia về phát triển chung và đảm bảo an toàn, an ninh hạt nhân cho điện hạt nhân</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">6 - Giải Pháp Về Sử Dụng Điện Tiết Kiệm và Hiệu Quả</div>
+                    
+                    <div class="callout callout-warning">
+                        <h4>Sử Dụng Điện Bền Vững</h4>
+                        <p><strong>Tăng cường nhận thức sử dụng năng lượng tiết kiệm và hiệu quả</strong>, bảo vệ môi trường là quốc sách quan trọng và trách nhiệm của toàn xã hội như tính chất Nghị quyết số 55-NQ/TW ngày 11 tháng 02 năm 2020 của Bộ Chính trị</p>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>Giải Pháp Tiết Kiệm Điện</h3>
+                        <ul>
+                            <li><strong>Khuyến khích đầu tư:</strong> Khuyến khích đầu tư vào sử dụng công nghệ, trang thiết bị tiết kiệm năng lượng; tăng cường kiểm toán năng lượng; đẩy mạnh triển khai mô hình các công ty dịch vụ năng lượng</li>
+                            
+                            <li><strong>Áp dụng các tiêu chuẩn:</strong> Áp dụng các tiêu chuẩn, quy chuẩn bắt buộc kèm theo chế tài về sử dụng điện hiệu quả đối với những lĩnh vực, ngành có mức tiêu thụ điện cao</li>
+                            
+                            <li><strong>Đẩy mạnh thực hiện:</strong> Đẩy mạnh thực hiện các chương trình Quản lý nhu cầu điện (DSM), chương trình sử dụng năng lượng tiết kiệm và hiệu quả</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">7 - Giải Pháp Về Phát Triển Nguồn Nhân Lực</div>
+                    
+                    <div class="key-points">
+                        <h3>Đào Tạo Nguồn Nhân Lực Chất Lượng Cao</h3>
+                        <ul>
+                            <li><strong>Phát triển nguồn nhân lực chất lượng cao:</strong> Phát triển nguồn nhân lực chất lượng cao, đặc biệt trong các lĩnh vực phát điện, truyền tải, phân phối, điều độ, thị trường điện, lưới điện thông minh, v.v...</li>
+                            
+                            <li><strong>Xây dựng đội ngũ chuyên gia:</strong> Xây dựng đội ngũ chuyên gia, nhà khoa học có trình độ cao trong lĩnh vực điện lực; xây dựng các đơn vị mạnh về khoa học - công nghệ điện lực</li>
+                            
+                            <li><strong>Tổ chức đào tạo và đào tạo lại:</strong> Tổ chức đào tạo và đào tạo lại đội ngũ cán bộ kỹ thuật và quản lý ngành điện ngang tầm các nước trong khu vực và thế giới</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">8 - Giải Pháp Về Hợp Tác Quốc Tế</div>
+                    
+                    <div class="callout callout-info">
+                        <h4>Tăng Cường Liên Kết Khu Vực</h4>
+                        <p><strong>Triển khai tích cực, hiệu quả các nội dung của tuyên bố chính trị thiết lập quan hệ Đối tác chuyển dịch năng lượng công bằng với các đối tác quốc tế (JETP)</strong>, tận dụng tối đa hỗ trợ của các đối tác quốc tế trong chuyển giao công nghệ, quản trị, đào tạo nhân lực, cung cấp tài chính, coi JETP là giải pháp quan trọng cho quá trình chuyển dịch năng lượng ở Việt Nam</p>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>Hợp Tác Đa Phương</h3>
+                        <ul>
+                            <li><strong>Thực hiện chính sách đối ngoại:</strong> Thực hiện chính sách đối ngoại năng lượng, khí hậu linh hoạt, hiệu quả, bình đẳng, cùng có lợi. Mở rộng và làm sâu sắc hơn hợp tác năng lượng với các đối tác chiến lược, đối tác quan trọng</li>
+                            
+                            <li><strong>Thúc đẩy hợp tác:</strong> Thúc đẩy hợp tác, nghiên cứu, triển khai kết nối lưới điện với các nước láng giềng, các nước trong khu vực Đông Nam Á, các nước tiểu vùng sông Mê Kông mở rộng</li>
+                            
+                            <li><strong>Mở rộng hợp tác quốc tế:</strong> Mở rộng hợp tác quốc tế về nghiên cứu khoa học và phát triển công nghệ điện lực, tranh thủ chuyển giao công nghệ, nguồn vốn từ các đối tác nước ngoài</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">9 - Giải Pháp Về Tăng Cường Năng Lực Trong Nước</div>
+                    
+                    <div class="key-points">
+                        <h3>Phát Triển Ngành Công Nghiệp Điện</h3>
+                        <ul>
+                            <li><strong>Hình thành các trung tâm:</strong> Hình thành các trung tâm công nghiệp năng lượng tái tạo, tạo lập một hệ sinh thái công nghiệp năng lượng tái tạo hoàn chỉnh, gắn với sản xuất chế tạo, dịch vụ phụ trợ, các khu công nghiệp tập trung</li>
+                            
+                            <li><strong>Tập trung phát triển ngành:</strong> Tập trung phát triển ngành công nghiệp chế tạo thiết bị năng lượng tái tạo, thiết bị lưu trữ điện năng, công nghệ thu hồi, hấp thụ, lưu trữ và sử dụng CO₂ v.v... trong nước để chủ động khai thác tiềm năng sẵn có của nước ta, tăng tính độc lập tự chủ, giảm giá thành sản xuất điện từ năng lượng tái tạo</li>
+                            
+                            <li><strong>Khuyến khích các doanh nghiệp:</strong> Khuyến khích các doanh nghiệp trong nước thực hiện các công trình dự án điện phức tạp, kỹ thuật cao. Nâng cao năng lực thiết kế, tổ chức mua sắm, quản lý điều hành dự án của các doanh nghiệp trong nước, đủ khả năng đảm nhiệm vai trò tổng thầu các dự án điện quy mô lớn</li>
+                            
+                            <li><strong>Nâng cao năng lực:</strong> Nâng cao năng lực thiết kế, chế tạo thiết bị trong nước để tăng tỷ lệ thiết bị nội địa trong các công trình nguồn và lưới điện; nâng cao năng lực sửa chữa, bảo dưỡng, kiểm định các thiết bị điện trong nước</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">10 - Giải Pháp Về Tổ Chức Quản Lý, Nâng Cao Hiệu Quả Hoạt Động Điện Lực</div>
+                    
+                    <div class="key-points">
+                        <h3>Cải Cách Quản Lý</h3>
+                        <ul>
+                            <li><strong>Đổi mới mạnh mẽ:</strong> Đổi mới mạnh mẽ quản lý ngành điện theo hướng công khai, minh bạch, cạnh tranh, hiệu quả, tăng năng suất lao động, giảm giá thành các khâu, phù hợp với thể chế kinh tế thị trường định hướng xã hội chủ nghĩa</li>
+                            
+                            <li><strong>Thực hiện tái cơ cấu:</strong> Thực hiện tái cơ cấu ngành điện phù hợp với lộ trình xây dựng thị trường điện cạnh tranh đã được phê duyệt</li>
+                            
+                            <li><strong>Đổi mới và nâng cao:</strong> Đổi mới và nâng cao hiệu quả của các doanh nghiệp nhà nước trong lĩnh vực điện lực, áp dụng các mô hình và thông lệ quản trị tiên tiến, nâng cao hệ số tín nhiệm quốc tế, thực hiện công khai, minh bạch trong hoạt động</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">11 - Giải Pháp Về Tổ Chức Thực Hiện và Giám Sát Thực Hiện Quy Hoạch</div>
+                    
+                    <div class="callout callout-success">
+                        <h4>Giám Sát Chặt Chẽ</h4>
+                        <p><strong>Xây dựng cơ sở dữ liệu ngành điện lực</strong>, bao gồm dữ liệu về quy hoạch và tổ chức thực hiện quy hoạch để làm cơ sở giám sát tình hình thực hiện quy hoạch. Thường xuyên rà soát tình hình phát triển phụ tải toàn quốc và các địa phương, tiến độ thực hiện các công trình nguồn và lưới điện để đề xuất các giải pháp điều chỉnh cơ cấu nguồn điện, tiến độ nếu cần thiết, đảm bảo cung cấp điện của nền kinh tế</p>
+                    </div>
+
+                    <div class="key-points">
+                        <h3>Cơ Chế Giám Sát</h3>
+                        <ul>
+                            <li><strong>Quản lý chặt chẽ:</strong> Quản lý chặt chẽ việc phát triển các nguồn điện tự sản tự tiêu, nguồn điện đồng phát, nguồn điện sử dụng nhiệt dư, khí lò cao, các sản phẩm phụ của dây chuyền công nghệ trong các cơ sở công nghiệp, nguồn điện mặt trời mái nhà và các nguồn điện được các đơn vị phát điện và mua điện tự thỏa thuận mua bán điện trực tiếp với nhau</li>
+                            
+                            <li><strong>Xây dựng và áp dụng:</strong> Xây dựng và áp dụng thiết chế về tính kỷ luật và tuân thủ trong việc tổ chức triển khai Điều chỉnh Quy hoạch điện VIII đối với các chủ đầu tư, các bộ, ngành và các địa phương</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <section class="section" id="references">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Nguồn Tham Khảo</h2>
+                <ol>
+                <li>    
+                <p>Danh mục đầy đủ các dự án được quy định tại <strong>Phụ lục I, III</strong> của Quyết định 768/QĐ-TTg. 
+                <a href="https://moit.gov.vn/upload/2005517/fck/files/768_QD-TTg_15042025-signed_1__9548d.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style="color: #3b82f6; text-decoration: underline; font-weight: 600;">
+                    Xem văn bản đầy đủ tại đây
+                </a>
+                </p>
+                </li>
+
+                <li>
+                    Tạp chí Năng lượng Việt Nam, 
+                    “Báo cáo nhận diện rủi ro, thách thức... phát triển các phân ngành điện Việt Nam,” 
+                    27/10/2025. 
+                </li>
+
+                <li>
+                    Năng lượng Sạch Việt Nam, 
+                    “Giải quyết các thách thức để phát triển hệ thống lưu trữ năng lượng,” 
+                    14/11/2025. 
+                </li>
+
+                <li>
+                    EVN – Cục Điện lực & Năng lượng Tái tạo, 
+                    “Quy hoạch điện VIII điều chỉnh: Cần thêm giải pháp ‘hóa giải’ thách thức nguồn điện,” 
+                    16/09/2025. 
+                </li>
+
+                <li>
+                    Báo Chính Phủ, 
+                    “Việt Nam bước gần hơn đến mục tiêu Net Zero năm 2050,” 
+                    28/11/2023. 
+                </li>
+
+                <li>
+                    Báo Người Lao Động, 
+                    “EVN lỗ hơn 1 tỉ USD, giá điện có thể tăng tiếp?,” 
+                    10/07/2024. 
+                </li>
+
+                <li>
+                    Báo Dân trí, 
+                    “Bộ Công Thương thừa nhận miền Bắc thiếu điện trầm trọng,” 
+                    07/06/2023. 
+                </li>
+
+                <li>
+                    VnExpress (Vinalab.org.vn dẫn lại), 
+                    “Vì sao miền Bắc lại thiếu điện trầm trọng?,” 
+                    06/2023. 
+                </li>
+
+                <li>
+                    VnBusiness, 
+                    “Hàng loạt dự án nguồn và lưới điện chậm tiến độ nhiều năm...,” 
+                    14/07/2023. 
+                </li>
+
+                <li>
+                    Báo Mới – An Ninh Thủ Đô, 
+                    “Cung ứng điện: ‘Miền Bắc thiếu, miền Trung thì thừa’,” 
+                    13/02/2025. 
+                </li>
+
+                <li>
+                    EVN, 
+                    “Cà Mau: 3 dự án lưới điện trọng điểm chậm tiến độ vì mặt bằng,” 
+                    30/10/2022. 
+                </li>
+
+                <li>
+                    Ban QLDA Công trình điện miền Trung, 
+                    “Tình hình hoạt động tháng 10/2025... của EVN,” 
+                    11/2025. 
+                </li>
+
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-top" id="scrollTop">
+        <span style="font-size: 24px;">↑</span>
+    </div>
+
+    <script>
+        // Scroll to top functionality
+        const scrollTop = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+        
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Animate stats on scroll
+        const statCards = document.querySelectorAll('.stat-card');
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease';
+                }
+            });
+        }, observerOptions);
+
+        statCards.forEach(card => statObserver.observe(card));
+
+        // Print functionality
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+    </script>
+</body>
+</html>
