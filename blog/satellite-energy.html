@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khai thác ảnh vệ tinh hỗ trợ ra quyết định trong vận hành năng lượng (2026)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-bg: #faf9f7;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #555;
+            --color-accent: #c9553d;
+            --color-accent-light: #f4e9e6;
+            --color-border: #e0ddd8;
+            --color-highlight: #2d5a4a;
+            --color-card-bg: #fff;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Source Serif 4', Georgia, serif;
+            --font-ui: 'IBM Plex Sans', sans-serif;
+            --max-width: 720px;
+            --spacing-unit: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, #1a2f38 0%, #2d4a54 100%);
+            color: #fff;
+            padding: 4rem 2rem 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-tag {
+            font-family: var(--font-ui);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #7fb3a5;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+        }
+
+        .subtitle {
+            font-family: var(--font-body);
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.8);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .meta-info {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* Main Article */
+        main {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        article p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        article p:first-of-type::first-letter {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            float: left;
+            line-height: 1;
+            margin-right: 0.5rem;
+            margin-top: 0.1rem;
+            color: var(--color-accent);
+        }
+
+        /* Headings */
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin: 3rem 0 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--color-border);
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--color-highlight);
+            margin: 2.5rem 0 1rem;
+            line-height: 1.4;
+        }
+
+        h4 {
+            font-family: var(--font-ui);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin: 2rem 0 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Emphasis and highlights */
+        strong {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        /* Pull quotes */
+        .pullquote {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--color-highlight);
+            border-left: 4px solid var(--color-accent);
+            padding: 1.5rem 0 1.5rem 2rem;
+            margin: 2.5rem 0;
+            line-height: 1.5;
+        }
+
+        .pullquote cite {
+            display: block;
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            font-style: normal;
+            color: var(--color-text-secondary);
+            margin-top: 1rem;
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .info-box.highlight {
+            background: var(--color-accent-light);
+            border-color: var(--color-accent);
+            border-left-width: 4px;
+        }
+
+        .info-box h4 {
+            margin-top: 0;
+            color: var(--color-accent);
+        }
+
+        /* Figure and images */
+        figure {
+            margin: 2.5rem -1rem;
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        figure .image-placeholder {
+            background: linear-gradient(135deg, #e8e6e3 0%, #d5d2cd 100%);
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-secondary);
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+        }
+
+        figcaption {
+            padding: 1rem 1.5rem;
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            background: #fafafa;
+            border-top: 1px solid var(--color-border);
+        }
+
+        figcaption strong {
+            color: var(--color-text);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        li::marker {
+            color: var(--color-accent);
+        }
+
+        /* Country sections */
+        .country-section {
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .country-section::before {
+            content: attr(data-flag);
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            opacity: 0.7;
+        }
+
+        .country-section h3 {
+            margin-top: 0;
+            padding-right: 3rem;
+        }
+
+        /* Statistics highlight */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Model/Tech list */
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .tech-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 1rem;
+        }
+
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tech-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .tech-list li strong {
+            display: block;
+            color: var(--color-highlight);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Table of contents */
+        .toc {
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .toc h4 {
+            margin-top: 0;
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--color-text);
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .toc ol {
+            padding-left: 1.25rem;
+            margin: 1rem 0 0;
+        }
+
+        .toc li {
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--color-accent);
+        }
+
+        /* Footer / References */
+        .references {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--color-border);
+        }
+
+        .references h2 {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        .ref-list {
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        .ref-list p {
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+            text-indent: -2.5rem;
+            text-align: left;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .ref-list p:last-child {
+            border-bottom: none;
+        }
+
+        .ref-list a {
+            color: var(--color-highlight);
+            text-decoration: none;
+            word-break: break-all;
+            transition: color 0.2s;
+        }
+
+        .ref-list a:hover {
+            color: var(--color-accent);
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            html {
+                font-size: 16px;
+            }
+
+            header {
+                padding: 3rem 1.5rem 4rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .meta-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            figure {
+                margin: 2rem -0.5rem;
+            }
+
+            .country-section {
+                padding: 1.5rem;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            header {
+                background: #333;
+                -webkit-print-color-adjust: exact;
+            }
+
+            body {
+                font-size: 11pt;
+            }
+        }
+
+        /* Diagram styles */
+        .diagram-container {
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .diagram-title {
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .pipeline-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0;
+            flex-wrap: wrap;
+            padding: 1rem 0;
+        }
+
+        .pipeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .pipeline-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid;
+        }
+
+        .pipeline-icon.satellite { background: #e3f2fd; border-color: #1976d2; }
+        .pipeline-icon.process { background: #fff3e0; border-color: #f57c00; }
+        .pipeline-icon.ai { background: #f3e5f5; border-color: #7b1fa2; }
+        .pipeline-icon.output { background: #e8f5e9; border-color: #388e3c; }
+        .pipeline-icon.api { background: #fce4ec; border-color: #c2185b; }
+
+        .pipeline-label {
+            font-family: var(--font-ui);
+            font-size: 0.75rem;
+            color: var(--color-text);
+            font-weight: 500;
+            max-width: 90px;
+        }
+
+        .pipeline-time {
+            font-family: var(--font-ui);
+            font-size: 0.65rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .pipeline-arrow {
+            color: var(--color-border);
+            font-size: 1.25rem;
+            padding: 0 0.5rem;
+            font-family: monospace;
+        }
+
+        /* Comparison diagram */
+        .comparison-diagram {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+
+        .comparison-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 2px solid var(--color-border);
+        }
+
+        .comparison-box.object-level {
+            border-color: #90a4ae;
+        }
+
+        .comparison-box.decision-level {
+            border-color: var(--color-highlight);
+            background: #f1f8f5;
+        }
+
+        .comparison-box h5 {
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .comparison-box.object-level h5 { color: #546e7a; }
+        .comparison-box.decision-level h5 { color: var(--color-highlight); }
+
+        .comparison-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+        }
+
+        .comparison-box li {
+            padding: 0.4rem 0;
+            padding-left: 1.25rem;
+            position: relative;
+            margin: 0;
+            border-bottom: none;
+        }
+
+        .comparison-box li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--color-text-secondary);
+        }
+
+        .comparison-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        /* Model chain diagram */
+        .model-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .chain-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chain-step {
+            flex: 1;
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .chain-step.input { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-color: #64b5f6; }
+        .chain-step.model-a { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-color: #ffb74d; }
+        .chain-step.model-b { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-color: #ba68c8; }
+        .chain-step.model-c { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-color: #81c784; }
+        .chain-step.output { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border-color: #f06292; }
+
+        .chain-arrow {
+            color: #9e9e9e;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+
+        .chain-label {
+            font-family: var(--font-ui);
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+
+        /* Responsive diagrams */
+        @media (max-width: 768px) {
+            .pipeline-diagram {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .pipeline-arrow {
+                transform: rotate(90deg);
+                padding: 0.5rem 0;
+            }
+
+            .comparison-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-arrow {
+                transform: rotate(90deg);
+            }
+
+            .chain-row {
+                flex-direction: column;
+            }
+
+            .chain-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        article > * {
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        article > *:nth-child(1) { animation-delay: 0.1s; }
+        article > *:nth-child(2) { animation-delay: 0.15s; }
+        article > *:nth-child(3) { animation-delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <span class="category-tag">Năng lượng & Công nghệ</span>
+            <h1>Khai thác ảnh vệ tinh hỗ trợ ra quyết định trong vận hành năng lượng</h1>
+            <p class="subtitle">Từ dữ liệu không gian đến quyết định vận hành: Cách công nghệ vệ tinh đang định hình tương lai của ngành điện</p>
+            <div class="meta-info">
+                <span>📅 2026</span>
+                <span>⏱️ 25 phút đọc</span>
+                <span>🏷️ Dự báo năng lượng • AI/ML • Lưới điện thông minh</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article>
+            <!-- Introduction -->
+            <p>Ảnh vệ tinh đang ngày càng trở thành nguồn dữ liệu quan trọng để hỗ trợ vận hành hệ thống năng lượng, đặc biệt trong bối cảnh tỷ trọng năng lượng tái tạo tăng cao. Khác với cách tiếp cận truyền thống chủ yếu dùng ảnh vệ tinh để nhận dạng đối tượng (phát hiện tấm pin mặt trời hay tuabin gió), xu hướng hiện nay là tích hợp sâu dữ liệu ảnh vệ tinh vào chuỗi ra quyết định vận hành.</p>
+
+            <p>Cụ thể, ảnh vệ tinh được sử dụng để <strong>cập nhật dự báo</strong> (đặc biệt cho năng lượng tái tạo như điện mặt trời, điện gió), cung cấp <strong>chỉ báo rủi ro</strong> cho lưới điện, và hỗ trợ <strong>ưu tiên điều độ</strong> nguồn phát một cách linh hoạt.</p>
+
+            <div class="toc">
+                <h4>Nội dung bài viết</h4>
+                <ol>
+                    <li><a href="#forecast">Ứng dụng trong dự báo năng lượng tái tạo</a></li>
+                    <li><a href="#risk">Chỉ báo rủi ro cho lưới điện</a></li>
+                    <li><a href="#dispatch">Ưu tiên điều độ và hỗ trợ ra quyết định</a></li>
+                    <li><a href="#transition">Từ phân tích đối tượng đến thông tin quyết định</a></li>
+                    <li><a href="#countries">Triển khai theo quốc gia và khu vực</a></li>
+                    <li><a href="#ai">Các mô hình AI/ML được sử dụng</a></li>
+                    <li><a href="#latency">Độ trễ thời gian và khai thác gần thời gian thực</a></li>
+                    <li><a href="#indicators">Các chỉ báo thực tiễn tạo ra</a></li>
+                    <li><a href="#future">Hạn chế và tiềm năng tương lai</a></li>
+                </ol>
+            </div>
+
+            <p>Nhờ độ phủ rộng và tần suất chụp cao, ảnh từ vệ tinh địa tĩnh (như Meteosat ở châu Âu, GOES ở Mỹ, Himawari ở Nhật Bản, Fengyun ở Trung Quốc) cho phép theo dõi liên tục các hiện tượng thời tiết và môi trường có ảnh hưởng đến năng lượng.</p>
+
+            <figure>
+                <img src="https://business.esa.int/sites/business/files/inline-images/image6_11.jpg" alt="Tích hợp ảnh vệ tinh và mô hình AI để dự báo sản lượng năng lượng gió" style="width: 100%; height: auto; display: block;">
+                <figcaption>
+                    <strong>Hình 1:</strong> Dữ liệu từ nhiều vệ tinh (Meteosat, Metop, NOAA) được kết hợp với cảm biến mặt đất và mô hình AI nhằm tạo ra dự báo sản lượng điện gió từ 15 phút đến vài ngày, phục vụ nhà máy điện, công ty quản lý lưới và điều độ hệ thống.
+                </figcaption>
+            </figure>
+
+            <p>Việc khai thác ảnh vệ tinh trong năng lượng mang lại <em>tầm nhìn rộng và theo thời gian thực</em> cho người vận hành. Thay vì chỉ dựa vào các cảm biến tại chỗ hoặc mô hình khí tượng truyền thống, ảnh vệ tinh cung cấp "bức tranh sống" về mây, bức xạ mặt trời, gió hay tình trạng tài sản trên phạm vi rộng lớn.</p>
+
+            <p>Khi kết hợp với các thuật toán trí tuệ nhân tạo và học máy hiện đại, dữ liệu vệ tinh có thể chuyển thành những thông tin dự báo, cảnh báo có giá trị trực tiếp cho vận hành hệ thống điện. Các hệ thống tiên tiến hiện nay có thể cập nhật dự báo mỗi vài phút, với độ phân giải cao (đến mức 0,5–1 km) và cung cấp kết quả dưới dạng xác suất kèm theo độ bất định.</p>
+
+            <!-- Section 1: Forecasting -->
+            <h2 id="forecast">Ứng dụng ảnh vệ tinh trong dự báo năng lượng tái tạo</h2>
+
+            <h3>Dự báo điện mặt trời (PV forecasting)</h3>
+
+            <p>Đây là lĩnh vực hưởng lợi rõ rệt nhất từ ảnh vệ tinh. Các đám mây quan sát từ vệ tinh là yếu tố quyết định đến lượng bức xạ mặt trời tới các tấm pin quang điện. Nhiều nghiên cứu và dự án đã tích hợp ảnh vệ tinh địa tĩnh (chụp mỗi 5–15 phút) vào mô hình dự báo công suất điện mặt trời theo thời gian thực.</p>
+
+            <div class="info-box highlight">
+                <h4>Dự án Solar Nowcasting tại Anh</h4>
+                <p>Dự án "Solar Nowcasting" của Trung tâm Điều độ Điện quốc gia Anh (National Grid ESO) hợp tác cùng tổ chức Open Climate Fix đã phát triển mô hình học sâu sử dụng chuỗi ảnh vệ tinh gần nhất kết hợp với dự báo khí tượng để tạo ra dự báo xác suất sản lượng điện mặt trời cho từng hệ thống PV trên toàn quốc.</p>
+            </div>
+
+            <p>Mô hình này có khả năng dự đoán được "những khung hình tiếp theo" của ảnh mây vệ tinh — tức mô phỏng chuyển động và phát triển của mây trong tương lai gần, từ đó tính toán được sản lượng điện PV tương ứng.</p>
+
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-number">~2.8×</div>
+                    <div class="stat-label">Cải thiện độ chính xác</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">233 MW</div>
+                    <div class="stat-label">Sai số MAE (từ 650 MW)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5 phút</div>
+                    <div class="stat-label">Tần suất cập nhật</div>
+                </div>
+            </div>
+
+            <p>Dịch vụ dự báo PV theo thời gian thực đầu tiên này đã được đưa vào phòng điều khiển lưới điện Anh từ tháng 12/2022 và giúp giảm nhu cầu dự phòng điện từ nhiệt điện truyền thống.</p>
+
+            <p>Tại Pháp và châu Âu, công ty Steadysun triển khai hệ thống dự báo kết hợp 5 vệ tinh địa tĩnh (Meteosat, GOES, Himawari) với hơn 20 mô hình thời tiết để cung cấp dự báo điện mặt trời và điện gió "đa mô hình" rất tin cậy. Hệ thống cập nhật dự báo mỗi 5 phút cho mọi vị trí trên toàn cầu, cho phép các nhà vận hành tối ưu hóa kế hoạch phát điện và giảm rủi ro vận hành tới 15 ngày trước.</p>
+
+            <p>Tại Nhật Bản, Hiệp hội Thời tiết JWA cung cấp dịch vụ SOLASAT 9-Now sử dụng ảnh vệ tinh Himawari-8/9 để tính toán bức xạ mặt trời với độ phân giải 0,5 km, cập nhật mỗi 2,5 phút. Hệ thống này ứng dụng mô hình AI độc quyền để hiệu chỉnh ảnh mây, tăng độ chính xác 15% so với phương pháp vật lý thuần túy.</p>
+
+            <div class="pullquote">
+                "Bằng cách hiệu chỉnh trường mây ban đầu bằng dữ liệu vệ tinh thời gian thực, về cơ bản chúng tôi cung cấp cho hệ thống dự báo một 'bản đồ mây sống'. Đây không chỉ là đột phá kỹ thuật mà còn cung cấp công cụ thực tiễn cho lập lịch lưới điện."
+                <cite>— Chen, đồng tác giả nghiên cứu tại Viện Khí tượng Đô thị Trung Quốc (CMA)</cite>
+            </div>
+
+            <p>Trung Quốc gần đây đạt bước tiến khi nhóm nghiên cứu tại Viện Khí tượng Đô thị (CMA) tích hợp dữ liệu vệ tinh Fengyun-4B vào mô hình thời tiết nhanh RMAPS-ST để dự báo bức xạ trong 0–6 giờ tới trên khắp Trung Quốc. Bằng cách đồng hóa trường mây thực tế từ vệ tinh vào mô hình, họ giảm sai số dự báo GHI hơn 7% trong 15 phút đầu, đặc biệt mùa hè cải thiện ~9,4% và có nơi (như Tứ Xuyên) giảm lỗi trên 20%.</p>
+
+            <h3>Dự báo điện gió</h3>
+
+            <p>Mặc dù gió khó quan sát trực tiếp qua ảnh quang học, nhưng ảnh vệ tinh vẫn đóng vai trò hỗ trợ quan trọng. Các dự án châu Âu tận dụng ảnh mây và dữ liệu khí tượng từ vệ tinh để suy luận trường gió ở tầng thấp, nhất là cho dự báo ngắn hạn và khu vực ngoài khơi.</p>
+
+            <div class="info-box">
+                <h4>Dự án Wind Sat (ESA)</h4>
+                <p>Hệ thống tích hợp ảnh vệ tinh (Meteosat thế hệ 2 và 3, MetOp, NOAA) với dữ liệu thời tiết và cảm biến tại tuabin để đưa ra dự báo sản lượng điện gió từ trước 15 phút đến 7 ngày. Wind Sat áp dụng mô hình AI kết hợp đa nguồn dữ liệu nhằm nâng cao độ chính xác dự báo so với phương pháp truyền thống.</p>
+            </div>
+
+            <p>Trong thử nghiệm tại Ý, Wind Sat đã thành công khi dự báo cho 10 trang trại gió (tổng công suất ~1967 MW), cập nhật hàng giờ với độ phân giải từng trại gió. Hệ thống xử lý ảnh vệ tinh để trích xuất vectơ chuyển động khí quyển (AMV) — tốc độ và hướng mây — từ đó suy ra diễn biến gió gần bề mặt.</p>
+
+            <p>Ngoài dự báo vận hành, vệ tinh còn được dùng để đánh giá tài nguyên gió cho quy hoạch: ảnh radar khẩu độ tổng hợp (SAR) cung cấp bản đồ gió biển phục vụ định vị trang trại gió ngoài khơi, trong khi ảnh quang học độ phân giải cao giúp phát hiện tuabin gió hiện hữu để cập nhật dữ liệu đầu vào cho mô hình dự báo.</p>
+
+            <h3>Dự báo phụ tải và thủy điện</h3>
+
+            <p>Ảnh vệ tinh cũng gián tiếp hỗ trợ dự báo nhu cầu điện và năng lượng khác. Quan sát mây và nhiệt độ từ vệ tinh góp phần hiệu chỉnh dự báo phụ tải (do phụ tải chịu ảnh hưởng thời tiết). Ảnh vệ tinh còn theo dõi tuyết, mưa tại các lưu vực, đầu vào cho dự báo nước về của thủy điện. Một số nghiên cứu sử dụng ảnh Sentinel-2 để đo diện tích mặt nước hồ chứa nhằm suy ra dung tích nước phục vụ điều độ thủy điện.</p>
+
+            <!-- Section 2: Risk Indicators -->
+            <h2 id="risk">Ảnh vệ tinh như chỉ báo rủi ro cho lưới điện</h2>
+
+            <p>Bên cạnh dự báo nguồn phát, ảnh vệ tinh còn cung cấp các chỉ số rủi ro và tình trạng hạ tầng nhằm hỗ trợ vận hành an toàn lưới điện. Không ảnh độ phân giải cao, ảnh radar và ảnh hồng ngoại từ vệ tinh cho phép giám sát diện rộng các yếu tố đe dọa tới lưới điện mà phương pháp truyền thống khó bao quát.</p>
+
+            <h3>Quản lý cây cối và hành lang tuyến</h3>
+
+            <p>Thực vật mọc quá gần đường dây điện là một trong những nguyên nhân hàng đầu gây sự cố mất điện (do cây chạm dây, cháy rừng). Giải pháp mới dựa trên ảnh vệ tinh kết hợp AI giúp phát hiện và đánh giá mức độ rủi ro cây cối xâm lấn dọc theo hàng ngàn km đường dây một cách tự động.</p>
+
+            <div class="info-box">
+                <h4>Hệ thống GridEyes (StormGeo & ESA)</h4>
+                <p>Công ty StormGeo (Na Uy) phối hợp với Cơ quan Vũ trụ châu Âu đã phát triển hệ thống GridEyes ứng dụng ảnh vệ tinh quang học đa phổ cùng thuật toán học máy để giám sát thảm thực vật gần lưới điện. GridEyes cung cấp cho nhà vận hành chỉ báo định lượng về những điểm có nguy cơ cao (cây cối cao, khoảng cách pha, đất không đảm bảo, cây chết khô dễ cháy).</p>
+            </div>
+
+            <p>Năm 2025, đơn vị vận hành lưới Lede (Na Uy) đã triển khai GridEyes, giúp họ chủ động hơn trong công tác cắt tỉa cây và nâng cao độ tin cậy lưới. Theo Lede, với tần suất thời tiết cực đoan tăng, việc chuyển từ bảo trì phản ứng sang bảo trì phòng ngừa dựa trên dữ liệu là tối quan trọng.</p>
+
+            <div class="pullquote">
+                "Công nghệ AI cùng ảnh vệ tinh cho phép chúng tôi ưu tiên xử lý những rủi ro do cây cối trước khi chúng gây sự cố."
+                <cite>— Đại diện Lede, Na Uy</cite>
+            </div>
+
+            <h3>Giám sát dịch chuyển mặt đất và hạ tầng</h3>
+
+            <p>Ảnh radar khẩu độ tổng hợp (SAR) từ vệ tinh (như Sentinel-1 của ESA) cho phép phát hiện chuyển dịch milimet của mặt đất và công trình qua kỹ thuật giao thoa (InSAR). Điều này mở ra khả năng giám sát nền móng và kết cấu hạ tầng điện trên toàn mạng lưới một cách liên tục và có hệ thống.</p>
+
+            <p>Tại Anh, dự án "Eye in the Sky" do National Grid và Ofgem tài trợ đã thử nghiệm sử dụng ảnh InSAR để theo dõi độ lún đất xung quanh móng cột điện và trạm biến áp trên phạm vi cả nước. Kết quả cho thấy so với kiểm tra mặt đất định kỳ, dữ liệu vệ tinh cung cấp cái nhìn thường xuyên hơn và có thể truy xuất (auditable) về những biến động địa chất có thể gây mất ổn định cột điện.</p>
+
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-number">6 ngày</div>
+                    <div class="stat-label">Tần suất chụp Sentinel-1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">£22M</div>
+                    <div class="stat-label">Giá trị NPV tiềm năng</div>
+                </div>
+            </div>
+
+            <p>Phân tích lợi ích cho thấy cách tiếp cận này có thể mang lại giá trị kinh tế tới 22 triệu bảng (NPV) nhờ giảm sự cố khẩn cấp và tối ưu bảo dưỡng, đồng thời giảm khí thải do hạn chế dùng trực thăng kiểm tra thủ công.</p>
+
+            <h3>Phát hiện thiên tai và mối đe dọa khí hậu</h3>
+
+            <p>Vệ tinh địa tĩnh thời tiết (như Himawari, GOES) cung cấp cảnh báo sớm về bão, giông sét, lốc xoáy — thông tin thiết yếu cho vận hành hệ thống điện. Hình ảnh mây vệ tinh được sử dụng để dự báo quỹ đạo bão nhiệt đới giúp các công ty điện lực chuẩn bị ứng phó (cắt tải phòng ngừa, huy động đội sửa chữa).</p>
+
+            <p>Với cháy rừng, ảnh vệ tinh hồng ngoại có thể phát hiện điểm nóng cháy rừng và khói lan tới đường dây, tạo chỉ báo rủi ro gián đoạn hoặc sự cố trên lưới truyền tải. Các tiện ích ở California (Mỹ) đã thử nghiệm dùng ảnh vệ tinh MODIS/VIIRS để theo dõi cháy rừng theo thời gian thực, quyết định ngắt điện khu vực có nguy cơ (PSPS) nhằm phòng tránh cháy lan qua đường dây.</p>
+
+            <!-- Section 3: Dispatch -->
+            <h2 id="dispatch">Ưu tiên điều độ và hỗ trợ ra quyết định vận hành</h2>
+
+            <p>Một lợi ích rõ rệt của việc tích hợp ảnh vệ tinh vào vận hành năng lượng là nâng cao khả năng điều độ linh hoạt. Thông tin cập nhật từ vệ tinh cho phép trung tâm điều độ và thị trường điện đưa ra quyết định nhanh nhạy, tối ưu hơn so với trước đây.</p>
+
+            <h3>Điều độ nguồn điện và dự phòng</h3>
+
+            <p>Trong hệ thống điện, việc điều độ nhằm đảm bảo cân bằng cung-cầu và an ninh hệ thống với chi phí tối ưu. Dự báo công suất từ ảnh vệ tinh giúp người vận hành giảm sự bất định của nguồn tái tạo, qua đó giảm lượng dự phòng phải giữ lại.</p>
+
+            <p>Ở Anh, trước kia do dự báo điện mặt trời thiếu chính xác, trung tâm điều độ phải duy trì sẵn nguồn dự phòng từ nhiên liệu hóa thạch để bù bất ngờ khi PV sụt giảm. Nhờ hệ thống nowcasting bằng ảnh vệ tinh, độ chính xác dự báo tăng lên đồng nghĩa với việc giảm đáng kể nguồn dự phòng cần huy động, tiết kiệm chi phí và giảm phát thải carbon.</p>
+
+            <div class="info-box highlight">
+                <h4>Self-forecast tại Úc</h4>
+                <p>Tại Úc, nơi thị trường điện vận hành theo chu kỳ 5 phút, một sáng kiến tiên phong là cho phép các nhà máy điện mặt trời lớn tự dự báo sản lượng 5 phút tới và gửi lên trung tâm điều độ AEMO. Công ty Solcast đã triển khai giải pháp nowcast dùng ảnh vệ tinh cho 8 trang trại điện mặt trời, tạo dự báo công suất 5 phút liên tục và gửi thẳng vào hệ thống điều độ để tính toán phân bổ công suất.</p>
+            </div>
+
+            <p>Những dự báo tự động này được AEMO sử dụng trong quá trình lập lịch và điều độ thị trường điện, thay thế cho dự báo mặc định kém chính xác hơn trước đây. Kết quả là các nhà máy PV giảm được sai số dự báo, tránh bị phạt do chênh lệch sản lượng, và toàn hệ thống giảm nhu cầu điều chỉnh cân bằng bằng các nguồn đắt tiền.</p>
+
+            <h3>Ưu tiên huy động và vận hành linh hoạt</h3>
+
+            <p>Dữ liệu vệ tinh cũng hỗ trợ người vận hành ra quyết định về thứ tự ưu tiên huy động nguồn hoặc thiết bị. Nếu ảnh vệ tinh cho thấy một đám mây dày sắp bao phủ trang trại mặt trời lớn, trung tâm điều độ có thể ưu tiên tăng công suất nhà máy khác hoặc xả pin trước thời điểm PV sụt giảm, thay vì đợi tín hiệu đo được rồi mới phản ứng.</p>
+
+            <p>Khả năng này được nâng tầm nhờ các mô hình dự báo ngắn hạn sử dụng học sâu, vốn có thể xuất ra phân bố xác suất của sản lượng, giúp điều độ viên đánh giá rủi ro và lên phương án linh hoạt.</p>
+
+            <h3>Hỗ trợ quyết định thị trường</h3>
+
+            <p>Trong thị trường điện, thông tin dự báo chính xác hơn từ vệ tinh giúp các nhà giao dịch và nhà cung cấp dịch vụ phụ trợ đưa ra quyết định kinh doanh tốt hơn. Ở châu Âu, một số công ty sử dụng dự báo mặt trời dựa trên ảnh vệ tinh để điều chỉnh chiến lược chào giá điện trong thị trường trong ngày (intraday). Khi thấy ảnh vệ tinh cập nhật mây nhiều hơn dự kiến, họ có thể mua trước điện trên thị trường để bù thiếu, tránh giá tăng đột biến.</p>
+
+            <!-- Section 4: Object to Decision Level -->
+            <h2 id="transition">Từ phân tích cấp đối tượng đến thông tin cấp quyết định</h2>
+
+            <p>Trước đây, phần lớn ứng dụng AI trên ảnh vệ tinh trong ngành điện tập trung ở <strong>cấp độ đối tượng</strong>: nhận dạng vị trí và quy mô nhà máy điện mặt trời, đếm số tuabin gió, phát hiện đường dây, cột điện trên ảnh. Kết quả thường là các bản đồ, danh sách đối tượng phục vụ quy hoạch hoặc quản lý tài sản, nhưng chưa trực tiếp tích hợp vào vận hành hàng ngày.</p>
+
+            <p>Giờ đây, trọng tâm đang chuyển sang <strong>cấp độ quyết định</strong> — trích xuất từ ảnh vệ tinh những chỉ số có ý nghĩa vận hành hoặc kinh doanh cụ thể để hỗ trợ ra quyết định tức thì.</p>
+
+            <div class="info-box">
+                <h4>Sự khác biệt qua ví dụ</h4>
+                <p><strong>Phân tích cấp đối tượng:</strong> "Ở đây có bao nhiêu MW điện mặt trời lắp đặt?"</p>
+                <p><strong>Thông tin cấp quyết định:</strong> "Hiện tại nhà máy mặt trời này đang phát so với công suất định mức ra sao, có bình thường không, và 15 phút nữa sẽ thế nào?"</p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Chuyển đổi từ Object-level sang Decision-level</div>
+                <div class="comparison-diagram">
+                    <div class="comparison-box object-level">
+                        <h5>📍 Cấp đối tượng (Object-level)</h5>
+                        <ul>
+                            <li>Nhận dạng vị trí nhà máy PV</li>
+                            <li>Đếm số lượng tuabin gió</li>
+                            <li>Phát hiện đường dây, cột điện</li>
+                            <li>Bản đồ tài sản tĩnh</li>
+                            <li>Danh sách đối tượng</li>
+                        </ul>
+                        <p style="font-size: 0.75rem; color: #78909c; margin-top: 1rem; font-style: italic;">→ Phục vụ quy hoạch, quản lý tài sản</p>
+                    </div>
+                    <div class="comparison-arrow">⟹</div>
+                    <div class="comparison-box decision-level">
+                        <h5>⚡ Cấp quyết định (Decision-level)</h5>
+                        <ul>
+                            <li>Chỉ số hoạt động PV thời gian thực</li>
+                            <li>Dự báo sản lượng 15 phút tới</li>
+                            <li>Chỉ số rủi ro cây cối định lượng</li>
+                            <li>Danh sách ưu tiên hành động</li>
+                            <li>Cảnh báo bất thường tự động</li>
+                        </ul>
+                        <p style="font-size: 0.75rem; color: var(--color-highlight); margin-top: 1rem; font-style: italic;">→ Phục vụ vận hành, điều độ tức thì</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>Một hệ thống cấp quyết định có thể tạo ra <em>Chỉ số hoạt động PV</em> (PV performance index) theo thời gian thực cho mỗi nhà máy, dựa trên ảnh mây vệ tinh và dữ liệu nắng. Chỉ số này cho biết PV đang phát thấp hơn/mức bình thường bao nhiêu % so với điều kiện thời tiết lý tưởng. Nếu thấp đáng kể, điều độ viên có thể nghi ngờ sự cố hoặc bụi bẩn, từ đó đưa ra quyết định như phát lệnh kiểm tra hoặc điều chỉnh dự báo.</p>
+
+            <p>Tương tự, trong quản lý lưới điện, thay vì chỉ phát hiện có cây gần đường dây (đối tượng), nay hệ thống tạo ra <em>Chỉ số rủi ro cây cối</em> theo thang định lượng cho từng khoảng cột, và <em>Danh sách ưu tiên chặt tỉa</em>.</p>
+
+            <p>Chuyển dịch này đòi hỏi tích hợp thêm các lớp phân tích và mô hình: từ dữ liệu ảnh → nhận diện đối tượng → gắn kết với dữ liệu vận hành (công suất, lịch bảo trì) → tạo thành chỉ số vận hành hoặc đề xuất hành động.</p>
+
+            <!-- Section 5: Countries -->
+            <h2 id="countries">Triển khai theo quốc gia và khu vực</h2>
+
+            <p>Mức độ ứng dụng ảnh vệ tinh cho vận hành năng lượng có sự khác biệt giữa các quốc gia, tùy thuộc vào mức độ đầu tư công nghệ, nhu cầu thực tiễn và hạ tầng vệ tinh sẵn có.</p>
+
+            <div class="country-section" data-flag="🇺🇸">
+                <h3>Hoa Kỳ</h3>
+                <p>Việc sử dụng ảnh vệ tinh được thúc đẩy mạnh mẽ bởi các phòng thí nghiệm quốc gia và khu vực tư nhân. NREL đã xây dựng các cơ sở dữ liệu bức xạ mặt trời dựa trên ảnh vệ tinh (NSRDB) phục vụ quy hoạch và vận hành hệ thống điện.</p>
+                <p>Các công ty như IBM/Weather Company đã giới thiệu giải pháp dự báo năng lượng tái tạo tích hợp dữ liệu thời tiết vệ tinh. Nhiều ISO/RTO đã bắt đầu sử dụng dự báo từ nguồn này thay cho mô hình truyền thống. CAISO (California) sử dụng kết hợp dự báo từ NOAA (có ảnh GOES) và nhà cung cấp tư nhân để vận hành lưới với 15% điện mặt trời.</p>
+                <p>Về giám sát lưới điện, PG&E ở California thử nghiệm dùng ảnh vệ tinh để phát hiện dây dẫn nóng và vùng nguy cơ cháy dọc đường dây. NASA và DOE cũng hợp tác trong dự án sử dụng ảnh viễn thám để đánh giá nhanh thiệt hại hạ tầng điện sau thiên tai.</p>
+            </div>
+
+            <div class="country-section" data-flag="🇬🇧">
+                <h3>Vương quốc Anh</h3>
+                <p>Anh là một trong những nước tiên phong tích hợp ảnh vệ tinh và AI vào vận hành lưới điện. National Grid ESO đã triển khai dự án Solar Nowcasting từ 2020, đưa vào vận hành chính thức năm 2022, phục vụ trực tiếp phòng điều khiển trung tâm.</p>
+                <p>Dự án hợp tác với Open Climate Fix và được hỗ trợ bởi ESA, sử dụng ảnh vệ tinh Meteosat cùng học sâu để dự báo PV trên khắp nước Anh. Thành công của dự án được đánh giá cao vì nó giúp tăng lượng điện mặt trời có thể tích hợp mà không cần dự phòng than khí.</p>
+                <p>Dự án Eye in the Sky do National Grid thực hiện đã chứng minh tiềm năng tiết kiệm hàng chục triệu bảng khi thay thế một phần kiểm tra thủ công bằng giám sát ảnh vệ tinh.</p>
+            </div>
+
+            <div class="country-section" data-flag="🇫🇷">
+                <h3>Pháp và Châu Âu</h3>
+                <p>RTE (quản lý lưới truyền tải Pháp) từ năm 2018 đã hợp tác với Météo-France, CNES để cải thiện dự báo gió và mặt trời. Họ sử dụng ảnh Meteosat để hiệu chỉnh dự báo ngắn hạn điện mặt trời phân tán. RTE cũng là khách hàng của công ty Steadysun, sử dụng API dự báo từ ảnh vệ tinh cập nhật 5 phút.</p>
+                <p>Liên minh châu Âu thông qua chương trình Copernicus và Horizon đã tài trợ nhiều dự án kết hợp AI và dữ liệu vệ tinh cho năng lượng. Cơ quan Vũ trụ châu Âu (ESA) có danh mục dự án "Space for Energy", hỗ trợ các startup phát triển sản phẩm thương mại.</p>
+            </div>
+
+            <div class="country-section" data-flag="🇨🇳">
+                <h3>Trung Quốc</h3>
+                <p>Với quy mô lưới điện và công suất điện tái tạo lớn nhất thế giới, Trung Quốc đang nhanh chóng ứng dụng ảnh vệ tinh để giải các bài toán vận hành. Cục Khí tượng Trung Quốc (CMA) đã phát triển hệ thống dự báo siêu ngắn hạn 0–6 giờ cho bức xạ mặt trời kết hợp vệ tinh Fengyun-4B với mô hình khu vực.</p>
+                <p>Tập đoàn Lưới điện Quốc gia Trung Quốc (SGCC) đã xây dựng trung tâm quan trắc không gian riêng, sử dụng cả vệ tinh quang học và radar để giám sát hành lang tuyến đường dây siêu cao áp. Họ ứng dụng ảnh vệ tinh độ phân giải cao (cỡ 0,5 m) để kiểm tra tình trạng cột điện trên cao nguyên, vùng tuyết nơi con người khó tiếp cận.</p>
+                <p>Năm 2023, các nhà khoa học Trung Quốc công bố bản đồ quốc gia các nhà máy PV mặt đất với độ chi tiết 10 m, cho thấy phân bố tập trung ở các tỉnh Tây Bắc.</p>
+            </div>
+
+            <div class="country-section" data-flag="🇯🇵">
+                <h3>Nhật Bản</h3>
+                <p>Nhật Bản sở hữu công nghệ vệ tinh hàng đầu châu Á với vệ tinh địa tĩnh Himawari-8/9. Hiệp hội Thời tiết Nhật Bản (JWA) cung cấp SOLASAT 9-Now, dịch vụ ước tính bức xạ và sản lượng PV theo thời gian thực cho bất kỳ tọa độ nào ở Nhật. Dịch vụ này hỗ trợ giám sát từ xa trang trại năng lượng mặt trời, cảnh báo lỗi và đánh giá hiệu quả đầu tư.</p>
+                <p>Nhật Bản có kế hoạch phát triển hàng chục GW điện gió ngoài khơi, do đó quan tâm ảnh vệ tinh để đánh giá tài nguyên gió và dự báo sóng gió hỗ trợ vận hành tuabin ngoài khơi.</p>
+                <p>NEDO đang tài trợ một số nghiên cứu tận dụng ảnh vệ tinh cho lưới điện thông minh, như dự án kết hợp AI và dữ liệu vệ tinh để dự báo công suất PV chính xác hơn (2025–2029).</p>
+            </div>
+
+            <div class="country-section" data-flag="🇦🇺">
+                <h3>Úc</h3>
+                <p>Úc là quốc gia rộng lớn với tỷ lệ điện mặt trời trên đầu người cao nhất thế giới. Solcast, startup có trụ sở tại Sydney, đã triển khai thành công dự báo tự động 5 phút cho các trang trại PV lớn và tích hợp vào điều độ thị trường AEMO.</p>
+                <p>Kết quả sơ bộ cho thấy các trang trại PV tiết kiệm hàng trăm nghìn AUD/năm tiền chi phí mất cân bằng khi dùng dự báo chính họ cung cấp (với công nghệ ảnh vệ tinh của Solcast) so với dự báo mặc định của AEMO.</p>
+                <p>Về giám sát lưới, các công ty điện tại Victoria, New South Wales đã thử nghiệm dùng ảnh vệ tinh để theo dõi tình trạng thảm thực vật dọc tuyến đường dây vùng rừng, phòng chống cháy.</p>
+                <p>Do Úc có nhiều nông trại điện mặt trời xa xôi, các nhà phát triển đã lắp đặt camera vệ tinh kết hợp ảnh vệ tinh quan sát để giám sát từ xa, giảm chi phí kiểm tra thực địa. Powerlink Queensland đã nêu ví dụ dùng ảnh vệ tinh để phát hiện một cánh đồng pin mặt trời bị ngập nước sau mưa lớn, nhờ đó kịp thời ngắt kết nối trước khi gây sự cố.</p>
+                <p>Ngoài ra, AEMO khi đánh giá đơn đăng ký nhà máy mới thường tham khảo dữ liệu bức xạ mặt trời từ ảnh vệ tinh (Solar Atlas) để kiểm chứng tính hợp lý của sản lượng dự kiến. ARENA tài trợ dự án Skycam (ANU) kết hợp camera bầu trời và ảnh vệ tinh để nowcast mây, đang thử nghiệm tại lưới vi mô Alice Springs. Việc DNV (Na Uy) mua lại Solcast năm 2022 là minh chứng cho chất lượng giải pháp do Úc phát triển.</p>
+            </div>
+
+            <div class="info-box">
+                <h4>Các quốc gia khác</h4>
+                <p>Nhiều quốc gia phát triển cũng đang theo kịp xu hướng này:</p>
+                <ul>
+                    <li><strong>Đức:</strong> Dự án NOWCAST3 kết hợp ảnh vệ tinh cho TSO 50Hertz.</li>
+                    <li><strong>Ấn Độ:</strong> Khởi động chương trình SAFARI để dùng ảnh vệ tinh INSAT giám sát mặt trời và gió.</li>
+                    <li><strong>Canada:</strong> Sử dụng ảnh RADARSAT giám sát đóng băng đường dây điện.</li>
+                    <li><strong>Brazil:</strong> Sử dụng ảnh GOES dự báo năng lượng mặt trời cho hệ thống điện phía Đông Bắc.</li>
+                </ul>
+                <p>Điều này cho thấy công nghệ này mang tính toàn cầu.</p>
+            </div>
+
+            <!-- Section 6: AI/ML Models -->
+            <h2 id="ai">Các mô hình AI/ML được sử dụng</h2>
+
+            <p>Trí tuệ nhân tạo và học máy là công cụ then chốt để biến dữ liệu ảnh vệ tinh thô thành thông tin hữu ích cho vận hành năng lượng. Một số kỹ thuật và mô hình tiêu biểu bao gồm:</p>
+
+            <ul class="tech-list">
+                <li>
+                    <strong>Mạng neural tích chập (CNN) và U-Net</strong>
+                    Thường được dùng để xử lý và dịch ảnh vệ tinh thành bản đồ thông số. U-Net đã được áp dụng để phân đoạn đám mây trên ảnh vệ tinh và dự báo sự di chuyển của mây, từ đó suy ra bức xạ mặt trời tới. U-Net nổi trội trong bài toán này nhờ khả năng học đặc trưng không gian của mây và hiệu chỉnh dự báo cho từng pixel ảnh. Các nghiên cứu tại châu Âu cho thấy U-Net cho lỗi dự báo thấp nhất trong khoảng 30–45 phút đầu nowcast, đặc biệt với thời tiết ít biến động.
+                </li>
+                <li>
+                    <strong>Mạng học sâu thời gian (RNN, LSTM, ConvLSTM)</strong>
+                    Để dự báo chuỗi thời gian như công suất điện gió hoặc điện mặt trời. ConvLSTM là sự kết hợp giữa tích chập không gian và bộ nhớ chuỗi thời gian, phù hợp cho nowcasting (nhận vào một loạt ảnh vệ tinh liên tiếp và dự đoán ảnh tương lai). National Grid ESO cho biết họ dùng mô hình deep learning xử lý chuỗi ảnh vệ tinh gần nhất để dự đoán các khung hình tiếp theo, khả năng này gợi ý có thể là ConvLSTM hoặc một mô hình tương tự với encoder-decoder thời gian.
+                </li>
+                <li>
+                    <strong>Mô hình sinh (Generative) và Transformer</strong>
+                    Google DeepMind từng phát triển DGMR (Deep Generative Model for Radar) để dự báo mưa từ ảnh radar. Các nhà nghiên cứu đã cải tiến DGMR cho ảnh vệ tinh quang học (DGMR-SO) nhằm dự báo bức xạ mặt trời. Mô hình sinh này sử dụng kỹ thuật tương tự GAN (mạng sinh đối kháng) để tạo ra ảnh dự báo tương lai có tính chân thực cao, giúp nắm bắt sự phát triển hình thái mây tốt hơn so với phương pháp quang học thuần túy. Transformer/Attention cũng bắt đầu được áp dụng để học mối quan hệ không gian-thời gian trong ảnh vệ tinh, với Vision Transformer cho kết quả khả quan hơn LSTM truyền thống.
+                </li>
+                <li>
+                    <strong>Học đa nhiệm (Multitask) và đa nguồn (Multimodal)</strong>
+                    Trong bối cảnh vận hành thực, mô hình thường cần dự báo nhiều biến liên quan đồng thời. Kỹ thuật học đa nhiệm cho phép một mô hình học chung nhiều nhiệm vụ, tăng tính nhất quán và hiệu quả. Open Climate Fix huấn luyện mô hình để vừa dự báo ảnh mây 5 phút tới, vừa dự báo sản lượng PV, giúp mô hình học tốt hơn quan hệ giữa mây và công suất. Về đa nguồn dữ liệu, các mô hình hiện đại thường kết hợp cả ảnh vệ tinh lẫn dữ liệu số liệu (NWP, đo mặt đất). Dự án Wind Sat dùng cách tiếp cận đa nguồn: mạng AI nhận đầu vào gồm ảnh vệ tinh + thời tiết + SCADA tuabin, đảm bảo tận dụng điểm mạnh mỗi nguồn.
+                </li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Kiến trúc Fusion đa nguồn dữ liệu (Multimodal)</div>
+                <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                        <div style="background: #e3f2fd; border: 2px solid #1976d2; border-radius: 8px; padding: 1rem; text-align: center; min-width: 120px;">
+                            <div style="font-size: 1.5rem;">🛰️</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.8rem; font-weight: 500;">Ảnh vệ tinh</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.65rem; color: #666;">Mây, bức xạ</div>
+                        </div>
+                        <div style="background: #fff3e0; border: 2px solid #f57c00; border-radius: 8px; padding: 1rem; text-align: center; min-width: 120px;">
+                            <div style="font-size: 1.5rem;">🌤️</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.8rem; font-weight: 500;">NWP Model</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.65rem; color: #666;">Dự báo số trị</div>
+                        </div>
+                        <div style="background: #e8f5e9; border: 2px solid #388e3c; border-radius: 8px; padding: 1rem; text-align: center; min-width: 120px;">
+                            <div style="font-size: 1.5rem;">📡</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.8rem; font-weight: 500;">SCADA</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.65rem; color: #666;">Dữ liệu tuabin</div>
+                        </div>
+                        <div style="background: #fce4ec; border: 2px solid #c2185b; border-radius: 8px; padding: 1rem; text-align: center; min-width: 120px;">
+                            <div style="font-size: 1.5rem;">📷</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.8rem; font-weight: 500;">Sky Camera</div>
+                            <div style="font-family: var(--font-ui); font-size: 0.65rem; color: #666;">Mây cục bộ</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.5rem; color: #9e9e9e;">↓ ↓ ↓ ↓</div>
+                    <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border: 2px solid #7b1fa2; border-radius: 12px; padding: 1.25rem 2rem; text-align: center;">
+                        <div style="font-size: 1.5rem;">🧠</div>
+                        <div style="font-family: var(--font-ui); font-size: 0.9rem; font-weight: 600;">AI Fusion Model</div>
+                        <div style="font-family: var(--font-ui); font-size: 0.7rem; color: #666;">Feature-level hoặc Decision-level fusion</div>
+                    </div>
+                    <div style="font-size: 1.5rem; color: #9e9e9e;">↓</div>
+                    <div style="background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%); border: 2px solid #43a047; border-radius: 12px; padding: 1.25rem 2rem; text-align: center;">
+                        <div style="font-size: 1.5rem;">📈</div>
+                        <div style="font-family: var(--font-ui); font-size: 0.9rem; font-weight: 600;">Dự báo công suất + Độ bất định</div>
+                        <div style="font-family: var(--font-ui); font-size: 0.7rem; color: #666;">Phân phối xác suất, khoảng tin cậy</div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="tech-list">
+                <li>
+                    <strong>Phương pháp học không giám sát và phát hiện bất thường</strong>
+                    Cho các bài toán như phát hiện sự cố từ ảnh (ví dụ pin mặt trời hỏng sẽ thay đổi tính phản xạ trên ảnh), mô hình Autoencoder hoặc GAN được dùng để học phân bố bình thường rồi tìm điểm bất thường. Thậm chí, các hãng năng lượng đang nghiên cứu dùng học tăng cường (Reinforcement Learning) để xử lý chuỗi ảnh vệ tinh và quyết định hành động điều khiển, dù hiện vẫn trong giai đoạn thử nghiệm do tính phức tạp.
+                </li>
+                <li>
+                    <strong>Kết hợp mô hình vật lý và ML (Hybrid)</strong>
+                    Nhiều chuyên gia đề xuất không nên coi ML hoàn toàn thay thế mô hình vật lý, mà nên kết hợp hai bên để tận dụng ưu điểm. Phương pháp Optical Flow + ML: trước tiên dùng thuật toán vật lý quang học để ước tính vector chuyển động mây từ ảnh vệ tinh, sau đó dùng ML hiệu chỉnh sự hình thành/tiêu tan mây mà quang học không xử lý được. Một số hệ thống cũng chạy song song dự báo vật lý (từ NWP) và dự báo ML từ ảnh vệ tinh, rồi trộn kết quả theo tỷ lệ tối ưu (ensemble). Điều này cải thiện tính ổn định và tin cậy, yếu tố quan trọng để người vận hành chấp nhận kết quả.
+                </li>
+                <li>
+                    <strong>Diễn giải và đo lường bất định (XAI)</strong>
+                    Do các mô hình deep learning thường bị coi là "hộp đen", gần đây có xu hướng tích hợp công cụ XAI (Explainable AI) để tạo niềm tin cho người dùng vận hành. Mô hình có thể cung cấp bản đồ độ tin cậy kèm dự báo (như spatial probability maps cho biết xác suất nắng vượt X W/m² ở mỗi pixel). IEA Task 16 cũng khuyến nghị tăng cường giải thích để chính sách và điều độ viên hiểu và tin dùng kết quả AI. Một kỹ thuật phổ biến là dùng Monte Carlo dropout hay ensemble để ước lượng khoảng bất định cho mỗi dự báo. Trong dự án của Anh, mô hình nowcast phát ra phân phối xác suất chứ không phải giá trị điểm duy nhất, và được hiệu chỉnh bằng dữ liệu đo thực tế gần thời gian thực để giảm sai lệch.
+                </li>
+            </ul>
+
+            <p>Quan trọng là các mô hình được thiết kế với đầu ra phù hợp cho vận hành, ví dụ như đưa ra cảnh báo hay đề xuất hành động chứ không chỉ dự báo đơn thuần. Trong thực tiễn, đôi khi giải pháp sử dụng một chuỗi mô hình (model chain): ảnh vệ tinh → mô hình A dự báo thời tiết → mô hình B chuyển thời tiết thành công suất → mô hình C tối ưu quyết định điều độ dựa trên công suất dự báo. Chuỗi mô hình như vậy cũng được báo cáo cho kết quả tốt hơn so với cố gắng làm tất cả trong một mô hình duy nhất.</p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Chuỗi mô hình (Model Chain) trong vận hành năng lượng</div>
+                <div class="model-chain">
+                    <div class="chain-row">
+                        <div class="chain-step input">
+                            <strong>🛰️ Ảnh vệ tinh</strong><br>
+                            <span style="font-size: 0.7rem;">Meteosat, Himawari, GOES</span>
+                        </div>
+                        <div class="chain-arrow">→</div>
+                        <div class="chain-step model-a">
+                            <strong>Model A</strong><br>
+                            <span style="font-size: 0.7rem;">Dự báo thời tiết<br>(mây, bức xạ, gió)</span>
+                        </div>
+                        <div class="chain-arrow">→</div>
+                        <div class="chain-step model-b">
+                            <strong>Model B</strong><br>
+                            <span style="font-size: 0.7rem;">Chuyển đổi<br>thời tiết → công suất</span>
+                        </div>
+                        <div class="chain-arrow">→</div>
+                        <div class="chain-step model-c">
+                            <strong>Model C</strong><br>
+                            <span style="font-size: 0.7rem;">Tối ưu hóa<br>quyết định điều độ</span>
+                        </div>
+                        <div class="chain-arrow">→</div>
+                        <div class="chain-step output">
+                            <strong>📋 Hành động</strong><br>
+                            <span style="font-size: 0.7rem;">Lệnh điều độ, cảnh báo</span>
+                        </div>
+                    </div>
+                    <div class="chain-row" style="justify-content: space-between; padding: 0 2rem;">
+                        <div class="chain-label">Dữ liệu thô</div>
+                        <div class="chain-label">U-Net, CNN</div>
+                        <div class="chain-label">LSTM, Regression</div>
+                        <div class="chain-label">Optimization, RL</div>
+                        <div class="chain-label">SCADA/EMS</div>
+                    </div>
+                </div>
+            </div>
+
+            <p>Một điểm nữa là <strong>hiệu năng tính toán</strong>: các mô hình deep learning xử lý ảnh vệ tinh thường được triển khai trên nền tảng GPU đám mây để cho kết quả trong vài giây đến vài phút. Nhờ điện toán đám mây, ngay cả công ty nhỏ cũng có thể chạy mô hình lớn trên dữ liệu toàn quốc (ví dụ Open Climate Fix huấn luyện trên ảnh toàn châu Âu với hàng triệu mẫu). Điều này đồng nghĩa với chi phí tính toán tăng, nhưng lợi ích vận hành đem lại thường vượt chi phí. Với đà phát triển của AI chuyên biệt cho chuỗi thời gian và ảnh (như video prediction models), ta có thể kỳ vọng các mô hình ngày càng chính xác và nhanh hơn nữa trong vài năm tới.</p>
+
+            <!-- Section 7: Latency -->
+            <h2 id="latency">Độ trễ thời gian và khả năng khai thác gần thời gian thực</h2>
+
+            <p>Đối với ứng dụng vận hành, độ trễ thời gian (latency) là yếu tố quyết định tính hữu dụng của dữ liệu ảnh vệ tinh. Nhiều tiến bộ đã đạt được để rút ngắn tối đa độ trễ từ lúc ảnh chụp đến khi thông tin đến tay người vận hành.</p>
+
+            <h4>Vệ tinh địa tĩnh thời tiết</h4>
+            <p>Đây là nguồn dữ liệu gần thời gian thực chính. Các vệ tinh như Meteosat, GOES, Himawari truyền ảnh xuống mặt đất gần như ngay lập tức sau khi chụp. Ảnh toàn đĩa (full-disk) mỗi 10–15 phút, còn ảnh khu vực nhanh (rapid scan) mỗi 2,5–5 phút. Dịch vụ Rapid Scanning Service của Meteosat-9/10 cung cấp ảnh mỗi 5 phút độ phân giải 1 km cho châu Âu, với độ trễ xử lý < 1 phút. Kết quả, từ lúc một đám mây xuất hiện cho đến khi nó được phản ánh trong mô hình dự báo chỉ mất khoảng 5–10 phút. Với Nhật Bản, Himawari-8/9 chụp mỗi 2,5 phút khu vực Nhật và truyền gần như tức thời, JWA cho biết họ cập nhật dữ liệu 2,5 phút/lần trong hệ thống SOLASAT. Như vậy, ảnh vệ tinh địa tĩnh hiện đã đáp ứng được tiêu chí "gần thời gian thực".</p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">So sánh tần suất cập nhật của các vệ tinh địa tĩnh</div>
+                <div style="display: flex; flex-direction: column; gap: 1rem; font-family: var(--font-ui);">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="min-width: 140px; font-size: 0.85rem; font-weight: 500;">Himawari-8/9 🇯🇵</div>
+                        <div style="flex: 1; height: 24px; background: linear-gradient(90deg, #4caf50 0%, #4caf50 100%); border-radius: 4px; display: flex; align-items: center; padding-left: 0.5rem;">
+                            <span style="color: white; font-size: 0.75rem; font-weight: 500;">2.5 phút</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="min-width: 140px; font-size: 0.85rem; font-weight: 500;">Meteosat RSS 🇪🇺</div>
+                        <div style="flex: 1; height: 24px; background: linear-gradient(90deg, #2196f3 0%, #2196f3 50%, #e0e0e0 50%); border-radius: 4px; display: flex; align-items: center; padding-left: 0.5rem;">
+                            <span style="color: white; font-size: 0.75rem; font-weight: 500;">5 phút</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="min-width: 140px; font-size: 0.85rem; font-weight: 500;">GOES-16/17 🇺🇸</div>
+                        <div style="flex: 1; height: 24px; background: linear-gradient(90deg, #ff9800 0%, #ff9800 50%, #e0e0e0 50%); border-radius: 4px; display: flex; align-items: center; padding-left: 0.5rem;">
+                            <span style="color: white; font-size: 0.75rem; font-weight: 500;">5 phút (CONUS)</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="min-width: 140px; font-size: 0.85rem; font-weight: 500;">Meteosat Full Disk</div>
+                        <div style="flex: 1; height: 24px; background: linear-gradient(90deg, #9c27b0 0%, #9c27b0 25%, #e0e0e0 25%); border-radius: 4px; display: flex; align-items: center; padding-left: 0.5rem;">
+                            <span style="color: white; font-size: 0.75rem; font-weight: 500;">15 phút</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #666; text-align: right; margin-top: 0.5rem;">
+                        Thanh màu thể hiện tương đối tần suất cập nhật (càng dài = càng nhanh)
+                    </div>
+                </div>
+            </div>
+
+            <h4>Chuỗi xử lý tự động (pipeline)</h4>
+            <p>Để khai thác hiệu quả, ảnh vệ tinh thô được đưa vào pipeline xử lý tự động trên cloud. Pipeline này gồm các bước: nhận ảnh → tiền xử lý (hiệu chỉnh địa lý, lọc mây) → chạy mô hình AI → tạo sản phẩm (bản đồ dự báo, chỉ số) → phân phối qua API. Các nhà cung cấp dịch vụ dự báo (Solcast, Steadysun) thường đặt pipeline tại các máy chủ gần nguồn dữ liệu (ví dụ cùng trung tâm dữ liệu với server EUMETSAT hoặc AWS Tokyo cho Himawari) để giảm độ trễ tải dữ liệu. Steadysun cập nhật dự báo 5 phút một lần, toàn bộ pipeline từ dữ liệu đến kết quả mất không quá 5 phút. Solcast xử lý ảnh vệ tinh đa khu vực (Himawari cho Úc, GOES cho Mỹ) liên tục, với độ trễ ~30 giây cho nowcast 5 phút.</p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Pipeline xử lý ảnh vệ tinh thời gian thực</div>
+                <pre style="font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; padding: 2rem; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px; color: #2c3e50;">
+╔═════════════════╗      ╔═════════════╗      ╔════════════════╗
+║Vệ tinh địa tĩnh ║      ║ Nhận ảnh    ║      ║Tiền xử lý      ║
+║ Meteosat, GOES, ║───►  ║ ~30 giây    ║───►  ║Hiệu chỉnh địa  ║
+║   Himawari      ║      ║             ║      ║ lý, lọc        ║
+╚═════════════════╝      ╚═════════════╝      ╚════════════════╝
+                                                      │
+                                                      ▼
+╔═════════════════╗      ╔═════════════╗      ╔════════════════╗
+║    API/         ║      ║ Sản phẩm    ║      ║ Mô hình        ║
+║   Dashboard     ║◄───  ║dự báo,Bản đồ║◄───  ║   AI/ML        ║
+║  < 5 phút tổng  ║      ║ chỉ số      ║      ║CNN, LSTM, U-Net║
+╚═════════════════╝      ╚═════════════╝      ╚════════════════╝
+                </pre>
+            </div>
+
+            <h4>Vệ tinh quỹ đạo cực (polar orbit)</h4>
+            <p>Các vệ tinh như Sentinel, Landsat có chu kỳ lặp vài ngày đến cả tuần, nên không cung cấp dữ liệu thời gian thực. Tuy nhiên, chúng hữu ích cho giám sát định kỳ (như InSAR mỗi 6-12 ngày). Ở mức vận hành, thông tin từ ảnh polar được dùng cho mục tiêu trung hạn hơn: ví dụ, ảnh Sentinel-2 (5 ngày) để đánh giá tình trạng thực vật 2 tuần một lần, đủ để lên kế hoạch cắt tỉa cây. Ở châu Âu, Sentinel-1 (SAR) có thể cung cấp cập nhật lún đất hàng tuần, phù hợp giám sát xu hướng, không cần tức thời từng phút. Do đó, tùy ứng dụng, dữ liệu polar orbit vẫn có giá trị trong vận hành (đặc biệt bảo trì tài sản), miễn là tích hợp vào quy trình đúng chu kỳ.</p>
+
+            <h4>Độ trễ xử lý dữ liệu lớn</h4>
+            <p>Một thách thức là khi cần xử lý ảnh có độ phân giải rất cao (VHR, 0.3 m) hoặc khu vực rất rộng. Tuy nhiên, trong vận hành, người ta thường chấp nhận dùng ảnh độ phân giải vừa (0,5–1 km cho thời tiết) để đổi lấy cập nhật liên tục. Những tác vụ cần VHR (như đếm tấm pin) thường làm offline định kỳ. Còn giám sát liên tục hành lang tuyến có thể dùng ảnh PlanetScope (3–5 m, daily), loại này có latencies tính bằng giờ (phải tải sau khi vệ tinh bay qua và downlink). Một giải pháp mới là vệ tinh chòm (constellation): ví dụ chòm Planet có thể phủ toàn cầu mỗi ngày, hay các startup như Tomorrow.io phóng chùm vệ tinh radar mỗi giờ. Khi các chòm này hoạt động, dữ liệu gần real-time sẽ phong phú hơn.</p>
+
+            <h4>Truyền dẫn và hạ tầng CNTT</h4>
+            <p>Độ trễ không chỉ ở vệ tinh, mà còn ở mạng truyền và xử lý. Nhiều đơn vị vận hành đã kết nối trực tiếp tới nguồn dữ liệu vệ tinh. Ví dụ, AEMO (Úc) có feed trực tiếp từ Himawari qua Bureau of Meteorology. National Grid ESO có kết nối tới EUMETSAT Data Hub để nhận ảnh ngay khi có. Hơn nữa, việc đưa mô hình AI lên cloud có lợi thế linh hoạt nhưng phụ thuộc đường truyền internet; một số nơi cân nhắc đưa mô hình vào biên (edge) gần trung tâm điều độ để có kết quả tức thì ngay cả khi mạng chậm.</p>
+
+            <p>Hiện nay, trong ứng dụng dự báo thời tiết cho năng lượng, "gần thời gian thực" thường được hiểu là cập nhật vài phút một lần, độ trễ tổng < 10 phút. Mốc này đã đạt được cho dự báo mặt trời (vệ tinh 5 phút) và đang được tiến đến cho gió (vệ tinh + radar + mô hình). Tuy nhiên, cho các ứng dụng điều khiển tần số hay ổn định điện áp yêu cầu giây hoặc sub-second thì dữ liệu vệ tinh không đáp ứng, những cái đó vẫn cần cảm biến địa phương. Nhưng ở quy mô ra quyết định vận hành (dự báo công suất, điều độ công suất, an ninh lưới thời gian thực), dữ liệu vệ tinh đã chứng minh có thể hòa vào dòng thời gian thực một cách hiệu quả.</p>
+
+            <div class="info-box">
+                <h4>Ví dụ điển hình</h4>
+                <p>Hệ thống dự báo PV của Anh hiệu chỉnh đầu ra dự báo liên tục bằng dữ liệu SCADA thực tế theo thời gian thực. Điều này nghĩa là pipeline dự báo đang chạy online, đồng bộ với hệ thống SCADA, biến dự báo thành một phần của quy trình vận hành chuẩn.</p>
+                <p>Hay công ty JWA cung cấp API cho phép truy vấn bức xạ tại điểm bất kỳ ngay tại thời điểm yêu cầu với dữ liệu gần nhất (2,5 phút), tích hợp vào hệ thống khách hàng. Những ví dụ này cho thấy ảnh vệ tinh đã thật sự trở thành dữ liệu thời gian thực, chứ không còn chỉ là ảnh chụp "để xem" như trước.</p>
+            </div>
+
+            <!-- Section 8: Indicators -->
+            <h2 id="indicators">Các chỉ báo và thông tin thực tiễn tạo ra</h2>
+
+            <p>Từ các hệ thống và mô hình kể trên, nhiều chỉ báo (indicator) và thông tin định lượng hữu ích đã được tạo ra nhằm hỗ trợ các quyết định vận hành và kinh doanh. Dưới đây là một số loại chính:</p>
+
+            <h3>Dự báo công suất tái tạo theo thời gian thực</h3>
+            <p>Đây là sản phẩm phổ biến nhất, bao gồm dự báo công suất hoặc sản lượng điện mặt trời, điện gió cho các mốc thời gian ngắn (5 phút, 15 phút, 1 giờ, 1 ngày). Ví dụ: dự báo PV 5 phút toàn quốc ở Anh với MAE ~233 MW; dự báo công suất gió 15 phút đến 8 giờ trong dự án Wind Sat kèm phân bố xác suất. Các dự báo này thường đi kèm sai số ước tính hoặc khoảng tin cậy. Một số hệ thống cung cấp biểu đồ xác suất (prediction interval) cho từng khoảng thời gian để điều độ viên cân nhắc mức dự phòng phù hợp.</p>
+
+            <h3>Chỉ số độ sẵn có của nguồn tái tạo</h3>
+            <p>Ví dụ, chỉ số % công suất PV khả dụng (soiling, mây), % công suất gió khả dụng (dựa trên vùng có gió tốt). Hệ thống của Open Climate Fix tạo ra dự báo cho "mỗi hệ thống pin mặt trời", có thể hiểu như chỉ số cho biết mức phát tương ứng cho từng nguồn. Tích hợp lại, có thể ra chỉ số như "độ khả dụng PV toàn quốc đang là 80%".</p>
+
+            <h3>Chỉ số rủi ro thời tiết cho lưới</h3>
+            <p>Ví dụ, chỉ số rủi ro giông sét theo vùng (kết hợp ảnh mây đối lưu từ vệ tinh), chỉ số rủi ro bão cho đường dây (dựa trên dự báo đường đi bão qua ảnh), chỉ số cảnh báo cháy rừng (dựa trên ảnh nhiệt). Các chỉ số này thường ở dạng thang (thấp/trung bình/cao) hoặc xác suất xảy ra sự cố. StormGeo cung cấp cho khách hàng tiện ích các <em>bản đồ nhiệt rủi ro</em> cho lưới khi có bão lớn, kết hợp từ dữ liệu vệ tinh và mô hình thời tiết.</p>
+
+            <h3>Chỉ báo tình trạng tài sản</h3>
+            <p>Bao gồm chỉ số nghiêng lún cột điện (từ InSAR vệ tinh), chỉ số chùng dây (từ ảnh nhiệt, nhiệt độ dây dẫn), chỉ số che phủ cây (tỉ lệ cây trong hành lang tuyến). Các chỉ số này được trình bày dưới dạng bảng cho từng tài sản hoặc bản đồ GIS hiển thị màu theo mức độ.</p>
+
+            <div class="info-box">
+                <h4>Ví dụ chỉ báo tình trạng tài sản</h4>
+                <p><strong>Eye in the Sky (Anh):</strong> Tạo danh sách những cột điện có mức độ rủi ro đất nền cao nhất để kiểm tra ưu tiên.</p>
+                <p><strong>GridEyes (Na Uy):</strong> Tạo score 0-100 cho từng đoạn đường dây về nguy cơ cây cối, và highlight top 10 đoạn cần xử lý ngay.</p>
+            </div>
+
+            <h3>Chỉ báo hiệu suất nhà máy điện</h3>
+            <p>So sánh sản lượng đo được với tiềm năng (tính từ ảnh vệ tinh bức xạ/gió). Nếu thấp hơn đáng kể, chỉ số hiệu suất giảm, gợi ý vấn đề. Solcast cung cấp "performance index" hàng ngày cho các trang trại PV, dựa trên dữ liệu vệ tinh và SCADA, giúp chủ đầu tư biết trang trại của họ vận hành tốt không. Tương tự, chỉ số <em>Capacity Factor realtime</em> cho gió tính từ vệ tinh có thể cho thấy farm gió nào cắt giảm công suất hay gặp sự cố.</p>
+
+            <h3>Ưu tiên bảo trì và đầu tư</h3>
+            <p>Dữ liệu vệ tinh phân tích theo thời gian có thể tạo chỉ số xu hướng như tốc độ lún đất (mm/năm) ở mỗi trạm điện, để ưu tiên gia cố nền. Hoặc chỉ số "tỷ lệ tăng sinh thực vật" trong hành lang tuyến, để lập lịch chặt cây. Các công ty điện thường muốn con số định lượng để biện minh quyết định đầu tư, và ảnh vệ tinh đang cung cấp điều đó. Ví dụ Eye in the Sky tính toán được giá trị NPV ~22 triệu bảng khi triển khai trên 3 trường hợp, tạo chỉ số ROI cho công nghệ. Đây cũng là dạng thông tin giúp ra quyết định ở cấp quản lý.</p>
+
+            <h3>Hình ảnh trực quan hỗ trợ quyết định</h3>
+            <p>Ngoài chỉ số định lượng, bản đồ và hình ảnh từ vệ tinh cũng chính là sản phẩm hỗ trợ quyết định quan trọng. Ảnh mây vệ tinh hiện lên màn hình điều độ cho trực quan về thời tiết trên toàn hệ thống. Ảnh nhiệt vệ tinh cho thấy đám cháy hay điểm nóng. Những hình ảnh này, kết hợp với chỉ báo, giúp người vận hành có niềm tin và hiểu biết tốt hơn khi ra quyết định (do họ "nhìn thấy tận mắt" chứ không chỉ tin vào số liệu).</p>
+
+            <h3>Biểu diễn độ bất định</h3>
+            <p>Việc biểu diễn độ bất định dưới dạng chỉ số cũng rất hữu ích. Ví dụ: không chỉ dự báo 100 MW, mà nói "độ bất định ±20 MW ở khoảng tin cậy 95%". NESO báo cáo mô hình nowcast của họ tạo ra dự báo xác suất và được hiệu chỉnh theo thời gian thực, tức cung cấp phân phối để người vận hành hiểu mức rủi ro. Thêm nữa, các mô hình như GridEyes còn ưu tiên thứ tự, đó cũng là một dạng "chỉ báo hành động" (action indicator) vì nó hướng dẫn rõ nên làm gì trước.</p>
+
+            <div class="info-box highlight">
+                <h4>Chỉ số PSI (Power Supply Irregularity)</h4>
+                <p>Một chỉ báo thú vị là <strong>PSI - Power Supply Irregularity index</strong> do các nhà nghiên cứu phát triển dùng ảnh đêm vệ tinh để đo mức độ bất ổn cung ứng điện ở Ghana. Chỉ báo này tính toán sự biến động của độ sáng đèn điện ban đêm để suy ra khu vực nào thường xuyên bị cúp điện, qua đó giúp công ty điện lực tập trung cải thiện lưới tại đó. Đây là minh chứng rằng ngay cả khi thiếu dữ liệu SCADA, ảnh vệ tinh có thể tạo ra chỉ số thay thế phản ánh chất lượng dịch vụ điện.</p>
+            </div>
+
+            <p>Nhiều trong số các chỉ báo trên từng không tồn tại trong quy trình vận hành truyền thống. Sự xuất hiện của chúng nhờ dữ liệu vệ tinh đã lấp đầy khoảng trống thông tin trước đây. Quan trọng là các chỉ báo được thiết kế đúng nhu cầu người dùng: ví dụ, điều độ viên cần thông tin gọn, rõ (như "dự báo quốc gia giảm 200 MW do mây trong 30 phút tới, độ tin cậy 90%"), còn kỹ sư bảo trì cần danh sách địa điểm rủi ro.</p>
+
+            <!-- Section 9: Future -->
+            <h2 id="future">Hạn chế và tiềm năng tương lai</h2>
+
+            <h3>Hạn chế và thách thức</h3>
+
+            <ul>
+                <li><strong>Độ phân giải không gian và thời gian:</strong> Dù vệ tinh địa tĩnh chụp liên tục, độ phân giải (0,5–1 km) vẫn còn thô với những ứng dụng đòi hỏi chi tiết địa phương. Ví dụ, dự báo mây từ Meteosat khó phân biệt mây nhỏ ảnh hưởng một trang trại PV nhỏ. Còn vệ tinh độ phân giải cao thì tần suất lại thấp. Đây là trade-off chưa thể khắc phục hoàn toàn, dù có thể cải thiện với chòm vệ tinh dày đặc trong tương lai.</li>
+                <li><strong>Ban đêm và thời tiết xấu:</strong> Ảnh quang học vệ tinh không thấy mây vào ban đêm (trừ kênh hồng ngoại thô). Điều này gây khó cho dự báo PV ngay trước bình minh hay khi trời tối (dự báo sáng hôm sau). Cũng vậy, ảnh vệ tinh khó phân định mây nhiều tầng, mây ti ti. Mô hình AI có thể lấp phần nào, nhưng vẫn có tình huống thất bại (ví dụ sương mù sát mặt đất không hiện rõ trên ảnh IR). Ngoài ra, mưa lớn hay bão cát cũng cản trở quan sát từ vệ tinh quang học.</li>
+                <li><strong>Độ trễ trong một số quy trình:</strong> Mặc dù ảnh địa tĩnh nhanh, nhưng chuỗi xử lý phức tạp có thể tạo độ trễ tổng đáng kể nếu không tối ưu. Ví dụ nếu hệ thống đợi đến khi có ảnh rồi mới chạy mô hình nặng trong vài phút thì kết quả có thể đến quá muộn. Điều này đòi hỏi tối ưu hóa pipeline hoặc dùng kỹ thuật dự báo xen kẽ (predict in between frames).</li>
+                <li><strong>Tích hợp vào hệ thống vận hành hiện có:</strong> Nhiều trung tâm điều độ và công ty điện lực có quy trình bảo thủ, ngại thêm nguồn dữ liệu mới nếu chưa tin cậy 100%. Rào cản về niềm tin và đào tạo cần vượt qua: người vận hành cần hiểu và tin dùng dự báo từ vệ tinh, thay vì xem đó chỉ là tham khảo. Thiếu giải thích (XAI) cũng làm chậm lại việc chấp nhận. IEA nhấn mạnh "thiếu tính minh bạch của mô hình AI khiến khó áp dụng vào vận hành nhạy cảm như lưới điện". Do đó, cần các công cụ giải thích và thử nghiệm kỹ để chứng minh giá trị.</li>
+                <li><strong>Chi phí và hạ tầng CNTT:</strong> Xây dựng hệ thống xử lý ảnh vệ tinh thời gian thực đòi hỏi đầu tư hạ tầng tính toán và lưu trữ dữ liệu lớn. Không phải công ty nào cũng sẵn sàng. Tuy có cloud, nhưng với yêu cầu độ tin cậy 24/7, có thể cần cụm máy chủ riêng. Bên cạnh đó, mua dữ liệu vệ tinh thương mại (VHR) rất đắt, giới hạn việc mở rộng giám sát.</li>
+                <li><strong>Phụ thuộc vào vệ tinh:</strong> Nếu quá phụ thuộc, khi vệ tinh gặp sự cố (ví dụ sự cố mất liên lạc, hoặc tệ hơn là thảm họa không gian như Kessler syndrome), thì hệ thống dự báo có thể mất nguồn dữ liệu quan trọng. Một bài viết của startup Soltell cảnh báo về nguy cơ mạng lưới vệ tinh thời tiết có thể sụp đổ do rác vũ trụ, và đặt câu hỏi các công ty năng lượng làm sao giảm thiểu rủi ro nếu mất dữ liệu vệ tinh. Dù xác suất thấp, đây cũng là điều cần phương án dự phòng (như có hệ thống sky-camera hoặc radar mặt đất hỗ trợ nếu thiếu vệ tinh).</li>
+                <li><strong>Yếu tố pháp lý và riêng tư:</strong> Ảnh vệ tinh độ phân giải cao có thể gặp rào cản về quyền riêng tư khi quan sát tài sản trên đất tư nhân (đặc biệt châu Âu có luật GDPR). Tuy trong vận hành lưới thường không có nhạy cảm, nhưng nếu giám sát gần khu dân cư có thể có phản ứng cộng đồng nếu không giải thích rõ mục đích sử dụng.</li>
+            </ul>
+
+            <h3>Tiềm năng và hướng phát triển</h3>
+
+            <ul>
+                <li><strong>Vệ tinh thế hệ mới và chòm vệ tinh:</strong> Châu Âu vừa phóng Meteosat Thế hệ 3 (MTG-I1) cuối 2022, cung cấp ảnh nhanh hơn (2,5 phút) và nhiều kênh phổ hơn, sẽ tăng chất lượng nowcast mây vào 2024–2025. Mỹ chuẩn bị loạt vệ tinh GeoXO với cảm biến tân tiến. Nhiều công ty tư nhân phóng chòm vệ tinh nhỏ giám sát thời tiết (Tomorrow.io dự kiến 2023+). Những điều này sẽ mang lại dữ liệu dày đặc hơn, độ trễ thấp hơn và có thể quan sát 3D (một số vệ tinh có radar độ cao mây). Nhờ đó dự báo từ vệ tinh sẽ càng chính xác và chi tiết.</li>
+                <li><strong>Tích hợp IoT và cảm biến địa phương:</strong> Ảnh vệ tinh nếu kết hợp với mạng cảm biến trên mặt đất (ví dụ, hàng nghìn cảm biến nhiệt độ dây, hay camera bầu trời ở nhà máy điện) sẽ tạo hệ dữ liệu hợp nhất mạnh mẽ. Xu hướng fusion đa nguồn này đã thấy ở Solcast (kết hợp SCADA + ảnh vệ tinh + camera). Trong tương lai, lưới điện thông minh IoT (với cảm biến rẻ) sẽ cung cấp vô vàn dữ liệu cục bộ, và ảnh vệ tinh sẽ đóng vai trò "bức tranh lớn" kết nối các chấm dữ liệu đó, giúp AI đưa ra quyết định toàn cục.</li>
+                <li><strong>Tự động hóa hành động (từ quyết định đến điều khiển):</strong> Hiện nay phần lớn chỉ dừng ở hỗ trợ quyết định, con người vẫn ra lệnh. Tiềm năng tương lai là một số quyết định có thể tự động hoàn toàn dựa trên dữ liệu vệ tinh + AI, đặc biệt trong các hệ thống microgrid hoặc nhà máy tự vận hành. Ví dụ, farm pin + PV có thể tự động điều khiển sạc/xả pin dựa trên nowcast mây vệ tinh mà không cần người giám sát. Hoặc lưới vi mô đảo có thể tự điều tiết máy phát khi thấy bão đến qua ảnh vệ tinh. Tất nhiên, để đạt được tự động như vậy cần độ tin cậy rất cao.</li>
+                <li><strong>Thị trường dịch vụ mới:</strong> Khi dự báo tốt hơn, có thể xuất hiện dịch vụ thị trường mới như giao dịch quyền dự phòng. Ví dụ, nếu bên thứ ba cung cấp đảm bảo (hedging) cho nhà máy PV dựa trên dự báo vệ tinh: "Nếu mây làm hụt sản lượng quá X, chúng tôi bù", dựa trên độ tin cậy dự báo >90%. Điều này giống như bảo hiểm, và dữ liệu vệ tinh là nền tảng để định giá rủi ro. Ngoài ra, các sản phẩm dữ liệu mới (bản đồ độ sáng đêm realtime để đánh giá tình hình cung cấp điện chẳng hạn) có thể phục vụ chính phủ giám sát an ninh năng lượng.</li>
+                <li><strong>Mở rộng sang các lĩnh vực năng lượng khác:</strong> Ứng dụng hiện tại tập trung vào điện, nhưng có tiềm năng cho dầu khí (giám sát đường ống qua ảnh nhiệt và SAR phát hiện lún hay rò rỉ), hay hệ thống sưởi (dự báo nhu cầu sưởi từ ảnh mây lạnh mùa đông). Khi tích hợp năng lượng (điện, nhiệt, giao thông) thì dữ liệu vệ tinh có thể hỗ trợ bức tranh toàn hệ thống.</li>
+                <li><strong>Cải thiện tính minh bạch và tin cậy:</strong> Phát triển các công cụ XAI cho phép người vận hành hỏi hệ thống AI "tại sao dự báo vậy". Ví dụ hiển thị những khu vực mây quan trọng nhất ảnh hưởng dự báo PV, người điều độ nhìn thấy và hiểu logic hơn. Điều này sẽ nâng cao sự chấp nhận.</li>
+                <li><strong>Hợp tác quốc tế và chia sẻ dữ liệu:</strong> Nhiều nước có chung vệ tinh (ví dụ vệ tinh thời tiết có vùng phủ quốc tế). Sự hợp tác trong phát triển thuật toán (như IEA và IEEE các hội thảo) sẽ đẩy nhanh tiến trình. Có thể hình dung tương lai một phần mềm mã nguồn mở chuẩn cho nowcasting từ vệ tinh, mà bất kỳ tiện ích nào trên thế giới cũng có thể áp dụng với dữ liệu vùng mình, như vậy rào cản sẽ giảm.</li>
+                <li><strong>Tích hợp với Digital Twin và dự báo dài hạn:</strong> Dữ liệu vệ tinh lịch sử lâu dài (Landsat có từ 1980s) có thể giúp xây dựng digital twin của hệ thống năng lượng, để chạy mô phỏng kịch bản (ví dụ nếu mây thay đổi theo xu hướng khí hậu, ảnh hưởng ra sao). Kết hợp ảnh vệ tinh với mô phỏng dạng digital twin sẽ cho phép thử nghiệm phương thức vận hành mới, kiểm tra độ an toàn trước khi áp dụng.</li>
+            </ul>
+
+            <div class="pullquote">
+                Xu thế sử dụng ảnh vệ tinh trong vận hành năng lượng là không thể đảo ngược khi hệ thống điện trở nên thông minh và phi carbon. Ảnh vệ tinh sẽ hiện diện thường trực trong các trung tâm điều độ như một "giác quan không gian" hỗ trợ con người ra quyết định sáng suốt.
+            </div>
+
+            <!-- References -->
+            <div class="references">
+                <h2>Tài liệu tham khảo</h2>
+                
+                <div class="ref-list">
+                    <p>Các thông tin và số liệu trong báo cáo được tổng hợp từ nhiều nguồn chính thống gồm báo cáo của cơ quan vận hành lưới (National Grid ESO, RTE, AEMO), tổ chức quốc tế (IEA, ESA, NEDO), các bài báo khoa học và dự án thực tiễn của doanh nghiệp (StormGeo, Solcast, Steadysun).</p>
+
+                    <p>[1] PV Forecast Service | ESA Space Solutions — <a href="https://business.esa.int/projects/pv-forecast-service" target="_blank">https://business.esa.int/projects/pv-forecast-service</a></p>
+                    
+                    <p>[2] Satellite data and weather models improve short-term solar irradiance forecasts in China — <a href="https://phys.org/news/2025-12-satellite-weather-short-term-solar.html" target="_blank">https://phys.org/news/2025-12-satellite-weather-short-term-solar.html</a></p>
+                    
+                    <p>[3] Wind Sat | ESA Space Solutions — <a href="https://business.esa.int/projects/wind-sat" target="_blank">https://business.esa.int/projects/wind-sat</a></p>
+                    
+                    <p>[4] Solar radiation nowcasting based on geostationary satellite images and deep learning models | ScienceDirect — <a href="https://www.sciencedirect.com/science/article/pii/S0038092X24005619" target="_blank">https://www.sciencedirect.com/science/article/pii/S0038092X24005619</a></p>
+                    
+                    <p>[5] Solar NowCasting innovation project improves solar forecasting | National Energy System Operator — <a href="https://www.neso.energy/news/solar-nowcasting-innovation-project-improves-solar-forecasting" target="_blank">https://www.neso.energy/news/solar-nowcasting-innovation-project-improves-solar-forecasting</a></p>
+                    
+                    <p>[6] SOLASAT 9-Now Solar Radiation Estimation using Himawari 8 & 9 Data | Japan Weather Association — <a href="https://www.jwa.or.jp/english/services-solutions/solar-power-generation/solasat9-now-solar-radiation-estimation/" target="_blank">https://www.jwa.or.jp/english/services-solutions/solar-power-generation/solasat9-now-solar-radiation-estimation/</a></p>
+                    
+                    <p>[7] Des prévisions précises de l'énergie solaire et éolienne | Steadysun — <a href="https://steady-sun.com/fr/" target="_blank">https://steady-sun.com/fr/</a></p>
+                    
+                    <p>[8] Mapping land- and offshore wind turbines in China | ScienceDirect — <a href="https://www.sciencedirect.com/science/article/abs/pii/S1364032125002394" target="_blank">https://www.sciencedirect.com/science/article/abs/pii/S1364032125002394</a></p>
+                    
+                    <p>[9] Lede Adopts StormGeo's GridEyes for AI Vegetation Management — <a href="https://stormgeo.com/insights/lede-pioneers-ai-driven-vegetation-risk-management-with-stormgeos-grideyes" target="_blank">https://stormgeo.com/insights/lede-pioneers-ai-driven-vegetation-risk-management-with-stormgeos-grideyes</a></p>
+                    
+                    <p>[10] Eye in the Sky, Utilising satellite data to improve grid resilience | ENA Innovation Portal — <a href="https://smarter.energynetworks.org/projects/nget-eye_in_the_sky-sifdatadigitalisationrd1_alpha/" target="_blank">https://smarter.energynetworks.org/projects/nget-eye_in_the_sky-sifdatadigitalisationrd1_alpha/</a></p>
+                    
+                    <p>[11] Measuring power outages in Ghana using satellite imagery | IGC — <a href="https://www.theigc.org/sites/default/files/2019/10/Min-2019-policy-brief.pdf" target="_blank">https://www.theigc.org/sites/default/files/2019/10/Min-2019-policy-brief.pdf</a></p>
+                    
+                    <p>[12] Exploring Power Grid Inconsistencies Using Satellite Data in Accra — <a href="https://zealshah95.github.io/posters/umass_energy_forum_accra_poster.pdf" target="_blank">https://zealshah95.github.io/posters/umass_energy_forum_accra_poster.pdf</a></p>
+                    
+                    <p>[13] Solcast Nowcasting Lessons Learnt Report | ARENA — <a href="https://arena.gov.au/assets/2020/07/solcast-nowcasting-lessons-learnt-report-2.pdf" target="_blank">https://arena.gov.au/assets/2020/07/solcast-nowcasting-lessons-learnt-report-2.pdf</a></p>
+                    
+                    <p>[14] More than doubled in 2023: Mapping the photovoltaic power plants | ScienceDirect — <a href="https://www.sciencedirect.com/science/article/abs/pii/S0960148125020452" target="_blank">https://www.sciencedirect.com/science/article/abs/pii/S0960148125020452</a></p>
+                    
+                    <p>[15] National Solar Radiation Database (NSRDB) | NREL — <a href="https://nsrdb.nrel.gov/" target="_blank">https://nsrdb.nrel.gov/</a></p>
+                    
+                    <p>[16] Advances in solar forecasting: Computer vision with deep learning | ScienceDirect — <a href="https://www.sciencedirect.com/science/article/pii/S266679242300029X" target="_blank">https://www.sciencedirect.com/science/article/pii/S266679242300029X</a></p>
+                    
+                    <p>[17] OCTAGON | ESA Space Solutions — <a href="https://business.esa.int/projects/octagon" target="_blank">https://business.esa.int/projects/octagon</a></p>
+                    
+                    <p>[18] DNV acquires solar data specialist Solcast | PV Tech — <a href="https://www.pv-tech.org/energy-risk-management-firm-dnv-acquires-solar-data-specialist-solcast/" target="_blank">https://www.pv-tech.org/energy-risk-management-firm-dnv-acquires-solar-data-specialist-solcast/</a></p>
+                    
+                    <p>[19] Online map for ground mounted solar plants in China | PV Magazine — <a href="https://www.pv-magazine.com/2024/03/07/online-map-for-ground-mounted-solar-plants-in-china/" target="_blank">https://www.pv-magazine.com/2024/03/07/online-map-for-ground-mounted-solar-plants-in-china/</a></p>
+                    
+                    <p>[20] ICHARM team wins Judges' Special Award from NEDO Challenge — <a href="https://diasjp.net/en/information/topics/20250517-nedochallenge-icharm/" target="_blank">https://diasjp.net/en/information/topics/20250517-nedochallenge-icharm/</a></p>
+                    
+                    <p>[21] Japan's groundbreaking solar power experiment | RatedPower — <a href="https://ratedpower.com/blog/japan-solar-power-from-space/" target="_blank">https://ratedpower.com/blog/japan-solar-power-from-space/</a></p>
+                    
+                    <p>[22] NEDO outlines R&D concepts to expand solar adoption in Japan | PV Magazine — <a href="https://www.pv-magazine.com/2025/09/12/nedo-outlines-rd-concepts-to-expand-solar-adoption-in-japan/" target="_blank">https://www.pv-magazine.com/2025/09/12/nedo-outlines-rd-concepts-to-expand-solar-adoption-in-japan/</a></p>
+                    
+                    <p>[23] Solar power nowcasting using satellite images and deep learning | IET Digital Library — <a href="https://digital-library.theiet.org/doi/abs/10.1049/icp.2024.4690" target="_blank">https://digital-library.theiet.org/doi/abs/10.1049/icp.2024.4690</a></p>
+                    
+                    <p>[24] Combining Deep Learning and Physical Models: A Benchmark | Wiley — <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/solr.202300808" target="_blank">https://onlinelibrary.wiley.com/doi/full/10.1002/solr.202300808</a></p>
+                    
+                    <p>[25] Advances in solar forecasting: Computer vision with deep learning | NREL — <a href="https://docs.nrel.gov/docs/fy23osti/86109.pdf" target="_blank">https://docs.nrel.gov/docs/fy23osti/86109.pdf</a></p>
+                    
+                    <p>[26] A New Approach for Short-Term Solar Radiation Forecasting | NREL — <a href="https://docs.nrel.gov/docs/fy19osti/72290.pdf" target="_blank">https://docs.nrel.gov/docs/fy19osti/72290.pdf</a></p>
+                    
+                    <p>[27] Combining Satellite and Ground Data: What Works & What Doesn't | SolarAnywhere — <a href="https://www.solaranywhere.com/resource/combining-satellite-and-ground-data-what-works/" target="_blank">https://www.solaranywhere.com/resource/combining-satellite-and-ground-data-what-works/</a></p>
+                    
+                    <p>[28] Mitigating Weather Satellite Network Risks with Sensorless Solar Performance Measurement | Soltell Systems — <a href="https://www.linkedin.com/posts/soltell_energyanalytics-solaranalyticspredictivemaintenance-activity-7414564038799532032-gBIv" target="_blank">LinkedIn</a></p>
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+    <footer style="background: #1a2f38; color: rgba(255,255,255,0.7); padding: 3rem 2rem; text-align: center; font-family: var(--font-ui); font-size: 0.85rem;">
+        <p>© 2026 | Khai thác ảnh vệ tinh trong vận hành năng lượng</p>
+    </footer>
+
+</body>
+</html>
