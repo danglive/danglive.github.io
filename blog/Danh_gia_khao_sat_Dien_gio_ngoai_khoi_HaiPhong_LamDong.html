@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đánh giá hai khu vực khảo sát điện gió ngoài khơi (Hải Phòng vs. Nam Trung Bộ)</title>
+    <style>
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        /* === ARTICLE CONTAINER === */
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+        
+        /* === HEADER === */
+        .article-header {
+            background: linear-gradient(135deg, #0d4f8b 0%, #1a6bb3 50%, #0a3d6e 100%);
+            color: white;
+            padding: 60px 50px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 15 L55 35 L75 35 L60 48 L65 68 L50 55 L35 68 L40 48 L25 35 L45 35 Z' fill='%23ffffff08'/%3E%3C/svg%3E") repeat;
+            background-size: 80px 80px;
+            opacity: 0.3;
+        }
+        
+        .article-header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 25px;
+        }
+        
+        /* === CONTENT === */
+        .article-content {
+            padding: 50px;
+        }
+        
+        /* === CHARTS AND GRAPHS === */
+        .chart-container {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .chart-title {
+            text-align: center;
+            color: #1a5490;
+            margin: 0 0 20px 0;
+            padding: 0;
+            border: none;
+            font-size: 1.1rem;
+        }
+        
+        /* Wind Calendar Chart */
+        .wind-calendar {
+            overflow-x: auto;
+        }
+        
+        .calendar-header, .calendar-row {
+            display: grid;
+            grid-template-columns: 120px repeat(12, 1fr);
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        
+        .calendar-header .month {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #4a5568;
+            padding: 8px 4px;
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+        
+        .calendar-row .region-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            padding-left: 5px;
+        }
+        
+        .north-row .region-label {
+            color: #2196f3;
+        }
+        
+        .south-row .region-label {
+            color: #ff9800;
+        }
+        
+        .month-cell {
+            text-align: center;
+            padding: 10px 4px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            transition: transform 0.2s;
+            cursor: help;
+        }
+        
+        .month-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        
+        .north-row .month-cell.strong {
+            background: linear-gradient(135deg, #1976d2, #2196f3);
+            color: white;
+        }
+        
+        .north-row .month-cell.medium {
+            background: linear-gradient(135deg, #64b5f6, #90caf9);
+            color: #1565c0;
+        }
+        
+        .north-row .month-cell.weak {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .north-row .month-cell.storm {
+            background: linear-gradient(135deg, #f44336, #ff5722);
+            color: white;
+        }
+        
+        .south-row .month-cell.strong {
+            background: linear-gradient(135deg, #f57c00, #ff9800);
+            color: white;
+        }
+        
+        .south-row .month-cell.medium {
+            background: linear-gradient(135deg, #ffb74d, #ffcc80);
+            color: #e65100;
+        }
+        
+        .south-row .month-cell.weak {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #cbd5e0;
+        }
+        
+        .legend-item {
+            font-size: 0.8rem;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-dot {
+            font-weight: bold;
+        }
+        
+        .legend-dot.strong { color: #1976d2; }
+        .legend-dot.medium { color: #64b5f6; }
+        .legend-dot.weak { color: #90caf9; }
+        .legend-dot.storm { color: #f44336; }
+        
+        /* Bar Charts */
+        .bar-chart-container {
+            margin: 25px 0;
+        }
+        
+        .bar-chart-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .bar-label {
+            width: 140px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        .bar-wrapper {
+            flex: 1;
+            height: 35px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            transition: width 0.8s ease-out;
+        }
+        
+        .bar-fill.north {
+            background: linear-gradient(90deg, #1976d2, #42a5f5);
+        }
+        
+        .bar-fill.south {
+            background: linear-gradient(90deg, #f57c00, #ffb74d);
+        }
+        
+        .bar-value {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        /* Comparison Summary Box */
+        .comparison-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid;
+        }
+        
+        .summary-card.north {
+            border-left-color: #2196f3;
+        }
+        
+        .summary-card.south {
+            border-left-color: #ff9800;
+        }
+        
+        .summary-card h5 {
+            margin: 0 0 15px 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .summary-card.north h5 { color: #1565c0; }
+        .summary-card.south h5 { color: #e65100; }
+        
+        .summary-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 0.9rem;
+        }
+        
+        .summary-stat:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: #64748b;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .stat-value.highlight-good {
+            color: #16a34a;
+        }
+        
+        .stat-value.highlight-warning {
+            color: #ea580c;
+        }
+        
+        /* Potential Breakdown */
+        .potential-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #cbd5e0;
+        }
+        
+        .breakdown-item {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .breakdown-item.north-bg {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 1px solid #90caf9;
+        }
+        
+        .breakdown-item.south-bg {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 1px solid #ffcc80;
+        }
+        
+        .breakdown-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .north-bg .breakdown-label { color: #1565c0; }
+        .south-bg .breakdown-label { color: #e65100; }
+        
+        .breakdown-values {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+        
+        .breakdown-values strong {
+            color: #1e293b;
+        }
+        
+        /* Price Comparison */
+        .price-comparison {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .price-card {
+            text-align: center;
+            padding: 20px 30px;
+            border-radius: 12px;
+            min-width: 180px;
+        }
+        
+        .price-card.north {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px solid #2196f3;
+        }
+        
+        .price-card.south {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border: 2px solid #4caf50;
+        }
+        
+        .price-card .region-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .price-card.north .region-name { color: #1565c0; }
+        .price-card.south .region-name { color: #2e7d32; }
+        
+        .price-card .price-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .price-card.north .price-value { color: #1976d2; }
+        .price-card.south .price-value { color: #388e3c; }
+        
+        .price-card .price-unit {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        
+        .price-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 10px;
+        }
+        
+        /* === ADMINISTRATIVE NOTE === */
+        .admin-note {
+            display: flex;
+            gap: 15px;
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%);
+            border: 1px solid #f0c36d;
+            border-left: 5px solid #e6a817;
+            border-radius: 0 10px 10px 0;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .admin-note .note-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .admin-note .note-content {
+            color: #5a4a1f;
+        }
+        
+        .admin-note strong {
+            color: #8b6914;
+        }
+        
+        /* === TABLE OF CONTENTS === */
+        .toc {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d4ecfc 100%);
+            padding: 30px 35px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border-left: 5px solid #1a6bb3;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #0d4f8b;
+            font-size: 1.2rem;
+        }
+        
+        .toc ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            counter-reset: toc-counter;
+        }
+        
+        .toc li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #a8d4f0;
+            counter-increment: toc-counter;
+        }
+        
+        .toc li:last-child {
+            border-bottom: none;
+        }
+        
+        .toc li::before {
+            content: counter(toc-counter) ". ";
+            font-weight: 600;
+            color: #1a6bb3;
+        }
+        
+        .toc a {
+            color: #0d4f8b;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .toc a:hover {
+            color: #2a5298;
+            padding-left: 5px;
+        }
+        
+        /* === HEADINGS === */
+        h2 {
+            font-size: 1.6rem;
+            color: #0d4f8b;
+            margin: 50px 0 25px 0;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #1a6bb3;
+            font-weight: 700;
+        }
+        
+        h3 {
+            font-size: 1.35rem;
+            color: #1a5490;
+            margin: 40px 0 20px 0;
+            font-weight: 600;
+            padding-left: 15px;
+            border-left: 4px solid #2a7bc8;
+        }
+        
+        h4 {
+            font-size: 1.15rem;
+            color: #2a5298;
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+        
+        /* === PARAGRAPHS === */
+        p {
+            margin-bottom: 18px;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
+        
+        /* === HIGHLIGHT BOX === */
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d4ecfc 100%);
+            border-left: 5px solid #1a6bb3;
+            padding: 25px 30px;
+            margin: 30px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .highlight-box.intro {
+            background: linear-gradient(135deg, #e8f4fd 0%, #cfe8f9 100%);
+            border-left-color: #0d4f8b;
+            font-size: 1.05rem;
+        }
+        
+        .highlight-box.warning {
+            background: linear-gradient(135deg, #fff8e6 0%, #fef3cd 100%);
+            border-left-color: #f0a500;
+        }
+        
+        .highlight-box.success {
+            background: linear-gradient(135deg, #e6f7ed 0%, #c6f6d5 100%);
+            border-left-color: #28a745;
+        }
+        
+        .highlight-box.comparison {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e4ebff 100%);
+            border-left-color: #5c6bc0;
+        }
+        
+        /* === COMPARISON BOXES === */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .comparison-box {
+            padding: 25px;
+            border-radius: 12px;
+        }
+        
+        .comparison-box.north {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #2196f3;
+        }
+        
+        .comparison-box.south {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid #ff9800;
+        }
+        
+        .comparison-box h4 {
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        /* === LINKS === */
+        a {
+            color: #1a6bb3;
+            text-decoration: none;
+            border-bottom: 1px dotted #1a6bb3;
+            transition: all 0.2s ease;
+        }
+        
+        a:hover {
+            color: #0d4f8b;
+            border-bottom-style: solid;
+        }
+        
+        /* === LISTS === */
+        ul, ol {
+            margin: 20px 0 20px 25px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+        
+        li strong {
+            color: #0d4f8b;
+        }
+        
+        /* === FIGURES === */
+        figure {
+            margin: 35px 0;
+            text-align: center;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        figcaption {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #5a6c7d;
+            font-style: italic;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        
+        .image-placeholder {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d4ecfc 100%);
+            padding: 40px;
+            border-radius: 12px;
+            color: #5a6c7d;
+            font-style: italic;
+        }
+        
+        /* === BLOCKQUOTE === */
+        blockquote {
+            background: #f7fafc;
+            border-left: 4px solid #1a6bb3;
+            padding: 20px 25px;
+            margin: 25px 0;
+            font-style: italic;
+            color: #4a5568;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* === KEY STATS === */
+        .key-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #1a6bb3 0%, #0d4f8b 100%);
+            color: white;
+            padding: 25px 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .stat-box .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* === REFERENCES === */
+        .references {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            padding: 40px;
+            margin-top: 50px;
+            border-radius: 12px;
+            border-top: 4px solid #1a6bb3;
+        }
+        
+        .references h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .references ol {
+            font-size: 0.92rem;
+            color: #4a5568;
+            margin-left: 20px;
+        }
+        
+        .references li {
+            margin-bottom: 15px;
+            word-break: break-word;
+            padding-left: 5px;
+        }
+        
+        .references a {
+            color: #1a6bb3;
+            font-size: 0.85rem;
+        }
+        
+        /* === SECTION DIVIDER === */
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #1a6bb3, transparent);
+            margin: 40px 0;
+        }
+        
+        /* === FOOTER === */
+        .article-footer {
+            background: linear-gradient(135deg, #0d4f8b 0%, #1a6bb3 100%);
+            padding: 30px 50px;
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+        }
+        
+        .article-footer p {
+            text-align: center;
+            margin-bottom: 0;
+        }
+        
+        /* === EMPHASIS === */
+        strong {
+            color: #1a5490;
+        }
+        
+        em {
+            color: #5a6c7d;
+        }
+        
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .article-header {
+                padding: 40px 25px;
+            }
+            
+            .article-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .article-content {
+                padding: 30px 20px;
+            }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h2 {
+                font-size: 1.35rem;
+            }
+            
+            h3 {
+                font-size: 1.15rem;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .key-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .potential-breakdown {
+                grid-template-columns: 1fr;
+            }
+            
+            .price-comparison {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .calendar-header, .calendar-row {
+                grid-template-columns: 80px repeat(12, 1fr);
+            }
+            
+            .calendar-row .region-label {
+                font-size: 0.7rem;
+            }
+            
+            .month-cell {
+                padding: 6px 2px;
+                font-size: 0.6rem;
+            }
+            
+            .comparison-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .references {
+                padding: 25px 20px;
+            }
+        }
+        
+        /* === PRINT STYLES === */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .article-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .article-header {
+                background: #0d4f8b !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .toc {
+                page-break-after: always;
+            }
+            
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            a {
+                color: #000;
+                text-decoration: underline;
+            }
+        }
+    </style>
+</head>
+<body>
+    <article class="article-container">
+        <header class="article-header">
+            <h1>Đánh giá hai khu vực khảo sát điện gió ngoài khơi<br>(Hải Phòng vs. Nam Trung Bộ)</h1>
+            <div class="article-meta">
+                <span>📝 Tác giả: Đặng Văn Tuấn</span>
+                <span>📅 Ngày: Tháng 01/2026</span>
+            </div>
+        </header>
+        
+        <div class="article-content">
+            <!-- TABLE OF CONTENTS -->
+            <nav class="toc">
+                <h3>📑 Mục lục</h3>
+                <ul>
+                    <li><a href="#section1">Điện gió ngoài khơi trong chiến lược an ninh năng lượng và chuyển dịch năng lượng quốc gia</a></li>
+                    <li><a href="#section2">Khí hậu và chế độ gió mùa ở Bắc Bộ vs. Nam Trung Bộ</a></li>
+                    <li><a href="#section3">Tốc độ gió, suất điện khả dụng và tiềm năng sản lượng</a></li>
+                    <li><a href="#section4">Rủi ro khí hậu và thời tiết cực đoan (bão, sóng, gió giật)</a></li>
+                    <li><a href="#section5">Điều kiện kỹ thuật: địa chất đáy biển, độ sâu và nền móng</a></li>
+                    <li><a href="#section6">Khả năng đấu nối và hấp thụ lưới điện hiện tại và tương lai</a></li>
+                    <li><a href="#section7">So sánh tính khả thi kỹ thuật và kinh tế giữa hai vùng</a></li>
+                    <li><a href="#section8">Khuyến nghị chính sách và định hướng ưu tiên phát triển</a></li>
+                </ul>
+            </nav>
+            <!-- FEATURED IMAGE -->
+            <figure>
+                <img src="../images/blog/offshore.png" alt="Điện gió ngoài khơi Việt Nam - Hải Phòng vs Nam Trung Bộ" loading="lazy">
+                <figcaption><em>Hình minh họa: Sơ đồ hệ thống điện gió ngoài khơi và đấu nối lưới điện — từ trang trại gió (Offshore Wind Farm) qua cáp ngầm biển (Submarine Cable), trạm chuyển đổi (Conversion Station) đến trạm biến áp EVNNPT</em></figcaption>
+            </figure>
+            
+            <!-- ADMINISTRATIVE NOTE -->
+            <div class="admin-note">
+                <div class="note-icon">📌</div>
+                <div class="note-content">
+                    <strong>Lưu ý về địa giới hành chính:</strong> Từ tháng 7/2024, tỉnh Ninh Thuận đã được sáp nhập vào tỉnh Khánh Hòa và tỉnh Bình Thuận đã được sáp nhập vào tỉnh Lâm Đồng theo chủ trương sắp xếp đơn vị hành chính của Quốc hội. Do đó, các địa danh "Bình Thuận", "Ninh Thuận" trong Bài báo này được hiểu là các khu vực địa lý thuộc tỉnh Lâm Đồng và Khánh Hòa hiện nay.
+                </div>
+            </div>
+
+            <!-- KEY STATISTICS -->
+            <div class="key-stats">
+                <div class="stat-box">
+                    <span class="number">63.811 ha</span>
+                    <span class="label">Tổng diện tích biển được giao khảo sát</span>
+                </div>
+                <div class="stat-box">
+                    <span class="number">6 GW</span>
+                    <span class="label">Mục tiêu công suất đến 2030</span>
+                </div>
+                <div class="stat-box">
+                    <span class="number">~600 GW</span>
+                    <span class="label">Tiềm năng kỹ thuật toàn quốc</span>
+                </div>
+            </div>
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section id="section1">
+                <h3>Điện gió ngoài khơi trong chiến lược an ninh năng lượng và chuyển dịch năng lượng quốc gia</h3>
+                
+                <div class="highlight-box intro">
+                    <p>Trong bối cảnh nhu cầu điện của Việt Nam tiếp tục tăng trưởng nhanh, dư địa phát triển các nguồn điện truyền thống ngày càng thu hẹp, và các cam kết chuyển dịch năng lượng trở thành ràng buộc dài hạn đối với chính sách phát triển, điện gió ngoài khơi nổi lên như một trụ cột chiến lược của hệ thống năng lượng quốc gia, không chỉ là một loại hình nguồn điện bổ sung.</p>
+                </div>
+
+                <p>Việc Nhà nước giao tổng cộng 63.811 ha khu vực biển cho Tập đoàn Điện lực Việt Nam (EVN) và Tập đoàn Công nghiệp - Năng lượng Quốc gia Việt Nam (Petrovietnam, PVN) để thực hiện khảo sát điện gió ngoài khơi đánh dấu bước khởi động có tính thể chế cho giai đoạn phát triển mới của ngành năng lượng biển Việt Nam. Quyết định này thể hiện cách tiếp cận chủ động của Nhà nước trong việc kiểm soát không gian biển, xây dựng dữ liệu nền quốc gia, và từng bước hình thành cơ sở cho các quyết định đầu tư dài hạn trong lĩnh vực điện gió ngoài khơi.</p>
+
+                <p>Hai khu vực khảo sát được lựa chọn, ngoài khơi Bắc Bộ (Hải Phòng) và ngoài khơi Nam Trung Bộ (khu vực cũ Bình Thuận cũ, nay là Lâm Đồng), không chỉ khác nhau về điều kiện tự nhiên, khí hậu và tiềm năng gió, mà còn đại diện cho hai vai trò chiến lược khác nhau trong hệ thống điện quốc gia. Khu vực Bắc Bộ gắn liền với bài toán an ninh cung cấp điện cho vùng phụ tải lớn nhất cả nước, trong khi khu vực Nam Trung Bộ sở hữu tiềm năng gió vượt trội, cho phép phát triển các dự án điện gió ngoài khơi quy mô lớn với chi phí cạnh tranh và tầm nhìn dài hạn.</p>
+
+                <p>Do đó, việc đánh giá các khu vực khảo sát này không thể chỉ dừng ở so sánh thuần túy về tốc độ gió hay suất điện khả dụng, mà cần được đặt trong bối cảnh tổng thể của hệ thống điện, hạ tầng truyền tải, rủi ro khí hậu, cũng như mục tiêu chiến lược của Việt Nam trong quá trình chuyển dịch năng lượng và phát triển kinh tế biển. Cách tiếp cận này cho phép nhận diện rõ vai trò bổ trợ giữa các vùng, tránh tư duy "chọn một, bỏ một", đồng thời cung cấp cơ sở khoa học và chính sách cho việc xác định lộ trình phát triển điện gió ngoài khơi phù hợp trong ngắn, trung và dài hạn.</p>
+
+                <p>Bài báo này phân tích trung lập về hai khu vực biển vừa được giao cho Tập đoàn Điện lực Việt Nam (EVN) và Petrovietnam (PVN) khảo sát phát triển điện gió ngoài khơi (theo quyết định ngày 22-23/01/2026). Cụ thể, EVN được giao khu vực khoảng <strong>24.000 ha biển ngoài khơi TP. Hải Phòng</strong> (vùng quần đảo Long Châu, Bạch Long Vĩ) để khảo sát dự án điện gió ngoài khơi Bắc Bộ 1.3 và 1.4 <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">[1]</a>. PVN được giao <strong>39.811 ha biển</strong> ngoài khơi (được gọi là khu vực Nam Trung Bộ 1, ngoài khơi tỉnh Lâm Đồng theo quyết định giao khu vực biển) để khảo sát phát triển điện gió ngoài khơi Nam Trung Bộ 1 <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">[1]</a>.</p>
+
+                <p>Bài báo so sánh hai khu vực dưới các góc độ: <strong>đặc điểm khí hậu gió mùa</strong>, <strong>tiềm năng và suất điện khả dụng (capacity factor)</strong>, <strong>rủi ro khí hậu, thời tiết cực đoan</strong>, <strong>điều kiện kỹ thuật (độ sâu, địa chất đáy biển, nền móng)</strong>, <strong>khả năng đấu nối và hấp thụ lưới điện</strong>, <strong>tính khả thi kỹ thuật &amp; kinh tế tổng thể</strong>, và cuối cùng là <strong>khuyến nghị chính sách, định hướng ưu tiên phát triển</strong>.</p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- SECTION 2: CLIMATE AND MONSOON -->
+            <section id="section2">
+                <h3>Khí hậu và chế độ gió mùa ở Bắc Bộ vs. Nam Trung Bộ</h3>
+
+                <p>Khu vực vịnh Bắc Bộ (ngoài khơi Hải Phòng) và vùng Nam Trung Bộ có chế độ khí hậu và gió mùa khác biệt rõ rệt.</p>
+
+                <div class="comparison-container">
+                    <div class="comparison-box north">
+                        <h4>🌊 Miền Bắc (Vịnh Bắc Bộ)</h4>
+                        <p><strong>Miền Bắc</strong> nằm trong vùng khí hậu nhiệt đới gió mùa có mùa đông lạnh, chịu tác động mạnh của gió mùa Đông Bắc vào mùa đông (từ khoảng tháng 10 đến tháng 3 năm sau). Giai đoạn <strong>mùa đông, đầu xuân (tháng 11 đến tháng 2)</strong> thường xuất hiện gió mùa Đông Bắc mạnh và đều đặn, mang không khí lạnh từ lục địa Trung Quốc tràn xuống vịnh Bắc Bộ.</p>
+                    </div>
+                    <div class="comparison-box south">
+                        <h4>☀️ Nam Trung Bộ (Lâm Đồng)</h4>
+                        <p><strong>Vùng Nam Trung Bộ</strong> (ngoài khơi Bình Thuận cũ, hiện tại đã sáp nhập vào Lâm Đồng) mang khí hậu nhiệt đới gió mùa điển hình vùng vĩ độ thấp, nóng ẩm quanh năm và ít có mùa đông lạnh. Khu vực này chịu chi phối bởi <strong>2 hướng gió mùa chính</strong>.</p>
+                    </div>
+                </div>
+
+                <p>Ngược lại, <strong>mùa hè (tháng 5-8)</strong> ở Bắc Bộ ít chịu ảnh hưởng của gió mùa Tây Nam (vì dãy Trường Sơn chắn gió), gió mùa Đông Nam yếu hơn; thời kỳ này thời tiết tương đối lặng gió, <strong>ngoại trừ các đợt bão, áp thấp nhiệt đới</strong> hoạt động trên Biển Đông có thể gây gió mạnh trong thời gian ngắn. Do đó, <strong>tính theo mùa</strong>, vùng vịnh Bắc Bộ có <strong>gió mạnh vào mùa đông</strong>, yếu hơn vào mùa hè, với sự phân hóa rõ: tiềm năng gió <strong>cao nhất vào các tháng mùa đông</strong>, thấp nhất vào cuối xuân (khoảng tháng 4-5) <a href="https://www.researchgate.net/profile/Lars-Hole/publication/391009737_Evaluation_of_wind_energy_potential_over_offshore_areas_in_Vietnam/links/68078908ded433155735dbcd/Evaluation-of-wind-energy-potential-over-offshore-areas-in-Vietnam.pdf">[2]</a>.</p>
+
+                <p>Khu vực Nam Trung Bộ chịu chi phối bởi gió mùa Đông Bắc vào mùa khô (khoảng tháng 11–3) và gió mùa Tây Nam vào mùa hè (mùa mưa khoảng tháng 5–9) <a href="https://vietnamenergy.vn/what-are-the-advantages-of-offshore-wind-power-in-vietnam-26375.html">[3]</a>. <strong>Mùa gió Đông Bắc</strong> thổi xuống theo hướng dọc bờ biển từ phía bắc, ảnh hưởng cả đến Nam Trung Bộ vào mùa khô, tạo nên nguồn gió ổn định và cường độ cao những tháng cuối và đầu năm tương tự miền Bắc. <strong>Mùa gió Tây Nam</strong> (từ tháng 5-9) xuất phát từ Ấn Độ Dương, gây mưa cho Nam Bộ và Tây Nguyên; tuy nhiên ven biển Nam Trung Bộ, gió Tây Nam thường <strong>yếu hơn</strong> do bị địa hình chắn, và hướng chủ đạo mùa hè là gió nam, tây nam yếu ven biển.</p>
+
+                <!-- WIND CALENDAR CHART -->
+                <div class="chart-container">
+                    <h4 class="chart-title">📊 Biểu đồ chế độ gió theo tháng trong năm</h4>
+                    <div class="wind-calendar">
+                        <div class="calendar-header">
+                            <div class="region-label"></div>
+                            <div class="month">T1</div>
+                            <div class="month">T2</div>
+                            <div class="month">T3</div>
+                            <div class="month">T4</div>
+                            <div class="month">T5</div>
+                            <div class="month">T6</div>
+                            <div class="month">T7</div>
+                            <div class="month">T8</div>
+                            <div class="month">T9</div>
+                            <div class="month">T10</div>
+                            <div class="month">T11</div>
+                            <div class="month">T12</div>
+                        </div>
+                        <div class="calendar-row north-row">
+                            <div class="region-label">🌊 Bắc Bộ</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                            <div class="month-cell medium" title="Gió ĐB giảm">●●</div>
+                            <div class="month-cell weak" title="Chuyển mùa - yếu">●</div>
+                            <div class="month-cell weak" title="Lặng gió">●</div>
+                            <div class="month-cell storm" title="Mùa bão">⚡</div>
+                            <div class="month-cell storm" title="Mùa bão">⚡</div>
+                            <div class="month-cell storm" title="Mùa bão">⚡</div>
+                            <div class="month-cell storm" title="Mùa bão">⚡</div>
+                            <div class="month-cell medium" title="Gió ĐB bắt đầu">●●</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                        </div>
+                        <div class="calendar-row south-row">
+                            <div class="region-label">☀️ Nam Trung Bộ</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                            <div class="month-cell medium" title="Chuyển mùa">●●</div>
+                            <div class="month-cell medium" title="Gió TN">●●</div>
+                            <div class="month-cell medium" title="Gió TN">●●</div>
+                            <div class="month-cell medium" title="Gió TN">●●</div>
+                            <div class="month-cell medium" title="Gió TN">●●</div>
+                            <div class="month-cell medium" title="Gió TN">●●</div>
+                            <div class="month-cell medium" title="Chuyển mùa">●●</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                            <div class="month-cell strong" title="Gió ĐB mạnh">●●●</div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item"><span class="legend-dot strong">●●●</span> Gió mạnh (Đông Bắc)</div>
+                        <div class="legend-item"><span class="legend-dot medium">●●</span> Gió trung bình</div>
+                        <div class="legend-item"><span class="legend-dot weak">●</span> Gió yếu/lặng</div>
+                        <div class="legend-item"><span class="legend-dot storm">⚡</span> Mùa bão (gió không ổn định)</div>
+                    </div>
+                </div>
+
+                <p>Nhìn chung, khu vực Lâm Đồng có <strong>gió tương đối đều quanh năm</strong>, không có thời kỳ lặng gió kéo dài như miền Bắc. Trong mùa khô (đồng thời là <strong>mùa gió Đông Bắc</strong>), vùng Nam Trung Bộ cũng ghi nhận <strong>gió mạnh nhất trong năm</strong>, tương tự quy luật mùa vụ của miền Bắc <a href="https://www.researchgate.net/profile/Lars-Hole/publication/391009737_Evaluation_of_wind_energy_potential_over_offshore_areas_in_Vietnam/links/68078908ded433155735dbcd/Evaluation-of-wind-energy-potential-over-offshore-areas-in-Vietnam.pdf">[2]</a> <a href="https://vietnamenergy.vn/what-are-the-advantages-of-offshore-wind-power-in-vietnam-26375.html">[3]</a>. Tuy nhiên, trong mùa hè, nhờ vị trí gần xích đạo hơn, <strong>gió nền vẫn duy trì ở mức trung bình khá</strong> (do chênh lệch áp giữa đất liền và biển tạo gió biển ngày đêm).</p>
+
+                <div class="highlight-box">
+                    <p>Về <strong>hướng gió chính</strong>, Việt Nam có hai hướng gió mùa gần như đối ngược: <strong>gió Đông Bắc vào mùa đông</strong> và <strong>gió Tây Nam vào mùa hè</strong>. Đây là <strong>đặc điểm thuận lợi cho việc bố trí tua-bin gió</strong>: các trại điện gió có thể thiết kế <strong>theo hai trục gió chính</strong>, giảm khoảng cách dàn trải theo hướng ít gió, tăng khoảng cách theo hướng gió chính, giúp giảm hiệu ứng cản gió (wake effect) giữa các tua-bin <a href="https://vietnamenergy.vn/what-are-the-advantages-of-offshore-wind-power-in-vietnam-26375.html">[3]</a>.</p>
+                </div>
+
+                <p>Nhìn chung, <strong>vùng Nam Trung Bộ có khí hậu ôn hòa hơn</strong> (nắng nóng quanh năm, ít lạnh), gió mùa mang tính hai mùa rõ rệt nhưng <strong>ít dao động cực đoan</strong> so với miền Bắc. <strong>Vịnh Bắc Bộ</strong> có mùa đông lạnh với gió mạnh, mùa hè nóng ẩm nhưng gió nền yếu, thay vào đó thường <strong>xuất hiện gió mạnh chủ yếu khi có bão/áp thấp</strong>.</p>
+
+                <!-- COMPREHENSIVE COMPARISON SUMMARY -->
+                <div class="comparison-summary">
+                    <div class="summary-card north">
+                        <h5>🌊 Bắc Bộ (Hải Phòng)</h5>
+                        <div class="summary-stat">
+                            <span class="stat-label">Gió mạnh nhất</span>
+                            <span class="stat-value">Tháng 11-2 (mùa đông)</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="stat-label">Gió yếu nhất</span>
+                            <span class="stat-value highlight-warning">Tháng 4-5 (lặng gió)</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="stat-label">Mùa bão</span>
+                            <span class="stat-value highlight-warning">Tháng 6-10 (4-6 cơn/năm)</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="stat-label">Đặc điểm</span>
+                            <span class="stat-value">Biến động theo mùa cao</span>
+                        </div>
+                    </div>
+                    <div class="summary-card south">
+                        <h5>☀️ Nam Trung Bộ (Lâm Đồng)</h5>
+                        <div class="summary-stat">
+                            <span class="stat-label">Gió mạnh nhất</span>
+                            <span class="stat-value">Tháng 11-3 (mùa khô)</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="stat-label">Gió yếu nhất</span>
+                            <span class="stat-value highlight-good">Vẫn trung bình khá</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="stat-label">Mùa bão</span>
+                            <span class="stat-value highlight-good">Rất ít bão đổ bộ</span>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="stat-label">Đặc điểm</span>
+                            <span class="stat-value highlight-good">Gió đều quanh năm</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- SECTION 3: WIND SPEED AND CAPACITY -->
+            <section id="section3">
+                <h3>Tốc độ gió, suất điện khả dụng và tiềm năng sản lượng</h3>
+
+                <p><strong>Tiềm năng gió và suất điện khả dụng</strong> ở hai khu vực có sự chênh lệch đáng kể, phản ánh qua tốc độ gió trung bình, hệ số công suất (capacity factor) và quy mô nguồn điện gió khả khai thác.</p>
+
+                <h4><em>Về tốc độ gió:</em></h4>
+                
+                <!-- WIND SPEED BAR CHART -->
+                <div class="chart-container">
+                    <h4 class="chart-title">📊 So sánh tốc độ gió trung bình tại độ cao 100m</h4>
+                    <div class="bar-chart-container">
+                        <div class="bar-chart-row">
+                            <div class="bar-label">🌊 Bắc Bộ</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill north" style="width: 77%;">7.5-8.5 m/s</div>
+                            </div>
+                        </div>
+                        <div class="bar-chart-row">
+                            <div class="bar-label">☀️ Nam Trung Bộ</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill south" style="width: 100%;">9.5-11 m/s</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 0.85rem; color: #64748b; margin: 10px 0 0 0;">
+                        <em>Năng lượng gió tỷ lệ với lập phương tốc độ gió → chênh lệch nhỏ tạo khác biệt sản lượng lớn</em>
+                    </p>
+                </div>
+
+                <p>Theo các nghiên cứu kỹ thuật (World Bank/ESMAP và các tổng hợp kỹ thuật...), <strong>vùng vịnh Bắc Bộ</strong> có tốc độ gió trung bình <strong>khoảng 7,5–8,5 m/s ở độ cao 100 m</strong> <a href="https://evn.com.vn/d6/news/Vi-sao-EVN-de-xuat-phat-trien-dien-gio-ngoai-khoi-vinh-Bac-Bo-6-17-31357.aspx">[10]</a>. Đây là mức gió khá tốt so với mặt bằng nhiều nơi trên thế giới, đủ điều kiện phát triển điện gió ngoài khơi cố định. Khu vực biển nông gần đồng bằng Bắc Bộ lại ở sát các trung tâm phụ tải lớn (Hải Phòng, Quảng Ninh, Hà Nội), nên dù tốc độ gió <strong>không quá cao</strong> nhưng vẫn được đánh giá hấp dẫn cho phát triển điện gió cố định gần bờ <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a>.</p>
+
+                <p>Ngược lại, <strong>vùng Nam Trung Bộ</strong> (ngoài khơi Lâm Đồng) nằm trong số những nơi gió mạnh nhất Việt Nam. Tốc độ gió trung bình <strong>vượt quá 9,5 m/s ở độ cao 100 m</strong> trên một vùng biển rộng <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a>. Nhiều điểm ngoài khơi Lâm Đồng, Khánh Hoà có gió <strong>đạt 10–11 m/s</strong> ở 100 m <a href="https://htc.issmge.org/contributions/member-societies/vietnamese-geotechnical-society/research-practice-wind-energy-in-vietnam-and-the-role-of-geotechnical-engineers">[5]</a>, tương đương với các điểm gió tốt ở Biển Bắc châu Âu. Sự chênh lệch tốc độ gió này ảnh hưởng trực tiếp đến sản lượng và suất khả dụng của dự án: tốc độ gió tăng nhỏ cũng làm tăng sản lượng đáng kể do năng lượng gió tỷ lệ với lập phương tốc độ gió.</p>
+
+                <figure>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Vietnam_Offshore_Wind_Technical_Potential.pdf/page1-846px-Vietnam_Offshore_Wind_Technical_Potential.pdf.jpg" alt="Bản đồ tiềm năng kỹ thuật điện gió ngoài khơi Việt Nam" loading="lazy">
+                    <figcaption><em>Hình 1: Bản đồ tiềm năng kỹ thuật điện gió ngoài khơi Việt Nam (Nguồn: World Bank/ESMAP)</em></figcaption>
+                </figure>
+
+                <h4><em>Về suất điện khả dụng (capacity factor):</em></h4>
+                <p>Với công nghệ tua-bin gió hiện đại (công suất 10-15 MW, đường kính cánh 180-220 m), <strong>hệ số công suất trung bình của điện gió ngoài khơi Việt Nam ước khoảng 50-55%</strong>, cao hơn nhiều so với điện gió trên bờ (khoảng 36%) <a href="https://www.undp.org/sites/g/files/zskgke326/files/2025-09/print_assessment_of_wind_energy_technical_potential_justified.pdf">[6]</a>.</p>
+
+                <div class="comparison-container">
+                    <div class="comparison-box south">
+                        <h4>Nam Trung Bộ (Lâm Đồng)</h4>
+                        <p>Suất khả dụng <strong>rất cao: ~50%</strong> hoặc hơn. Một số khu vực ngoài khơi có thể xấp xỉ <strong>55-60%</strong> <a href="https://vietnamenergy.vn/what-are-the-advantages-of-offshore-wind-power-in-vietnam-26375.html">[3]</a>.</p>
+                    </div>
+                    <div class="comparison-box north">
+                        <h4>Vịnh Bắc Bộ (Hải Phòng)</h4>
+                        <p>Suất khả dụng ước tính <strong>trong khoảng 30-45%</strong>. Khu vực quanh đảo Bạch Long Vĩ, Long Châu có thể đạt ~35-40%; các vùng gần bờ hơn khoảng 30-35% <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a> <a href="https://evn.com.vn/d6/news/Vi-sao-EVN-de-xuat-phat-trien-dien-gio-ngoai-khoi-vinh-Bac-Bo-6-17-31357.aspx">[10]</a>.</p>
+                    </div>
+                </div>
+
+                <!-- CAPACITY FACTOR BAR CHART -->
+                <div class="chart-container">
+                    <h4 class="chart-title">📊 So sánh suất điện khả dụng (Capacity Factor)</h4>
+                    <div class="bar-chart-container">
+                        <div class="bar-chart-row">
+                            <div class="bar-label">🌊 Bắc Bộ</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill north" style="width: 62%;">30-45%</div>
+                            </div>
+                        </div>
+                        <div class="bar-chart-row">
+                            <div class="bar-label">☀️ Nam Trung Bộ</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill south" style="width: 92%;">50-60%</div>
+                            </div>
+                        </div>
+                        <div class="bar-chart-row">
+                            <div class="bar-label" style="color: #64748b;">📍 Tiêu chuẩn thế giới</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill" style="width: 75%; background: linear-gradient(90deg, #64748b, #94a3b8);">~50%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 0.85rem; color: #64748b; margin: 10px 0 0 0;">
+                        <em>Nam Trung Bộ đạt tiêu chuẩn các dự án tốt nhất thế giới (Biển Bắc châu Âu)</em>
+                    </p>
+                </div>
+
+                <p>Số liệu khung giá phát điện gần đây do Bộ Công Thương ban hành cũng gián tiếp thể hiện chênh lệch này: giá trần điện gió ngoài khơi khu vực Bắc Bộ khoảng <strong>3.975,1 đ/kWh</strong>, cao hơn ~29% so với khu vực Nam Trung Bộ (~3.078,9 đ/kWh) <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">[1]</a>. Điều này cho thấy để đảm bảo hiệu quả dự án, điện gió Bắc Bộ cần giá cao hơn tương ứng với suất khả dụng thấp hơn.</p>
+
+                <!-- PRICE COMPARISON -->
+                <div class="price-comparison">
+                    <div class="price-card north">
+                        <div class="region-name">🌊 Bắc Bộ</div>
+                        <div class="price-value">3.975,1</div>
+                        <div class="price-unit">đồng/kWh</div>
+                    </div>
+                    <div class="price-card south">
+                        <div class="region-name">☀️ Nam Trung Bộ</div>
+                        <div class="price-value">3.078,9</div>
+                        <div class="price-unit">đồng/kWh</div>
+                    </div>
+                </div>
+                <p class="price-note">⚡ Chênh lệch ~29% — phản ánh suất khả dụng thấp hơn ở Bắc Bộ</p>
+
+                <figure>
+                    <img src="https://vietnamenergy.vn/stores/news_dataimages/Lemy/042021/14/11/hinh3.jpg" alt="Bản đồ phân bố suất điện khả dụng ngoài khơi Việt Nam" loading="lazy">
+                    <figcaption><em>Hình 2: Bản đồ phân bố suất điện khả dụng (net capacity factor) ước tính cho một trang trại điện gió 600 MW ngoài khơi Việt Nam (tua-bin 10 MW) <a href="https://vietnamenergy.vn/what-are-the-advantages-of-offshore-wind-power-in-vietnam-26375.html">[3]</a>. Khu vực màu đỏ đậm (ngoài khơi Lâm Đồng) có suất khả dụng cao nhất (~50%), trong khi vịnh Bắc Bộ (màu xanh lá) thấp hơn (~30-40%).</em></figcaption>
+                </figure>
+
+                <h4><em>Về tiềm năng công suất và sản lượng:</em></h4>
+                <p>Tổng <strong>tiềm năng kỹ thuật điện gió ngoài khơi</strong> của Việt Nam rất lớn, khoảng <strong>600 GW</strong> theo ước tính của WB/ESMAP năm 2021 <a href="https://moit.gov.vn/tin-tuc/phat-trien-nang-luong/chinh-thuc-phe-duyet-quy-hoach-dien-viii-dieu-chinh.html">[7]</a>, trong đó tập trung nhiều ở vùng biển <strong>Nam Trung Bộ và Nam Bộ</strong>.</p>
+
+                <p>Một nghiên cứu 2024 sử dụng dữ liệu gió độ phân giải cao (WRF 3 km) cho thấy <strong>vùng biển phía Nam (từ Lâm Đồng trở vào)</strong> có tổng diện tích gió tốt lớn gấp nhiều lần so với phía Bắc. Cụ thể, <strong>"vùng nước phía Bắc"</strong> (vịnh Bắc Bộ) có thể khai thác khoảng <strong>174 GW</strong> (130 GW cố định + 44 GW nổi) trên diện tích ~52.500 km²; trong khi <strong>"vùng nước phía Nam"</strong> (từ Nam Trung Bộ đến Nam Bộ) lên tới <strong>894 GW</strong> (345 GW cố định + 549 GW nổi) trên ~253.800 km² <a href="https://www.researchgate.net/profile/Lars-Hole/publication/391009737_Evaluation_of_wind_energy_potential_over_offshore_areas_in_Vietnam/links/68078908ded433155735dbcd/Evaluation-of-wind-energy-potential-over-offshore-areas-in-Vietnam.pdf">[2]</a>.</p>
+
+                <p>Ngay riêng vùng Nam Trung Bộ (ven Lâm Đồng, Khánh Hoà) đã chiếm phần lớn tiềm năng này nhờ diện tích thềm lục địa rộng, gió mạnh và ổn định. Theo <strong>Cơ quan Năng lượng Đan Mạch</strong>, <strong>khu vực vịnh Bắc Bộ</strong> phù hợp có tiềm năng khoảng <strong>18 GW</strong> điện gió ngoài khơi (cố định + nổi) <a href="https://evn.com.vn/d6/news/Vi-sao-EVN-de-xuat-phat-trien-dien-gio-ngoai-khoi-vinh-Bac-Bo-6-17-31357.aspx">[10]</a>, con số này chỉ bằng một phần nhỏ so với tiềm năng hàng trăm GW ở Nam Trung Bộ.</p>
+
+                <!-- POTENTIAL CAPACITY COMPARISON -->
+                <div class="chart-container">
+                    <h4 class="chart-title">📊 So sánh tiềm năng công suất điện gió ngoài khơi (GW)</h4>
+                    <div class="bar-chart-container">
+                        <div class="bar-chart-row">
+                            <div class="bar-label">🌊 Bắc Bộ</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill north" style="width: 19%;">174 GW</div>
+                            </div>
+                        </div>
+                        <div class="bar-chart-row">
+                            <div class="bar-label">☀️ Nam Trung Bộ+</div>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill south" style="width: 100%;">894 GW</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="potential-breakdown">
+                        <div class="breakdown-item north-bg">
+                            <span class="breakdown-label">Bắc Bộ</span>
+                            <div class="breakdown-values">
+                                <span>Cố định: <strong>130 GW</strong></span>
+                                <span>Nổi: <strong>44 GW</strong></span>
+                                <span>Diện tích: ~52,500 km²</span>
+                            </div>
+                        </div>
+                        <div class="breakdown-item south-bg">
+                            <span class="breakdown-label">Nam Trung Bộ → Nam Bộ</span>
+                            <div class="breakdown-values">
+                                <span>Cố định: <strong>345 GW</strong></span>
+                                <span>Nổi: <strong>549 GW</strong></span>
+                                <span>Diện tích: ~253,800 km²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box success">
+                    <p><strong>Tóm lại:</strong> Khu vực Nam Trung Bộ vượt trội về tốc độ gió và sản lượng tiềm năng. Suất điện khả dụng ở đây tiệm cận các dự án tốt nhất thế giới (~50%), cho phép phát điện ổn định sản lượng cao. Khu vực Hải Phòng, vịnh Bắc Bộ tuy gió yếu hơn nhưng vẫn đủ tốt để phát triển, với lợi thế gần phụ tải. Sản lượng điện gió Bắc Bộ sẽ thấp hơn khoảng 20-30% so với cùng công suất đặt ở Nam Trung Bộ, kéo theo chi phí sản xuất điện cao hơn.</p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- SECTION 4: CLIMATE RISKS -->
+            <section id="section4">
+                <h3>Rủi ro khí hậu và thời tiết cực đoan (bão, sóng, gió giật)</h3>
+
+                <p>Biển Việt Nam hàng năm hứng chịu nhiều hiện tượng <strong>thời tiết cực đoan</strong> như bão, áp thấp nhiệt đới, gió giật mạnh và sóng lớn, nhưng mức độ rủi ro phân bố không đều giữa các vùng.</p>
+
+                <div class="highlight-box warning">
+                    <p><strong>Vịnh Bắc Bộ và Bắc Trung Bộ</strong> là khu vực chịu ảnh hưởng <strong>bão nhiệt đới nhiều và mạnh nhất</strong> cả nước. Trung bình mỗi năm có khoảng 4-6 cơn bão/áp thấp ảnh hưởng trực tiếp đến đất liền Việt Nam, tập trung từ tháng 6 đến tháng 10; trong đó phần lớn đổ bộ vào dải bờ từ Bắc Trung Bộ đến Đông Bắc Bộ.</p>
+                </div>
+
+                <p>Vịnh Bắc Bộ với vị trí <strong>nằm trong hành lang bão</strong> thường xuyên hứng bão di chuyển từ Biển Đông vào (qua đảo Hải Nam hoặc từ phía nam vịnh). Các cơn bão mạnh cấp 12-14 (thậm chí siêu bão > cấp 15) đã từng đi vào vịnh Bắc Bộ trong quá khứ, gây gió giật rất mạnh ở khu vực đảo Bạch Long Vĩ, Hòn Dấu...</p>
+
+                <p>Ngược lại, <strong>vùng Nam Trung Bộ (Lâm Đồng)</strong> nằm về phía nam, gần như <strong>ít bão lớn đổ bộ trực tiếp</strong>. Lịch sử khí tượng cho thấy khu vực từ Ninh Thuận cũ (đã sáp nhập vào Khánh Hoà), Bình Thuận cũ (đã sáp nhập vào Lâm Đồng) trở vào Nam Bộ rất hiếm khi có bão mạnh; đôi khi chỉ chịu ảnh hưởng của áp thấp hoặc bão suy yếu từ phía bắc di chuyển xuống. Cơn bão mạnh hiếm hoi từng ảnh hưởng xa phía nam là bão Linda 1997 (qua Nam Bộ). Nhìn chung, <strong>tần suất bão tại Lâm Đồng (Bình Thuận cũ) rất thấp</strong> so với phía bắc. Tuy vậy, <strong>không thể loại trừ hoàn toàn rủi ro bão</strong> do xu hướng biến đổi khí hậu có thể khiến quỹ đạo bão dịch xuống phía nam.</p>
+
+                <p>Mức độ <strong>gió cực hạn và sóng lớn</strong> do bão cũng có sự khác biệt: Theo dữ liệu các tổng hợp quốc tế (ví dụ World Bank/ESMAP) phân tích tốc độ gió duy trì cực đại 10 phút ở 10 m trên biển, <strong>vùng biển phía Bắc có thể gặp gió bão trên 80 knot (≈ 41 m/s)</strong> <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a>, tương đương cấp 16 (siêu bão). Thực tế, miền Bắc từng ghi nhận gió giật trên 60–70 m/s trong tâm bão mạnh. Kèm theo đó, <strong>sóng biển trong bão ở vịnh Bắc Bộ</strong> có thể cao trên 10 m.</p>
+
+                <p>Trong khi đó, <strong>vùng phía Nam</strong> hiếm khi gặp gió duy trì quá 60–70 knot (30–36 m/s) vì ít bão mạnh trực tiếp <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a>. Các trận gió cực đoan chủ yếu do gió mùa Đông Bắc cường độ mạnh kết hợp áp thấp nhiệt đới xa, tạo sóng khoảng 5–7 m ở khơi Lâm Đồng (thấp hơn miền Bắc). <strong>Biên độ triều</strong> ở vịnh Bắc Bộ khá lớn (3–4 m), cũng góp phần gây nước dâng mạnh khi bão vào; Nam Trung Bộ triều thấp hơn (~1–2 m) nên nguy cơ nước dâng bão thấp hơn.</p>
+
+                <p>Những rủi ro khí hậu này ảnh hưởng đến <strong>thiết kế và vận hành tua-bin gió ngoài khơi</strong>. Các tua-bin tiêu chuẩn quốc tế (IEC Class I) thường thiết kế chịu được gió 10 phút ~ <strong>50 m/s</strong> (và giật 3 s ~ 70 m/s). Với điều kiện Việt Nam, <strong>khu vực Bắc Bộ</strong> có khả năng phải sử dụng <strong>tua-bin đặc biệt "chống bão (Typhoon Class)"</strong>, chịu được gió cực đại cao hơn (lên đến ~57 m/s duy trì) <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a>. Hiện nay một số hãng (MHI Vestas, GE, Goldwind...) đã phát triển dòng tua-bin T-Class cho thị trường châu Á nhằm đáp ứng yêu cầu này.</p>
+
+                <div class="highlight-box">
+                    <p><strong>Tựu trung:</strong> Điện gió ngoài khơi vịnh Bắc Bộ đối mặt rủi ro khí hậu cao hơn: nhiều bão mạnh, gió cực đại lớn, sóng lớn và biến động thời tiết khó lường. Điều này đòi hỏi chi phí đầu tư cao hơn cho kết cấu tua-bin, móng trụ, cũng như kế hoạch vận hành bảo trì phải tính đến thời gian dừng máy tránh bão. Trong khi đó, điện gió Nam Trung Bộ có lợi thế ít bão, thời tiết ổn định hơn, giảm thiểu thời gian gián đoạn.</p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- SECTION 5: TECHNICAL CONDITIONS -->
+            <section id="section5">
+                <h3>Điều kiện kỹ thuật: địa chất đáy biển, độ sâu và nền móng</h3>
+
+                <p><strong>Độ sâu mực nước</strong> và <strong>đặc điểm địa chất đáy biển</strong> là những yếu tố kỹ thuật then chốt quyết định khả năng xây dựng trang trại điện gió ngoài khơi. Hai khu vực khảo sát có đặc điểm tương đối khác nhau:</p>
+
+                <ul>
+                    <li><strong>Khu vực Hải Phòng (vịnh Bắc Bộ):</strong> Đây là vùng <strong>thềm lục địa nông</strong>; phần lớn diện tích vịnh Bắc Bộ có độ sâu &lt;50 m. Khu vực được giao cho EVN giới hạn bởi 11 điểm mốc, <strong>cho phép độ sâu sử dụng tới 140 m</strong> <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">[1]</a>, bao gồm cả vùng quanh đảo Bạch Long Vĩ, Long Châu. Thực tế, vùng biển gần các đảo này có độ sâu tăng dần ra xa bờ: quanh Long Châu (cách đất liền ~30 km) sâu ~30-50 m; khu vực đảo Bạch Long Vĩ (cách ~110-130 km) sâu khoảng 60-80 m, và xa hơn về phía đông nam có thể đạt ~100-130 m ở rìa vịnh.</li>
+                    <li><strong>Khu vực Nam Trung Bộ (ngoài khơi Lâm Đồng):</strong> Vùng biển Lâm Đồng có đặc điểm <strong>thềm lục địa hẹp dần về phía nam</strong>. Khu vực dự kiến khảo sát Nam Trung Bộ 1 rộng ~39.800 ha có thể trải từ gần bờ ra khoảng 30-50 km ngoài khơi. Vùng này có nhiều khả năng bao gồm <strong>dải nước nông &lt;50 m</strong> gần bờ (thuận lợi cho móng cố định) và có thể mở rộng ra vùng sâu hơn về phía đảo Phú Quý.</li>
+                </ul>
+
+                <h4><em>Đặc điểm địa chất đáy biển:</em></h4>
+                <p>Vịnh Bắc Bộ là vùng nhận nhiều trầm tích phù sa từ sông Hồng, sông Thái Bình, do đó <strong>đáy biển chủ yếu là trầm tích bùn cát, sét pha</strong> dày hàng chục mét. Nền đất mềm có ưu nhược điểm: <strong>đóng cọc móng sẽ dễ xuyên hơn</strong>, nhưng cần cọc dài để đạt tầng đất chịu lực tốt, và phải tính đến ổn định dưới tải trọng gió và sóng lớn (nguy cơ <strong>hóa lỏng đất</strong> cát bão hòa khi chịu dao động).</p>
+
+                <p>Trong khi đó, <strong>địa chất vùng Lâm Đồng, Nam Trung Bộ</strong> có sự xen kẽ giữa <strong>nền cát san hô, cuội sỏi và đá gốc nông</strong>. Đảo Phú Quý vốn là đảo núi lửa, xung quanh có rạn san hô, cho thấy nền đá tương đối cứng hiện diện ở một số nơi. Gần bờ Bình Thuận, đáy biển có lớp cát mỏng phủ trên nền đá. Điều này có thể gây thách thức hơn khi <strong>đóng cọc móng</strong> (cần khoan vào đá, hoặc sử dụng móng jacket bắt bu-lông neo vào đá).</p>
+
+                <h4><em>Giải pháp nền móng:</em></h4>
+                <ul>
+                    <li><strong>Vịnh Bắc Bộ (Hải Phòng):</strong> Phần lớn tua-bin có thể dùng <strong>móng cọc đơn (monopile)</strong>, đây là giải pháp kinh tế cho độ sâu đến ~40-50 m, phù hợp nền đất mềm (cọc lớn ~8-10 m đường kính). Những vị trí sâu hơn hoặc địa chất phức tạp có thể chuyển sang <strong>móng jacket</strong> thép 3-4 chân. Nếu dự án mở rộng ra vùng &gt;60-80 m, sẽ cần xem xét <strong>tua-bin gió nổi (floating)</strong>.</li>
+                    <li><strong>Nam Trung Bộ (Lâm Đồng):</strong> Nếu khu vực &lt;50 m là chủ yếu, thì <strong>móng monopile</strong> cũng sẽ được ưa chuộng do chi phí thấp và thi công nhanh. Bình Thuận nổi tiếng có nền đá gốc khá nông, do đó <strong>khoan cọc (drilled monopile)</strong> có thể được áp dụng ở vài nơi nếu đóng cọc thông thường gặp đá cứng. Móng jacket/tripod cũng là một lựa chọn nếu cần giảm kích thước cọc trên nền đá.</li>
+                </ul>
+
+                <h4><em>Khoảng cách đến bờ và kết nối kỹ thuật:</em></h4>
+                <p>Khu vực EVN (Long Châu, Bạch Long Vĩ) có điểm gần bờ nhất khoảng 20-30 km (gần đảo Cát Bà/Long Châu) và xa nhất ~130 km (Bạch Long Vĩ). Với khoảng cách này, dự án có thể phải dùng truyền tải <strong>điện xoay chiều (HVAC) cho phần gần, và có thể cân nhắc điện một chiều (HVDC) cho cụm xa</strong> nếu công suất lớn.</p>
+
+                <p>Ngược lại, khu vực Bình Thuận mà PVN khảo sát có thể nằm cách bờ ~20-50 km (nếu chưa vươn tới Phú Quý). Với cự ly này, <strong>hoàn toàn có thể dùng cáp ngầm HVAC 220-275 kV</strong> đưa điện vào bờ từng cụm 500 MW - 1 GW.</p>
+
+                <div class="highlight-box">
+                    <p><strong>Tổng quát:</strong> Điều kiện kỹ thuật tại vùng Hải Phòng và Nam Trung Bộ đều thuận lợi ở mức độ nhất định cho điện gió ngoài khơi cố định, với ưu thế nước nông trên diện tích lớn. Vịnh Bắc Bộ có nền đất mềm dễ thi công cọc nhưng phải thiết kế móng chống bão. Nam Trung Bộ gió tốt, nước nông gần bờ nhưng nền đá phức tạp hơn đôi chút. Cả hai đều có phần diện tích nước sâu (&gt;100 m) để phát triển điện gió nổi trong tương lai.</p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- SECTION 6: GRID CONNECTION -->
+            <section id="section6">
+                <h3>Khả năng đấu nối và hấp thụ lưới điện hiện tại và tương lai</h3>
+
+                <p>Bài toán <strong>đấu nối và giải tỏa công suất</strong> là một thách thức quan trọng đối với các dự án điện gió ngoài khơi, đặc biệt trong bối cảnh lưới điện Việt Nam đang quá tải cục bộ do bùng nổ năng lượng tái tạo những năm qua.</p>
+
+                <h4>Miền Bắc (khu vực Hải Phòng, Quảng Ninh):</h4>
+                <p>Đây là khu vực phụ tải rất lớn. Vùng Bắc Bộ hiện tiêu thụ gần 50% điện năng cả nước, với trọng tâm là thủ đô Hà Nội và các tỉnh công nghiệp lân cận <a href="https://evn.com.vn/d6/news/Vi-sao-EVN-de-xuat-phat-trien-dien-gio-ngoai-khoi-vinh-Bac-Bo-6-17-31357.aspx">[10]</a>. Hiện tại miền Bắc đang <strong>thiếu nguồn cấp</strong>: nhiều nhà máy nhiệt điện than cũ dần hết khấu hao, việc đầu tư mới chậm, trong khi nhu cầu tăng nhanh ~8-10%/năm.</p>
+
+                <div class="highlight-box success">
+                    <p>Nhờ <strong>gần các trung tâm tiêu thụ</strong>, <strong>khả năng hấp thụ của lưới điện miền Bắc với nguồn điện gió này khá tốt</strong>, nguồn đến đâu, dùng đến đó, giảm áp lực truyền xa. Nhìn chung, hấp thụ công suất điện gió ở miền Bắc không phải mối lo lớn, thậm chí được chào đón để giải quyết tình trạng thiếu điện mùa cao điểm.</p>
+                </div>
+
+                <h4>Miền Nam Trung Bộ (khu vực Bình Thuận, Lâm Đồng):</h4>
+                <p>Khu vực này hiện là "thủ phủ" năng lượng tái tạo trên bờ. Trong giai đoạn 2018-2021, hàng loạt dự án <strong>điện mặt trời và điện gió trên bờ</strong> đã được xây dựng ở Ninh Thuận, Bình Thuận, với tổng công suất lên tới vài nghìn MW. Điều này dẫn đến tình trạng <strong>quá tải lưới truyền tải</strong> ở khu vực <strong>Nam Trung Bộ, Tây Nguyên</strong> vài năm qua.</p>
+
+                <div class="highlight-box warning">
+                    <p><strong>Thách thức đấu nối ở Nam Trung Bộ hiện lớn hơn Bắc Bộ</strong>, do khoảng cách xa phụ tải và lưới hiện hữu chưa đủ mạnh. Để cụm dự án PVN Nam Trung Bộ 1 khả thi, rất cần đẩy nhanh các dự án <strong>lưới 500 kV mạch 3, mạch 4 nối miền Trung vào Nam</strong>.</p>
+                </div>
+
+                <p>Do miền Nam Trung Bộ không có phụ tải lớn tại chỗ (thành phố Phan Thiết nhỏ, Lâm Đồng tiêu thụ ít), phần lớn điện gió sẽ phải <strong>truyền tải đi xa</strong>, chủ yếu <strong>về TP. Hồ Chí Minh và các tỉnh Đông Nam Bộ</strong> nơi nhu cầu cao.</p>
+
+                <p>Điểm đáng lưu ý: khu vực Nam Trung Bộ, Tây Nguyên có tiềm năng phát triển công nghiệp hydrogen xanh (điện gió sản xuất hydro xuất khẩu). PDP8 đã tính toán tới 2035 có ~15 GW điện gió ngoài khơi dành cho sản xuất năng lượng mới (hydrogen) <a href="https://moit.gov.vn/tin-tuc/phat-trien-nang-luong/chinh-thuc-phe-duyet-quy-hoach-dien-viii-dieu-chinh.html">[7]</a>. Nếu PVN định hướng một phần dự án Nam Trung Bộ 1 cho sản xuất hydro (do khó truyền tải hết lên lưới trong giai đoạn đầu) thì bài toán hấp thụ lưới sẽ nhẹ bớt.</p>
+
+                <div class="highlight-box">
+                    <p><strong>Tóm lại:</strong> <strong>Miền Bắc</strong> có lợi thế phụ tải lớn gần nguồn gió, lưới điện cần nâng cấp nhưng khả thi và điện gió sẽ góp phần giải quyết thiếu điện. <strong>Miền Nam Trung Bộ</strong> gió rất dồi dào nhưng phải đi xa mới tới nơi dùng, đòi hỏi đầu tư lưới truyền tải lớn; ngược lại nó giúp bổ sung điện mùa khô cho miền Nam, giảm áp lực cho hệ thống.</p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- SECTION 7: FEASIBILITY COMPARISON -->
+            <section id="section7">
+                <h3>So sánh tính khả thi kỹ thuật và kinh tế giữa hai vùng</h3>
+
+                <p>Dựa trên các phân tích trên, có thể đưa ra <strong>đánh giá tổng quan</strong> về tính khả thi kỹ thuật và kinh tế của điện gió ngoài khơi tại hai khu vực:</p>
+
+                <ul>
+                    <li><strong>Tiềm năng và hiệu quả khai thác:</strong> Vùng <strong>Nam Trung Bộ (Bình Thuận)</strong> sở hữu <strong>nguồn gió tốt hơn hẳn</strong>, cho phép hệ số công suất cao (~50% hoặc hơn). Do đó, cùng một mức đầu tư, dự án ở đây tạo ra sản lượng điện lớn hơn, <strong>giảm giá thành trên mỗi kWh</strong>. Ngược lại, vùng <strong>Bắc Bộ (Hải Phòng)</strong> có gió thấp hơn (~7,5-8 m/s), hệ số công suất chỉ 30-40%, khiến <strong>giá thành điện cao hơn</strong>. Số liệu khung giá phát điện cho thấy <strong>giá trần điện gió Bắc Bộ ~3.975 đ/kWh, cao hơn 29% so với Nam Trung Bộ ~3.079 đ/kWh</strong> <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">[1]</a>.</li>
+                    <li><strong>Yếu tố kỹ thuật và thi công:</strong> Cả hai khu vực đều thuận lợi ở khía cạnh nước nông cho móng cố định. Tuy nhiên, <strong>điện gió Bắc Bộ hưởng lợi đôi chút ở cơ sở hạ tầng sẵn có</strong>: gần các cảng biển lớn (Hải Phòng, Cái Lân). Trong khi đó, <strong>Bình Thuận hiện chưa có cảng nước sâu quy mô lớn</strong>; khả năng phải nâng cấp cảng chuyên dụng hoặc dùng cảng Cam Ranh, Vũng Tàu làm căn cứ lắp ráp.</li>
+                    <li><strong>Rủi ro và độ tin cậy vận hành:</strong> <strong>Điện gió Bắc Bộ chịu rủi ro bão lớn</strong>, cần thiết kế tua-bin, móng, thiết bị điện chịu được thời tiết khắc nghiệt. Điều này làm <strong>tăng chi phí đầu tư và bảo trì</strong>. <strong>Điện gió Nam Trung Bộ ít phải dừng vì bão</strong>, khai thác được nhiều giờ hơn.</li>
+                    <li><strong>Môi trường và xã hội:</strong> Cả hai vùng đều phải cân nhắc tác động đến các hoạt động kinh tế biển và môi trường. Vịnh Bắc Bộ gần các khu vực nhạy cảm như <strong>quần đảo Cát Bà, vịnh Hạ Long</strong>, di sản thiên nhiên, nhiều tuyến hàng hải quốc tế qua cửa vịnh <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a>. Vùng Bình Thuận có <strong>khu bảo tồn biển Phú Quý</strong> (đa dạng sinh học cao) cần được lưu ý khi chọn vị trí trụ tua-bin.</li>
+                    <li><strong>Khả năng thu xếp vốn và đối tác:</strong> Điện gió ngoài khơi đòi hỏi vốn đầu tư rất lớn (ước tính <strong>2-3 tỷ USD cho mỗi GW</strong>). Hiện có nhiều <strong>nhà đầu tư quốc tế quan tâm mạnh đến Bình Thuận, Nam Trung Bộ</strong>. Do <strong>hiệu quả kinh tế thấp hơn</strong>, việc thu xếp vốn cho dự án Bắc Bộ có thể khó khăn hơn, <strong>cần hỗ trợ từ Chính phủ</strong>.</li>
+                </ul>
+
+                <div class="highlight-box comparison">
+                    <p><strong>Tóm lại:</strong> <strong>Về kỹ thuật</strong>, không có cản trở không thể vượt qua ở cả hai khu vực, đều khả thi với công nghệ hiện nay. <strong>Về kinh tế</strong>, khu vực Nam Trung Bộ ưu thế hơn nhờ gió mạnh (điện năng sản xuất nhiều, giá thành thấp hơn), trong khi Bắc Bộ cần cơ chế hỗ trợ giá để hấp dẫn đầu tư. <strong>Về chiến lược</strong>, Bắc Bộ mang lại lợi ích an ninh năng lượng nội vùng, Nam Trung Bộ đóng vai trò "cực phát triển" cho mục tiêu năng lượng tái tạo dài hạn.</p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- SECTION 8: POLICY RECOMMENDATIONS -->
+            <section id="section8">
+                <h3>Khuyến nghị chính sách và định hướng ưu tiên phát triển</h3>
+
+                <p>Để hiện thực hóa thành công các dự án điện gió ngoài khơi tại hai khu vực trên, <strong>chính sách và định hướng phát triển</strong> cần được thiết kế phù hợp, đồng bộ. Dưới đây là một số khuyến nghị chính:</p>
+
+                <p><strong>1. Tiếp tục hoàn thiện khung pháp lý, tạo thuận lợi cho EVN và PVN:</strong> Việc Bộ Nông nghiệp và Môi trường ban hành quyết định giao khu vực biển cho EVN, PVN khảo sát trong 36 tháng mà <strong>không thu phí sử dụng</strong> <a href="https://vnexpress.net/giao-gan-64-000-ha-bien-cho-evn-pvn-khao-sat-lam-dien-gio-ngoai-khoi-5008702.html">[9]</a> là bước đi tích cực. Cần theo sát triển khai Thông tư 79/2025/TT-BNNMT về trình tự thủ tục giao khu vực biển cho doanh nghiệp nhà nước khảo sát trước khi đấu thầu <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">[1]</a>. <strong>Chính phủ nên giao EVN/PVN phối hợp chặt với Bộ Công Thương và địa phương</strong> để sử dụng hiệu quả thời gian 36 tháng này.</p>
+
+                <p><strong>2. Ưu tiên phát triển có chọn lọc, "đi từng bước chắc chắn":</strong> Với mục tiêu quốc gia có <strong>6 GW điện gió ngoài khơi vào 2030</strong> <a href="https://moit.gov.vn/tin-tuc/phat-trien-nang-luong/chinh-thuc-phe-duyet-quy-hoach-dien-viii-dieu-chinh.html">[7]</a>, Việt Nam nên <strong>ưu tiên các dự án khả thi nhất trước</strong>. Khuyến nghị tập trung <strong>1-2 dự án đầu tiên ở Nam Trung Bộ</strong> (mỗi dự án 500-1000 MW) nơi có tiềm năng gió cao và nhà đầu tư sẵn sàng. <strong>Đồng thời, triển khai 1 dự án thí điểm ở Bắc Bộ (khoảng 500 MW)</strong> do EVN dẫn dắt.</p>
+
+                <p><strong>3. Đầu tư hạ tầng lưới điện đồng bộ, đón đầu:</strong> Chính phủ và EVN phải coi trọng <strong>đầu tư lưới truyền tải</strong> song song với nguồn điện. Cụ thể, đối với cụm dự án Bình Thuận cũ (nay là Lâm Đồng), cần <strong>đẩy nhanh xây dựng các tuyến 500 kV mới</strong>: kết nối Lâm Đồng, Đồng Nai, TP.HCM, cũng như <strong>nâng cấp trục 500 kV Bắc-Nam</strong> để sẵn sàng hấp thụ công suất lớn sau 2030.</p>
+
+                <p><strong>4. Khuyến khích nội địa hóa và phát triển chuỗi cung ứng:</strong> Hai dự án EVN và PVN do doanh nghiệp Việt Nam chủ trì là cơ hội tốt để <strong>phát triển công nghiệp phụ trợ trong nước</strong>. Chính phủ nên có chính sách ưu đãi thuế, tín dụng để các doanh nghiệp cơ khí, đóng tàu trong nước tham gia chế tạo thiết bị (cột tháp gió, kết cấu móng, dây cáp...).</p>
+
+                <p><strong>5. Đảm bảo an toàn hàng hải, quốc phòng và môi trường:</strong> Khi phát triển đồng thời ở hai khu vực chiến lược, phải <strong>phối hợp với các lực lượng hải quân, biên phòng và hàng hải</strong> để đảm bảo không ảnh hưởng an ninh trên biển <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">[1]</a>.</p>
+
+                <p><strong>6. Chiến lược phát triển lâu dài:</strong> Điện gió ngoài khơi cần <strong>tầm nhìn 20-30 năm</strong>. Khuyến nghị <strong>giữ mục tiêu PDP8 điều chỉnh</strong> (6 GW 2030, 17 GW 2035, ~120 GW 2050) <a href="https://moit.gov.vn/tin-tuc/phat-trien-nang-luong/chinh-thuc-phe-duyet-quy-hoach-dien-viii-dieu-chinh.html">[7]</a>. Ưu tiên <strong>đấu thầu cạnh tranh theo vùng</strong>, đồng thời chuẩn bị hạ tầng cảng, chuỗi cung ứng và cơ chế đầu tư truyền tải để hấp thụ công suất.</p>
+
+                <p><strong>7. Hài hòa lợi ích và sự ủng hộ địa phương:</strong> Thiết kế cơ chế <strong>chia sẻ lợi ích minh bạch</strong> với địa phương và cộng đồng; ưu tiên <strong>lao động địa phương và đào tạo</strong>; truyền thông sớm để tạo đồng thuận xã hội.</p>
+
+                <div class="highlight-box success">
+                    <p><strong>Kết luận:</strong> <strong>Nam Trung Bộ</strong> có lợi thế gió mạnh và sản lượng cao, phù hợp phát triển quy mô lớn; <strong>Bắc Bộ</strong> có vai trò an ninh cung cấp và đa dạng hóa vùng miền nhưng rủi ro bão cao và suất khả dụng thấp hơn. Lộ trình tối ưu là <strong>phát triển song song</strong>: đẩy nhanh dự án quy mô lớn ở Nam Trung Bộ, đồng thời triển khai có chọn lọc ở Bắc Bộ kèm kế hoạch lưới phù hợp. <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">[4]</a> <a href="https://www.undp.org/sites/g/files/zskgke326/files/2025-09/print_assessment_of_wind_energy_technical_potential_justified.pdf">[6]</a> <a href="https://moit.gov.vn/tin-tuc/phat-trien-nang-luong/chinh-thuc-phe-duyet-quy-hoach-dien-viii-dieu-chinh.html">[7]</a> <a href="https://vnexpress.net/giao-gan-64-000-ha-bien-cho-evn-pvn-khao-sat-lam-dien-gio-ngoai-khoi-5008702.html">[9]</a></p>
+                </div>
+            </section>
+        </div>
+        
+        <!-- REFERENCES SECTION -->
+        <section class="references">
+            <h2>📚 Tài liệu tham khảo</h2>
+            <ol>
+                <li>Thanh Niên (23/01/2026). Bài viết về quyết định giao khu vực biển khảo sát. <a href="https://thanhnien.vn/yeu-cau-dac-biet-khi-giao-evn-petrovietnam-64000-ha-bien-khao-sat-dien-gio-ngoai-khoi-185260123093827961.htm">thanhnien.vn</a></li>
+                <li>Mai Văn Khiêm và cs. (2025). Đánh giá tiềm năng gió ngoài khơi (VJMS&amp;T). <a href="https://vjs.ac.vn/jmst/article/view/23555">vjs.ac.vn</a></li>
+                <li>VietnamEnergy (14/04/2021). Tổng quan lợi ích điện gió ngoài khơi. <a href="https://vietnamenergy.vn/what-are-the-advantages-of-offshore-wind-power-in-vietnam-26375.html">vietnamenergy.vn</a></li>
+                <li>World Bank &amp; ESMAP (2021). Offshore Wind Roadmap for Vietnam. <a href="https://documents1.worldbank.org/curated/en/261981623120856300/pdf/Offshore-Wind-Development-Program-Offshore-Wind-Roadmap-for-Vietnam.pdf">documents1.worldbank.org</a></li>
+                <li>ISSMGE (VGS). Góc nhìn địa kỹ thuật cho điện gió ngoài khơi. <a href="https://htc.issmge.org/contributions/member-societies/vietnamese-geotechnical-society/research-practice-wind-energy-in-vietnam-and-the-role-of-geotechnical-engineers">htc.issmge.org</a></li>
+                <li>UNDP (2025). Assessment of Wind Technical Potential (Vietnam). <a href="https://www.undp.org/sites/g/files/zskgke326/files/2025-09/print_assessment_of_wind_energy_technical_potential_justified.pdf">undp.org</a></li>
+                <li>Bộ Công Thương (16/04/2025). PDP8 điều chỉnh. <a href="https://moit.gov.vn/tin-tuc/phat-trien-nang-luong/chinh-thuc-phe-duyet-quy-hoach-dien-viii-dieu-chinh.html">moit.gov.vn</a></li>
+                <li>Chinhphu.vn (21/01/2026). Tin về dự án truyền tải điện quan trọng. <a href="https://baochinhphu.vn/chap-thuan-chu-truong-dau-tu-du-an-truyen-tai-dien-quan-trong-tai-tay-nguyen-102260121100330688.htm">baochinhphu.vn</a></li>
+                <li>VnExpress (22/01/2026). Tin giao gần 64.000 ha biển cho EVN, PVN khảo sát. <a href="https://vnexpress.net/giao-gan-64-000-ha-bien-cho-evn-pvn-khao-sat-lam-dien-gio-ngoai-khoi-5008702.html">vnexpress.net</a></li>
+                <li>EVN (2022). Bài viết về đề xuất phát triển điện gió ngoài khơi vịnh Bắc Bộ. <a href="https://evn.com.vn/d6/news/Vi-sao-EVN-de-xuat-phat-trien-dien-gio-ngoai-khoi-vinh-Bac-Bo-6-17-31357.aspx">evn.com.vn</a></li>
+                <li>Báo Đầu tư (06/08/2025). Tổng hợp danh mục đề xuất dự án điện gió ngoài khơi. <a href="https://baodautu.vn/ngam-quy-mo-14-du-an-dien-gio-ngoai-khoi-duoc-tong-cong-ty-lung-lo-de-xuat-d351061.html">baodautu.vn</a></li>
+            </ol>
+        </section>
+        
+        <footer class="article-footer">
+            <p>Đặng Văn Tuấn — R&D Solution Architect | Energy Transition Strategy</p>
+        </footer>
+    </article>
+</body>
+</html>
