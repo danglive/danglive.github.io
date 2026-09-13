@@ -14,6 +14,7 @@
     content="AI lưới điện, vận hành lưới điện, Agentic AI, Physics-Informed AI, Operational Digital Twin, N-1, remedial action, điều độ hệ thống điện, hỗ trợ quyết định"
     name="keywords" />
   <meta content="article" property="og:type" />
+  <meta content="vi_VN" property="og:locale" />
   <meta content="Khi AI bước vào phòng điều độ: Từ dự đoán đúng đến quyết định có thể kiểm chứng" property="og:title" />
   <meta
     content="Trong vận hành lưới điện, độ chính xác của mô hình chưa đủ. Mỗi đề xuất cần gắn với đúng trạng thái lưới, được kiểm chứng bằng tính toán vật lý, có bằng chứng và nằm trong đúng thẩm quyền vận hành."
@@ -28,6 +29,9 @@
   <meta content="2026-09-13" property="article:published_time" />
   <meta content="Van Tuan Dang" property="article:author" />
   <link href="https://dangvantuan.info/blog/ai_trong_phong_dieu_do.html" rel="canonical" />
+  <link href="https://dangvantuan.info/blog/ai_trong_phong_dieu_do.html" rel="alternate" hreflang="vi" />
+  <link href="https://dangvantuan.info/blog/ai_in_grid_control_room.html" rel="alternate" hreflang="en" />
+  <link href="https://dangvantuan.info/blog/ai_trong_phong_dieu_do.html" rel="alternate" hreflang="x-default" />
   <style>
     :root {
       --bg: #eef4f8;
@@ -106,6 +110,15 @@
 
     .navlinks a {
       color: #33425a
+    }
+
+    .navlinks .language-switch {
+      padding: 5px 11px;
+      border: 1px solid #b9d2e2;
+      border-radius: 999px;
+      color: var(--navy);
+      background: #eef7fb;
+      font-weight: 750
     }
 
     .hero {
@@ -408,6 +421,190 @@
       border-left: 4px solid #72a8c7
     }
 
+    .visual-figure {
+      margin: 34px 0;
+      padding: clamp(20px, 3vw, 30px);
+      border: 1px solid #c9dce8;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 8% 10%, rgba(20, 152, 184, .12), transparent 24%),
+        radial-gradient(circle at 92% 88%, rgba(40, 115, 87, .10), transparent 24%),
+        linear-gradient(145deg, #f8fcfe, #edf5f9);
+      box-shadow: 0 14px 34px rgba(22, 55, 82, .08)
+    }
+
+    .visual-figure-title {
+      margin-bottom: 22px;
+      color: var(--navy);
+      font-size: 1.05rem;
+      font-weight: 850;
+      text-align: center
+    }
+
+    .visual-figure figcaption {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.55;
+      text-align: center
+    }
+
+    .funnel-flow {
+      display: grid;
+      grid-template-columns: 1.18fr 34px 1fr 34px .94fr 34px .82fr;
+      gap: 6px;
+      align-items: center
+    }
+
+    .funnel-node {
+      min-height: 156px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 17px 14px;
+      border: 1px solid #cfdee8;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .92);
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(22, 55, 82, .06)
+    }
+
+    .funnel-node:nth-of-type(3) {
+      background: #eef7fb;
+      border-color: #bfdde9
+    }
+
+    .funnel-node:nth-of-type(5) {
+      background: #edf8f3;
+      border-color: #c6e4d6
+    }
+
+    .funnel-node:nth-of-type(7) {
+      background: #fff7ea;
+      border-color: #ead6b4
+    }
+
+    .visual-symbol {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      font-size: .88rem;
+      font-weight: 900;
+      box-shadow: 0 7px 16px rgba(20, 107, 159, .22)
+    }
+
+    .funnel-node:nth-of-type(5) .visual-symbol {
+      background: linear-gradient(135deg, #22674e, #36906c)
+    }
+
+    .funnel-node:nth-of-type(7) .visual-symbol {
+      background: linear-gradient(135deg, #8b571c, #bd7a25)
+    }
+
+    .funnel-node b {
+      display: block;
+      color: #173d65;
+      line-height: 1.28
+    }
+
+    .funnel-node small {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      line-height: 1.45
+    }
+
+    .visual-arrow {
+      color: #3f89b3;
+      font-size: 1.45rem;
+      font-weight: 900;
+      text-align: center
+    }
+
+    .evidence-rail {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      position: relative
+    }
+
+    .evidence-rail::before {
+      content: "";
+      position: absolute;
+      top: 24px;
+      left: 9%;
+      right: 9%;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--green), var(--amber));
+      opacity: .55
+    }
+
+    .evidence-stop {
+      position: relative;
+      padding: 60px 10px 14px;
+      border: 1px solid #d2e1ea;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .94);
+      text-align: center;
+      box-shadow: 0 7px 18px rgba(22, 55, 82, .05)
+    }
+
+    .evidence-dot {
+      position: absolute;
+      z-index: 1;
+      top: 8px;
+      left: 50%;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      transform: translateX(-50%);
+      border: 4px solid #f5fafc;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+      font-size: .78rem;
+      font-weight: 900
+    }
+
+    .evidence-stop:nth-child(2) .evidence-dot {
+      background: #297fa7
+    }
+
+    .evidence-stop:nth-child(3) .evidence-dot {
+      background: var(--green)
+    }
+
+    .evidence-stop:nth-child(4) .evidence-dot {
+      background: #7b7940
+    }
+
+    .evidence-stop:nth-child(5) .evidence-dot {
+      background: var(--amber)
+    }
+
+    .evidence-stop b {
+      display: block;
+      color: #173d65;
+      font-size: .9rem;
+      line-height: 1.35
+    }
+
+    .evidence-stop small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.4
+    }
+
     .mini-card p {
       margin: 0;
       color: var(--muted);
@@ -619,6 +816,44 @@
       padding: 22px 24px 24px
     }
 
+    .hero-banner {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding-top: 28px
+    }
+
+    .hero-banner .author-cover {
+      border: 1px solid #cbdde8;
+      border-radius: 18px;
+      box-shadow: var(--shadow)
+    }
+
+    .author-statement {
+      margin: 0 0 36px;
+      padding: clamp(24px, 4vw, 44px);
+      border: 1px solid #c9dce8;
+      border-left: 5px solid var(--cyan);
+      border-radius: 18px;
+      background: linear-gradient(135deg, #eaf5fb, #fff);
+      box-shadow: 0 12px 30px rgba(22, 55, 82, .07)
+    }
+
+    .author-statement blockquote {
+      margin: 0;
+      color: #24445f;
+      font-size: 1.06rem;
+      line-height: 1.85
+    }
+
+    .author-statement p {
+      margin: 0 0 18px
+    }
+
+    .author-statement figcaption {
+      color: var(--navy);
+      font-weight: 750
+    }
+
     .author-box h4 {
       margin: 0 0 5px;
       color: var(--navy)
@@ -653,10 +888,35 @@
       .value-grid {
         grid-template-columns: 1fr 1fr
       }
+
+      .funnel-flow {
+        grid-template-columns: 1fr;
+        row-gap: 14px
+      }
+
+      .funnel-node {
+        min-height: 0
+      }
+
+      .visual-arrow {
+        transform: rotate(90deg)
+      }
+
+      .evidence-rail {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .evidence-rail::before {
+        display: none
+      }
     }
 
     @media(max-width:640px) {
       .navlinks {
+        display: flex
+      }
+
+      .navlinks a:not(.language-switch) {
         display: none
       }
 
@@ -670,6 +930,11 @@
       .arch-row.secondary,
       .three-col,
       .value-grid {
+        grid-template-columns: 1fr
+      }
+
+      .funnel-flow,
+      .evidence-rail {
         grid-template-columns: 1fr
       }
 
@@ -687,10 +952,15 @@
     <div class="sitebar-inner"><a class="brand" href="https://dangvantuan.info/">Van Tuan Dang</a>
       <nav class="navlinks"><a href="https://dangvantuan.info/">Trang chủ</a><a
           href="https://dangvantuan.info/blog.html">Bài viết</a><a href="https://dangvantuan.info/#contact">Liên hệ</a>
+        <a class="language-switch" href="ai_in_grid_control_room.html" lang="en" hreflang="en">English</a>
       </nav>
     </div>
   </header>
   <section class="hero">
+    <div class="hero-banner">
+      <img class="author-cover" src="author.jpg" width="1400" height="350"
+        alt="Van Tuan Dang — Principal Digital Grid Architect" fetchpriority="high" decoding="async" />
+    </div>
     <div class="hero-inner">
       <div>
         <span class="eyebrow">AI trong vận hành lưới điện</span>
@@ -720,6 +990,14 @@
     </div>
   </section>
   <main class="page">
+    <figure class="author-statement">
+      <blockquote>
+        <p>Trong hệ thống điện, câu hỏi quan trọng không còn là mô hình AI mạnh đến đâu, mà là chúng ta có thể đưa nó vào vận hành với mức độ tin cậy nào. Một mô hình chỉ thực sự có giá trị khi nó trở thành một thành phần được kiểm soát của hệ thống, có miền hoạt động được xác định và kiểm chứng, có ranh giới quyền hạn rõ ràng, có khả năng chịu lỗi và tấn công, có thể giải thích, truy vết và cung cấp đầy đủ bằng chứng cho mỗi khuyến nghị.</p>
+        <p>AI không được đứng ngoài kỷ luật vận hành của hệ thống điện. Nó phải tuân theo cùng một nguyên tắc: mọi quyết định quan trọng đều phải có căn cứ, có giới hạn, có khả năng kiểm chứng và luôn nằm dưới quyền kiểm soát của con người.</p>
+        <p>Đích đến của AI trong hạ tầng trọng yếu không phải là tự chủ bằng mọi giá, mà là tạo ra một năng lực hỗ trợ quyết định đủ đáng tin để điều độ viên biết khi nào có thể sử dụng, khi nào cần kiểm tra lại và khi nào phải từ chối. Khi đạt được điều đó, AI mới thực sự trở thành một phần của kiến trúc vận hành, chứ không còn chỉ là một mô hình thử nghiệm đặt bên cạnh hệ thống</p>
+      </blockquote>
+      <figcaption>— Van Tuan Dang</figcaption>
+    </figure>
     <article>
       <section id="opening">
         <h2>1. Khi AI đi từ “nói” sang “làm”</h2>
@@ -818,6 +1096,35 @@
           sách ngắn có chất lượng. Sau đó, từng phương án phải được xác nhận bằng load flow và các kiểm tra ràng buộc.
           Nếu phương án gồm nhiều bước đóng cắt, các trạng thái S1, S2, ..., Sn cũng phải được kiểm tra, chứ không chỉ
           trạng thái cuối.</div>
+        <figure class="visual-figure" aria-labelledby="funnel-title funnel-caption">
+          <div class="visual-figure-title" id="funnel-title">AI thu hẹp không gian tìm kiếm, vật lý xác nhận phương án</div>
+          <div class="funnel-flow">
+            <div class="funnel-node">
+              <span class="visual-symbol">1000+</span>
+              <b>Không gian tìm kiếm</b>
+              <small>Hàng nghìn thao tác và tổ hợp topology</small>
+            </div>
+            <div class="visual-arrow" aria-hidden="true">→</div>
+            <div class="funnel-node">
+              <span class="visual-symbol">AI</span>
+              <b>Sàng lọc và xếp hạng</b>
+              <small>Giữ lại danh sách top-k có triển vọng</small>
+            </div>
+            <div class="visual-arrow" aria-hidden="true">→</div>
+            <div class="funnel-node">
+              <span class="visual-symbol">N-1</span>
+              <b>Kiểm chứng vật lý</b>
+              <small>Load flow, giới hạn và trạng thái trung gian</small>
+            </div>
+            <div class="visual-arrow" aria-hidden="true">→</div>
+            <div class="funnel-node">
+              <span class="visual-symbol">✓</span>
+              <b>Phương án khả thi</b>
+              <small>Sẵn sàng để con người xem xét</small>
+            </div>
+          </div>
+          <figcaption id="funnel-caption">AI tăng tốc quá trình khảo sát; bộ giải vật lý vẫn là cổng kiểm chứng độc lập.</figcaption>
+        </figure>
         <p>Cách phân vai này rất thực dụng. AI được dùng đúng chỗ mà nó mạnh, còn bộ giải vật lý giữ vai trò kiểm chứng
           độc lập trước khi phương án đi xa hơn trong quy trình vận hành.</p>
       </section>
@@ -909,6 +1216,17 @@
             <p>Có thể dựng lại đúng tình huống để kiểm tra, kiểm toán hoặc phân tích sau sự kiện.</p>
           </div>
         </div>
+        <figure class="visual-figure" aria-labelledby="evidence-title evidence-caption">
+          <div class="visual-figure-title" id="evidence-title">Dấu vết bằng chứng đi cùng toàn bộ vòng đời quyết định</div>
+          <div class="evidence-rail">
+            <div class="evidence-stop"><span class="evidence-dot">01</span><b>Snapshot</b><small>Thời điểm và topology</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">02</span><b>Mô hình</b><small>Phiên bản và độ tin cậy</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">03</span><b>Mô phỏng</b><small>Kết quả tính toán vật lý</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">04</span><b>Phê duyệt</b><small>Người quyết định và lý do</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">05</span><b>Tái lập</b><small>Kiểm toán và phân tích lại</small></div>
+          </div>
+          <figcaption id="evidence-caption">Một khuyến nghị đáng tin cậy phải có thể được dựng lại từ trạng thái đầu vào đến quyết định cuối cùng.</figcaption>
+        </figure>
         <p>Đây cũng là điểm còn thiếu trong nhiều bản trình diễn AI. Hệ thống có thể trả lời rất trôi chảy, nhưng nếu
           không để lại đủ dấu vết thì câu trả lời vẫn chưa thể trở thành một phần đáng tin cậy của quy trình kỹ thuật.
         </p>
@@ -1034,8 +1352,6 @@
       <div class="small-note"><em>Lưu ý:</em> Các ví dụ trong bài mang tính minh họa cho kiến trúc và phương pháp kỹ
         thuật, không phải hướng dẫn thao tác vận hành cho một hệ thống điện cụ thể.</div>
       <div class="author-box">
-        <img class="author-cover" src="author.jpg" width="1400" height="350"
-          alt="Van Tuan Dang — Principal Digital Grid Architect" loading="lazy" decoding="async" />
         <div class="author-copy">
           <h4>Van Tuan Dang</h4>
           <p>Nghiên cứu AI/ML và kiến trúc lưới điện số, tập trung vào học máy có định hướng vật lý, bản sao số vận

@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>When AI Enters the Control Room: From Accurate Predictions to Verifiable Decisions | Van Tuan Dang</title>
+  <meta
+    content="A technical perspective on AI in power grid operations: AI narrows and ranks options, physics solvers verify them, every recommendation carries evidence, and humans retain final authority."
+    name="description" />
+  <meta content="Van Tuan Dang" name="author" />
+  <meta
+    content="grid AI, power grid operations, Agentic AI, Physics-Informed AI, Operational Digital Twin, N-1, remedial action, power system dispatch, decision support"
+    name="keywords" />
+  <meta content="article" property="og:type" />
+  <meta content="en_US" property="og:locale" />
+  <meta content="When AI Enters the Control Room: From Accurate Predictions to Verifiable Decisions" property="og:title" />
+  <meta
+    content="In power grid operations, model accuracy is not enough. Each recommendation must be tied to the correct grid state, verified through physics-based computation, supported by evidence, and kept within proper operational authority."
+    property="og:description" />
+  <meta content="https://dangvantuan.info/blog/ai_in_grid_control_room.html" property="og:url" />
+  <meta content="https://dangvantuan.info/blog/ai_grid_trust_philosophy.png" property="og:image" />
+  <meta content="1672" property="og:image:width" />
+  <meta content="941" property="og:image:height" />
+  <meta
+    content="AI philosophy for grid operations: AI proposes, physics verifies, evidence accompanies every result, and humans decide."
+    property="og:image:alt" />
+  <meta content="2026-09-13" property="article:published_time" />
+  <meta content="Van Tuan Dang" property="article:author" />
+  <link href="https://dangvantuan.info/blog/ai_in_grid_control_room.html" rel="canonical" />
+  <link href="https://dangvantuan.info/blog/ai_trong_phong_dieu_do.html" rel="alternate" hreflang="vi" />
+  <link href="https://dangvantuan.info/blog/ai_in_grid_control_room.html" rel="alternate" hreflang="en" />
+  <link href="https://dangvantuan.info/blog/ai_trong_phong_dieu_do.html" rel="alternate" hreflang="x-default" />
+  <style>
+    :root {
+      --bg: #eef4f8;
+      --surface: #fff;
+      --text: #17263a;
+      --muted: #607086;
+      --line: #d6e3ec;
+      --navy: #103d63;
+      --blue: #146b9f;
+      --cyan: #1498b8;
+      --green: #287357;
+      --amber: #9a601b;
+      --blue-soft: #eaf5fb;
+      --green-soft: #edf8f3;
+      --amber-soft: #fff6e9;
+      --shadow: 0 18px 48px rgba(20, 55, 83, .11);
+      --max: 1120px
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    .sitebar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, .93);
+      border-bottom: 1px solid rgba(223, 231, 239, .9)
+    }
+
+    .sitebar-inner {
+      width: min(var(--max), calc(100% - 32px));
+      margin: auto;
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: var(--navy)
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 18px;
+      font-size: .94rem
+    }
+
+    .navlinks a {
+      color: #33425a
+    }
+
+    .navlinks .language-switch {
+      padding: 5px 11px;
+      border: 1px solid #b9d2e2;
+      border-radius: 999px;
+      color: var(--navy);
+      background: #eef7fb;
+      font-weight: 750
+    }
+
+    .hero {
+      background: radial-gradient(circle at 14% 10%, rgba(22, 166, 201, .16), transparent 28%), radial-gradient(circle at 88% 24%, rgba(20, 115, 182, .14), transparent 30%), linear-gradient(145deg, #fbfdff 0%, #eef6fb 100%);
+      border-bottom: 1px solid var(--line)
+    }
+
+    .hero-inner {
+      width: min(var(--max), calc(100% - 32px));
+      margin: auto;
+      padding: 70px 0 56px;
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 52px;
+      align-items: center
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(20, 115, 182, .09);
+      color: var(--navy);
+      font-weight: 750;
+      font-size: .82rem;
+      letter-spacing: .05em;
+      text-transform: uppercase
+    }
+
+    h1 {
+      margin: 18px 0;
+      font-size: clamp(2.15rem, 5vw, 4rem);
+      line-height: 1.08;
+      letter-spacing: -.045em;
+      color: #102d4d
+    }
+
+    .hero-lead {
+      margin: 0;
+      max-width: 760px;
+      font-size: 1.15rem;
+      color: #405168
+    }
+
+    .meta {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      color: var(--muted);
+      font-size: .92rem
+    }
+
+    .meta strong {
+      color: #273b54
+    }
+
+    .hero-visual {
+      min-height: 420px;
+      display: grid;
+      place-items: center
+    }
+
+    .decision-card {
+      width: min(100%, 500px);
+      border-radius: 26px;
+      padding: 22px;
+      background: rgba(255, 255, 255, .94);
+      box-shadow: var(--shadow);
+      border: 1px solid #c9dce8;
+      border-top: 4px solid var(--cyan)
+    }
+
+    .decision-title {
+      text-align: center;
+      font-weight: 850;
+      color: var(--navy);
+      margin: 2px 0 18px
+    }
+
+    .flow-step {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 14px;
+      margin: 10px 0;
+      background: #fff
+    }
+
+    .flow-step b {
+      color: #173d65
+    }
+
+    .flow-step small {
+      display: block;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .flow-arrow {
+      text-align: center;
+      color: var(--blue);
+      font-weight: 900;
+      line-height: 1
+    }
+
+    .flow-step.physics {
+      background: #eef8f5;
+      border-color: #cfe7dd
+    }
+
+    .flow-step.human {
+      background: #fff8ee;
+      border-color: #ead7b7
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 34px auto 84px;
+      display: block
+    }
+
+    article {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid #cfdee8;
+      border-radius: 24px;
+      padding: clamp(28px, 4.5vw, 64px);
+      box-shadow: 0 16px 46px rgba(20, 55, 83, .09);
+      min-width: 0
+    }
+
+    article h2 {
+      margin: 58px 0 18px;
+      color: #173d65;
+      font-size: clamp(1.55rem, 3vw, 2.1rem);
+      line-height: 1.2;
+      letter-spacing: -.025em;
+      padding-left: 16px;
+      border-left: 4px solid var(--cyan)
+    }
+
+    article h2:first-of-type {
+      margin-top: 10px
+    }
+
+    article h3 {
+      margin: 34px 0 12px;
+      color: #234f79;
+      font-size: 1.25rem;
+      line-height: 1.3
+    }
+
+    article p {
+      margin: 0 0 18px
+    }
+
+    article ul,
+    article ol {
+      padding-left: 1.25rem;
+      margin: 0 0 22px
+    }
+
+    article li {
+      margin-bottom: 8px
+    }
+
+    strong {
+      color: #132d49
+    }
+
+    .lead-box,
+    .insight,
+    .warning,
+    .grid-example {
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin: 24px 0;
+      border: 1px solid transparent;
+      box-shadow: 0 8px 22px rgba(22, 55, 82, .06)
+    }
+
+    .philosophy-figure {
+      margin: 32px 0 42px
+    }
+
+    .philosophy-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      border: 1px solid #d6e2eb;
+      box-shadow: 0 18px 45px rgba(25, 55, 86, .13)
+    }
+
+    .philosophy-figure figcaption {
+      margin-top: 11px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.55
+    }
+
+    .philosophy-figure figcaption strong {
+      color: #244d73
+    }
+
+    .lead-box {
+      background: linear-gradient(135deg, #e8f5fb, #f8fcfe);
+      border-color: #c8e4ef;
+      border-left: 5px solid var(--cyan);
+      font-size: 1.06rem
+    }
+
+    .insight {
+      background: linear-gradient(135deg, var(--green-soft), #f8fcfa);
+      border-color: #cce6da;
+      border-left: 5px solid var(--green)
+    }
+
+    .warning {
+      background: linear-gradient(135deg, var(--amber-soft), #fffaf3);
+      border-color: #ecd8b8;
+      border-left: 5px solid var(--amber)
+    }
+
+    .grid-example {
+      background: linear-gradient(135deg, var(--blue-soft), #f8fbfd);
+      border-color: #cbdfeb;
+      border-left: 5px solid var(--blue)
+    }
+
+    .quote {
+      margin: 32px 0;
+      padding: 24px 26px;
+      border-left: 5px solid var(--blue);
+      border-radius: 0 16px 16px 0;
+      background: linear-gradient(135deg, #edf5fb, #f8fbfd);
+      box-shadow: 0 10px 26px rgba(22, 55, 82, .06);
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #173d65
+    }
+
+    .equation {
+      margin: 24px 0;
+      padding: 20px;
+      border: 1px solid #bfd5e4;
+      border-radius: 14px;
+      text-align: center;
+      background: linear-gradient(135deg, #f5fafd, #eaf4fa);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      color: #173d65;
+      overflow-x: auto
+    }
+
+    .three-col,
+    .two-col,
+    .check-grid {
+      display: grid;
+      gap: 14px;
+      margin: 24px 0
+    }
+
+    .three-col {
+      grid-template-columns: repeat(3, 1fr)
+    }
+
+    .two-col,
+    .check-grid {
+      grid-template-columns: repeat(2, 1fr)
+    }
+
+    .mini-card {
+      border: 1px solid #d2e1eb;
+      border-radius: 15px;
+      padding: 18px;
+      background: linear-gradient(145deg, #fff, #f8fbfd);
+      box-shadow: 0 8px 20px rgba(22, 55, 82, .055)
+    }
+
+    .mini-card h4 {
+      margin: 0 0 8px;
+      color: var(--navy);
+      font-size: 1rem
+    }
+
+    .three-col .mini-card:nth-child(1) {
+      border-top: 4px solid var(--cyan)
+    }
+
+    .three-col .mini-card:nth-child(2) {
+      border-top: 4px solid var(--green)
+    }
+
+    .three-col .mini-card:nth-child(3) {
+      border-top: 4px solid var(--amber)
+    }
+
+    .check-grid .mini-card {
+      border-left: 4px solid #72a8c7
+    }
+
+    .visual-figure {
+      margin: 34px 0;
+      padding: clamp(20px, 3vw, 30px);
+      border: 1px solid #c9dce8;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 8% 10%, rgba(20, 152, 184, .12), transparent 24%),
+        radial-gradient(circle at 92% 88%, rgba(40, 115, 87, .10), transparent 24%),
+        linear-gradient(145deg, #f8fcfe, #edf5f9);
+      box-shadow: 0 14px 34px rgba(22, 55, 82, .08)
+    }
+
+    .visual-figure-title {
+      margin-bottom: 22px;
+      color: var(--navy);
+      font-size: 1.05rem;
+      font-weight: 850;
+      text-align: center
+    }
+
+    .visual-figure figcaption {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.55;
+      text-align: center
+    }
+
+    .funnel-flow {
+      display: grid;
+      grid-template-columns: 1.18fr 34px 1fr 34px .94fr 34px .82fr;
+      gap: 6px;
+      align-items: center
+    }
+
+    .funnel-node {
+      min-height: 156px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 17px 14px;
+      border: 1px solid #cfdee8;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .92);
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(22, 55, 82, .06)
+    }
+
+    .funnel-node:nth-of-type(3) {
+      background: #eef7fb;
+      border-color: #bfdde9
+    }
+
+    .funnel-node:nth-of-type(5) {
+      background: #edf8f3;
+      border-color: #c6e4d6
+    }
+
+    .funnel-node:nth-of-type(7) {
+      background: #fff7ea;
+      border-color: #ead6b4
+    }
+
+    .visual-symbol {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      font-size: .88rem;
+      font-weight: 900;
+      box-shadow: 0 7px 16px rgba(20, 107, 159, .22)
+    }
+
+    .funnel-node:nth-of-type(5) .visual-symbol {
+      background: linear-gradient(135deg, #22674e, #36906c)
+    }
+
+    .funnel-node:nth-of-type(7) .visual-symbol {
+      background: linear-gradient(135deg, #8b571c, #bd7a25)
+    }
+
+    .funnel-node b {
+      display: block;
+      color: #173d65;
+      line-height: 1.28
+    }
+
+    .funnel-node small {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      line-height: 1.45
+    }
+
+    .visual-arrow {
+      color: #3f89b3;
+      font-size: 1.45rem;
+      font-weight: 900;
+      text-align: center
+    }
+
+    .evidence-rail {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      position: relative
+    }
+
+    .evidence-rail::before {
+      content: "";
+      position: absolute;
+      top: 24px;
+      left: 9%;
+      right: 9%;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--green), var(--amber));
+      opacity: .55
+    }
+
+    .evidence-stop {
+      position: relative;
+      padding: 60px 10px 14px;
+      border: 1px solid #d2e1ea;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .94);
+      text-align: center;
+      box-shadow: 0 7px 18px rgba(22, 55, 82, .05)
+    }
+
+    .evidence-dot {
+      position: absolute;
+      z-index: 1;
+      top: 8px;
+      left: 50%;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      transform: translateX(-50%);
+      border: 4px solid #f5fafc;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+      font-size: .78rem;
+      font-weight: 900
+    }
+
+    .evidence-stop:nth-child(2) .evidence-dot {
+      background: #297fa7
+    }
+
+    .evidence-stop:nth-child(3) .evidence-dot {
+      background: var(--green)
+    }
+
+    .evidence-stop:nth-child(4) .evidence-dot {
+      background: #7b7940
+    }
+
+    .evidence-stop:nth-child(5) .evidence-dot {
+      background: var(--amber)
+    }
+
+    .evidence-stop b {
+      display: block;
+      color: #173d65;
+      font-size: .9rem;
+      line-height: 1.35
+    }
+
+    .evidence-stop small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.4
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .94rem
+    }
+
+    .architecture {
+      margin: 28px 0;
+      padding: 22px;
+      border-radius: 18px;
+      border: 1px solid #cadde9;
+      background: linear-gradient(160deg, #f7fbfe, #eaf3f8);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 10px 26px rgba(22, 55, 82, .06)
+    }
+
+    .arch-title {
+      font-weight: 850;
+      color: var(--navy);
+      margin-bottom: 18px;
+      text-align: center
+    }
+
+    .arch-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      align-items: stretch
+    }
+
+    .arch-box {
+      padding: 14px 12px;
+      border: 1px solid #c7dbe7;
+      background: linear-gradient(145deg, #fff, #f7fafc);
+      border-radius: 13px;
+      text-align: center;
+      font-size: .9rem;
+      box-shadow: 0 6px 16px rgba(22, 55, 82, .05)
+    }
+
+    .arch-box b {
+      display: block;
+      margin-bottom: 4px;
+      color: #163e66
+    }
+
+    .arch-line {
+      text-align: center;
+      color: #3780b4;
+      font-size: 1.45rem;
+      margin: 7px 0
+    }
+
+    .arch-row.secondary {
+      grid-template-columns: repeat(3, 1fr)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 24px 0;
+      font-size: .94rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    th,
+    td {
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 13px;
+      text-align: left;
+      vertical-align: top
+    }
+
+    th {
+      background: linear-gradient(180deg, #eaf4fa, #e2eff6);
+      color: #173d65
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: 0
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0
+    }
+
+    .closing {
+      margin-top: 54px;
+      padding: 28px;
+      border-radius: 18px;
+      color: #fff;
+      background: linear-gradient(135deg, #103d63, #146b8e 62%, #168aa2);
+      box-shadow: 0 16px 34px rgba(16, 61, 99, .22)
+    }
+
+    .closing strong {
+      color: #fff
+    }
+
+    .closing p:last-child {
+      margin-bottom: 0
+    }
+
+    .value-flow {
+      margin: 26px 0 30px;
+      padding: 22px;
+      border-radius: 18px;
+      border: 1px solid #cadde9;
+      background: linear-gradient(160deg, #f7fbfe, #eaf3f8);
+      box-shadow: 0 10px 26px rgba(22, 55, 82, .06)
+    }
+
+    .value-title {
+      text-align: center;
+      font-weight: 850;
+      color: var(--navy);
+      margin-bottom: 16px
+    }
+
+    .value-stage {
+      margin-top: 10px
+    }
+
+    .value-stage-title {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #1a446f;
+      font-size: .82rem;
+      font-weight: 800;
+      margin-bottom: 10px
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      align-items: stretch
+    }
+
+    .value-box {
+      padding: 14px 12px;
+      border: 1px solid #c7dbe7;
+      background: linear-gradient(145deg, #fff, #f7fafc);
+      border-radius: 14px;
+      text-align: center;
+      font-size: .9rem;
+      box-shadow: 0 6px 16px rgba(22, 55, 82, .05)
+    }
+
+    .value-box b {
+      display: block;
+      margin-bottom: 5px;
+      color: #163e66
+    }
+
+    .value-down {
+      text-align: center;
+      color: #3b80b2;
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin: 10px 0 2px
+    }
+
+    .value-note {
+      margin-top: 14px;
+      font-size: .94rem;
+      color: #506074;
+      text-align: center
+    }
+
+    .small-note {
+      margin-top: 26px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: #f3f8fb;
+      border: 1px solid #d3e3ed;
+      border-left: 4px solid #8baec4;
+      color: #5c6b7e;
+      font-size: .92rem
+    }
+
+    .author-box {
+      margin-top: 40px;
+      overflow: hidden;
+      border: 1px solid #cbdde8;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #fff, #f3f8fb);
+      box-shadow: 0 12px 30px rgba(22, 55, 82, .08)
+    }
+
+    .author-cover {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 1;
+      object-fit: cover;
+      object-position: center;
+      border-bottom: 1px solid #cbdde8
+    }
+
+    .author-copy {
+      padding: 22px 24px 24px
+    }
+
+    .hero-banner {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding-top: 28px
+    }
+
+    .hero-banner .author-cover {
+      border: 1px solid #cbdde8;
+      border-radius: 18px;
+      box-shadow: var(--shadow)
+    }
+
+    .author-statement {
+      margin: 0 0 36px;
+      padding: clamp(24px, 4vw, 44px);
+      border: 1px solid #c9dce8;
+      border-left: 5px solid var(--cyan);
+      border-radius: 18px;
+      background: linear-gradient(135deg, #eaf5fb, #fff);
+      box-shadow: 0 12px 30px rgba(22, 55, 82, .07)
+    }
+
+    .author-statement blockquote {
+      margin: 0;
+      color: #24445f;
+      font-size: 1.06rem;
+      line-height: 1.85
+    }
+
+    .author-statement p {
+      margin: 0 0 18px
+    }
+
+    .author-statement figcaption {
+      color: var(--navy);
+      font-weight: 750
+    }
+
+    .author-box h4 {
+      margin: 0 0 5px;
+      color: var(--navy)
+    }
+
+    .author-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .93rem
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      text-align: center;
+      padding: 28px 16px 38px;
+      font-size: .9rem
+    }
+
+    @media(max-width:920px) {
+      .hero-inner {
+        grid-template-columns: 1fr
+      }
+
+      .hero-visual {
+        min-height: auto
+      }
+
+      .arch-row,
+      .arch-row.secondary,
+      .three-col,
+      .value-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .funnel-flow {
+        grid-template-columns: 1fr;
+        row-gap: 14px
+      }
+
+      .funnel-node {
+        min-height: 0
+      }
+
+      .visual-arrow {
+        transform: rotate(90deg)
+      }
+
+      .evidence-rail {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .evidence-rail::before {
+        display: none
+      }
+    }
+
+    @media(max-width:640px) {
+      .navlinks {
+        display: flex
+      }
+
+      .navlinks a:not(.language-switch) {
+        display: none
+      }
+
+      .hero-inner {
+        padding-top: 46px
+      }
+
+      .two-col,
+      .check-grid,
+      .arch-row,
+      .arch-row.secondary,
+      .three-col,
+      .value-grid {
+        grid-template-columns: 1fr
+      }
+
+      .funnel-flow,
+      .evidence-rail {
+        grid-template-columns: 1fr
+      }
+
+      article {
+        padding: 24px 19px
+      }
+    }
+  </style>
+  <script
+    type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "When AI Enters the Control Room: From Accurate Predictions to Verifiable Decisions", "datePublished": "2026-09-13", "dateModified": "2026-09-13", "inLanguage": "en", "author": {"@type": "Person", "name": "Van Tuan Dang", "url": "https://dangvantuan.info/"}, "mainEntityOfPage": "https://dangvantuan.info/blog/ai_in_grid_control_room.html", "image": "https://dangvantuan.info/blog/ai_grid_trust_philosophy.png"}</script>
+</head>
+
+<body>
+  <header class="sitebar">
+    <div class="sitebar-inner"><a class="brand" href="https://dangvantuan.info/">Van Tuan Dang</a>
+      <nav class="navlinks"><a href="https://dangvantuan.info/">Home</a><a href="https://dangvantuan.info/blog.html">Articles</a><a href="https://dangvantuan.info/#contact">Contact</a>
+        <a class="language-switch" href="ai_trong_phong_dieu_do.html" lang="vi" hreflang="vi">Tiếng Việt</a>
+      </nav>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-banner">
+      <img class="author-cover" src="author.jpg" width="1400" height="350" alt="Van Tuan Dang — Principal Digital Grid Architect" fetchpriority="high" decoding="async" />
+    </div>
+    <div class="hero-inner">
+      <div>
+        <span class="eyebrow">AI in Power Grid Operations</span>
+        <h1>When AI Enters the Control Room: From Accurate Predictions to Verifiable Decisions</h1>
+        <p class="hero-lead">In a power system, even a model that achieves very high accuracy on a test set—say 99%—is not enough to earn operational trust. What matters more is knowing which grid state the model is observing, why it recommends a particular option, whether that option has been verified through physics-based calculations, and who ultimately has the authority to accept or reject it.</p>
+        <div class="meta"><span><strong>Van Tuan Dang</strong></span><span>September 13, 2026</span><span>AI Research · Power Grid Operations</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="decision-card">
+          <div class="decision-title">A verifiable decision chain</div>
+          <div class="flow-step"><b>Grid state</b><small>Snapshot, topology, nodal power, operational limits, forecast context</small></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step"><b>AI proposes</b><small>Generate, retrieve, and rank candidate options</small></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step physics"><b>Physics verifies</b><small>Load flow, N-1 checks, constraints, and intermediate states</small></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step human"><b>Humans decide</b><small>Review evidence, adjust when necessary, and approve within operational authority</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <main class="page">
+    <figure class="author-statement">
+      <blockquote>
+        <p>In power systems, the key question is no longer how powerful an AI model is, but how confidently we can bring it into operations. A model becomes truly valuable only when it is a controlled component of the system: its operating domain is defined and verified; its authority boundaries are clear; it can withstand failures and attacks; and every recommendation is explainable, traceable, and supported by sufficient evidence.</p>
+        <p>AI cannot sit outside the operational discipline of the power system. It must follow the same principle: every important decision needs a basis, defined limits, verifiability, and continuous human control.</p>
+        <p>The destination for AI in critical infrastructure is not autonomy at any cost. It is a decision-support capability reliable enough that dispatchers know when to use it, when to check again, and when to reject it. Only then does AI become part of the operational architecture rather than an experimental model placed beside the system.</p>
+      </blockquote>
+      <figcaption>— Van Tuan Dang</figcaption>
+    </figure>
+    <article>
+      <section id="opening">
+        <h2>1. When AI moves from “saying” to “doing”</h2>
+        <p>In the early stages of applied machine learning, most models stopped at prediction: forecasting load, classifying images, detecting anomalies, or ranking a set of options. When results fell short, the familiar response was to tune the model, retrain it, or accept a certain error rate.</p>
+        <p>Once AI enters critical infrastructure—especially the power grid—the situation changes completely. A recommendation no longer stays on a screen. It may become an input to switching, load transfer, topology changes, setpoint adjustments, or the preparation of an operating sequence.</p>
+        <div class="lead-box">The question is no longer “Is the AI intelligent?” The question is: <strong>Does AI participate in a decision chain that can be controlled, verified, and traced?</strong></div>
+        <p>A large model should not be placed in the middle of the system with the expectation that it will understand physics, operational procedures, and authority limits by itself. In critical systems, the control architecture matters more than an impressive demonstration.</p>
+      </section>
+      <figure class="philosophy-figure">
+        <img src="ai_grid_trust_philosophy.png" width="1672" height="941" alt="AI architecture for grid operations: AI proposes, physics verifies, evidence accompanies every result, and humans decide." decoding="async" />
+        <figcaption><strong>The guiding philosophy:</strong> AI expands the option space we can explore; physics remains the independent verifier; every recommendation leaves evidence; and humans retain final authority.</figcaption>
+      </figure>
+      <section id="accuracy">
+        <h2>2. Model accuracy is not enough to create operational trust</h2>
+        <p>Machine-learning models are commonly evaluated through accuracy, precision, recall, F1, probability calibration, or task-specific metrics. Those measures remain necessary, but in power grid operations they describe only part of the problem.</p>
+        <p>Suppose a model ranks the best option correctly for 98% of the snapshots in a test set. The remaining 2% deserves the closest attention. Does it occur during islanding, under a rare configuration, after a planned outage, when measurements are inconsistent, or when an action relieves one overloaded branch but creates a new violation elsewhere?</p>
+        <div class="equation">High model accuracy ≠ Safe operational decision</div>
+        <p>Operational trust does not come from an average score. It comes from the ability to verify one specific decision against the exact system state being considered.</p>
+        <div class="two-col">
+          <div class="mini-card"><h4>Model metrics answer</h4><p>How often is the model correct on known data?</p></div>
+          <div class="mini-card"><h4>Operational evidence answers</h4><p>Is this option actually acceptable for the exact grid state under review?</p></div>
+        </div>
+      </section>
+      <section id="roles">
+        <h2>3. Where should AI sit in the decision chain?</h2>
+        <p>AI has three strengths that fit grid operations particularly well: <strong>searching a large option space, ranking options, and connecting context</strong>. These are precisely the tasks humans struggle to perform quickly enough as the number of contingencies, topology configurations, and operating states grows.</p>
+        <p>AI does not need to take over the roles of the solver, protection logic, or dispatcher. Assigning each component the right role makes the system both more capable and easier to control.</p>
+        <table><thead><tr><th>Component</th><th>Appropriate role in the architecture</th></tr></thead><tbody>
+          <tr><td><strong>AI / ML</strong></td><td>Search, retrieve, generate candidates, rank the top-k, estimate risk, and summarize context.</td></tr>
+          <tr><td><strong>Physics computation layer</strong></td><td>Run load flow, check limits, contingencies, topology, and intermediate states.</td></tr>
+          <tr><td><strong>Operational rules</strong></td><td>Enforce authority, equipment constraints, sequences, interlocks, procedures, and policies.</td></tr>
+          <tr><td><strong>Dispatcher</strong></td><td>Assess context, edit the option, and accept or reject the action.</td></tr>
+        </tbody></table>
+        <div class="quote">AI should help dispatchers see faster and wider. It should not take control of the decision away from them.</div>
+      </section>
+      <section id="physics">
+        <h2>4. Physics must remain an independent verification layer</h2>
+        <p>Power grids have an advantage that many other AI applications do not: the system is governed by clear physical laws. Kirchhoff’s laws do not change because a model has been fine-tuned. Grid impedance does not change because the AI sounds more confident. An incorrect topology still produces its physical consequences.</p>
+        <p>The architecture should therefore separate two layers clearly: <strong>AI proposes</strong> and <strong>physics verifies</strong>. AI may learn from history, dispatcher actions, PTDF/LODF, graph structure, or hundreds of thousands of snapshots. Before an option is considered feasible, however, it must pass through the solver and constraint checks.</p>
+        <div class="grid-example"><strong>Example:</strong> a line is overloaded after an N-1 contingency. AI produces 20 topology actions likely to reduce the flow on that branch. AI’s role is not to argue in natural language that all 20 are safe. Its role is to narrow thousands of possibilities to a short, high-quality list. Each option must then be confirmed by load flow and constraint checks. For a multi-step switching plan, the intermediate states S1, S2, ..., Sn must also be verified—not only the final state.</div>
+        <figure class="visual-figure" aria-labelledby="funnel-title funnel-caption">
+          <div class="visual-figure-title" id="funnel-title">AI narrows the search space; physics confirms the option</div>
+          <div class="funnel-flow">
+            <div class="funnel-node"><span class="visual-symbol">1000+</span><b>Search space</b><small>Thousands of actions and topology combinations</small></div>
+            <div class="visual-arrow" aria-hidden="true">→</div>
+            <div class="funnel-node"><span class="visual-symbol">AI</span><b>Filter and rank</b><small>Keep a promising top-k shortlist</small></div>
+            <div class="visual-arrow" aria-hidden="true">→</div>
+            <div class="funnel-node"><span class="visual-symbol">N-1</span><b>Physics verification</b><small>Load flow, limits, and intermediate states</small></div>
+            <div class="visual-arrow" aria-hidden="true">→</div>
+            <div class="funnel-node"><span class="visual-symbol">✓</span><b>Feasible option</b><small>Ready for human review</small></div>
+          </div>
+          <figcaption id="funnel-caption">AI accelerates exploration; the physics solver remains the independent verification gate.</figcaption>
+        </figure>
+        <p>This division of roles is practical. AI operates where it is strongest, while the physics solver independently verifies the option before it advances in the operational process.</p>
+      </section>
+      <section id="situation">
+        <h2>5. From model-centric to situation-centric operations</h2>
+        <p>An operational platform should not be organized around isolated AI models: one forecast model, one anomaly detector, one option-ranking model, and then an AI assistant. Dispatchers do not care how many models run behind the interface. They need a complete understanding of a <strong>grid situation</strong> that is occurring or may occur.</p>
+        <p>A complete operational situation must combine at least four layers: the current state, the expected state, active constraints, and feasible actions. AI should work from that shared context instead of allowing each model to see a separate fragment of data.</p>
+        <div class="architecture">
+          <div class="arch-title">Situation-centric operational context</div>
+          <div class="arch-row">
+            <div class="arch-box"><b>Current state</b>Topology, P/Q/V, limits, unavailable equipment</div>
+            <div class="arch-box"><b>Expected state</b>Load, renewables, maintenance, forecasts</div>
+            <div class="arch-box"><b>Security context</b>N-1, security margins, violations, islanding</div>
+            <div class="arch-box"><b>Action space</b>Switching, load transfer, setpoints, operating plans</div>
+          </div>
+          <div class="arch-line">↓</div>
+          <div class="arch-row secondary">
+            <div class="arch-box"><b>AI search and ranking</b>Which options should be reviewed first?</div>
+            <div class="arch-box"><b>Physics solver</b>Which options are actually feasible?</div>
+            <div class="arch-box"><b>Dispatch process</b>Which options may be reviewed and approved?</div>
+          </div>
+        </div>
+        <p>When the architecture becomes situation-centric, explanation becomes more natural. Dispatchers do not need a lecture on neural-network structure. They need to know which branch an option relieves, how much margin remains, whether it creates another violation, and which snapshot was used.</p>
+      </section>
+      <section id="agentic">
+        <h2>6. Agentic AI can orchestrate tools without owning the decision</h2>
+        <p>Agentic AI makes the problem more interesting because AI no longer only answers questions. An agent can select tools, query data, invoke a solver, compare options, generate reports, and prepare a workflow for operator review.</p>
+        <p>Tool orchestration is valuable, but the ability to call the right tool does not grant decision authority. These responsibilities must remain separate in the architecture.</p>
+        <div class="three-col">
+          <div class="mini-card"><h4>Allowed actions</h4><p>Query state, run simulations, generate candidates, compare results, and prepare drafts.</p></div>
+          <div class="mini-card"><h4>Bound by</h4><p>Approved tool lists, role-based access, state checks, operational policies, time limits, and approval gates.</p></div>
+          <div class="mini-card"><h4>No autonomous authority</h4><p>A recommendation cannot become a field action without the required authority and verification results.</p></div>
+        </div>
+        <div class="warning">When AI can call tools, one reasoning error may trigger a chain of incorrect actions. The most important safeguards therefore lie in system permissions, action limits, and verification mechanisms.</div>
+      </section>
+      <section id="evidence">
+        <h2>7. Every recommendation must carry verifiable evidence</h2>
+        <p>A sound recommendation in a critical system should carry more than a score. It needs enough evidence for another engineer to review, verify, and reproduce the exact situation that produced it.</p>
+        <div class="check-grid">
+          <div class="mini-card"><h4>State provenance</h4><p>Which snapshot, timestamp, topology version, and dataset were used?</p></div>
+          <div class="mini-card"><h4>Model provenance</h4><p>Which model and version generated or ranked the option, with what confidence and applicability?</p></div>
+          <div class="mini-card"><h4>Physics results</h4><p>Load flow, violations, security margins, and contingencies before and after the action.</p></div>
+          <div class="mini-card"><h4>Sequence verification</h4><p>For multi-step actions, intermediate states must be retained and verified.</p></div>
+          <div class="mini-card"><h4>Human decision</h4><p>Who changed, rejected, or approved what, why, and when?</p></div>
+          <div class="mini-card"><h4>Reproducibility</h4><p>Can the situation be reconstructed for review, audit, or post-event analysis?</p></div>
+        </div>
+        <figure class="visual-figure" aria-labelledby="evidence-title evidence-caption">
+          <div class="visual-figure-title" id="evidence-title">Evidence follows the complete decision lifecycle</div>
+          <div class="evidence-rail">
+            <div class="evidence-stop"><span class="evidence-dot">01</span><b>Snapshot</b><small>Time and topology</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">02</span><b>Model</b><small>Version and confidence</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">03</span><b>Simulation</b><small>Physics results</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">04</span><b>Approval</b><small>Decision-maker and rationale</small></div>
+            <div class="evidence-stop"><span class="evidence-dot">05</span><b>Replay</b><small>Audit and re-analysis</small></div>
+          </div>
+          <figcaption id="evidence-caption">A trustworthy recommendation can be reconstructed from its input state through the final decision.</figcaption>
+        </figure>
+        <p>This is also what many AI demonstrations lack. A system may respond fluently, but without an adequate trail its answer cannot become a trustworthy part of an engineering process.</p>
+      </section>
+      <section id="odt">
+        <h2>8. The Operational Digital Twin anchors AI to reality</h2>
+        <p>For AI to understand the same state a dispatcher sees, the grid first needs a unified representation. This layer may be organized as an <strong>Operational Digital Twin</strong>. It is not a visually appealing 3D model; it is a computable digital state with topology, power-system semantics, measurements, and operational limits.</p>
+        <p>When every snapshot can be reloaded, solved again, replayed under contingencies, and compared with historical results, the same platform supports both AI development and AI verification.</p>
+        <div class="insight">The more capable AI becomes, the more disciplined the underlying digital state must be. If the input state is unreliable, a smarter model only produces a more confident answer on faulty data.</div>
+        <p>The Operational Digital Twin is therefore the foundation that ties every AI analysis, recommendation, and decision to a specific grid state that can be verified again through computation.</p>
+      </section>
+      <section id="architecture">
+        <h2>9. An architecture suited to real operations</h2>
+        <p>When building an AI platform for grid operations, the starting question should not be which LLM to choose. First define the decision chain, trusted reference state, computation layer, role of AI, and approval boundaries.</p>
+        <div class="architecture">
+          <div class="arch-title">Evidence-based operational architecture</div>
+          <div class="arch-row">
+            <div class="arch-box"><b>1. Data and grid state</b>SCADA/EMS, forecasts, outages, standardized grid model</div>
+            <div class="arch-box"><b>2. Computation</b>Load flow, N-1, sensitivity analysis, optimization</div>
+            <div class="arch-box"><b>3. AI</b>Search, ranking, retrieval, tool orchestration</div>
+            <div class="arch-box"><b>4. Human workflow</b>Review, edit, approval, operation</div>
+          </div>
+          <div class="arch-line">↓</div>
+          <div class="arch-row secondary">
+            <div class="arch-box"><b>Evidence store</b>State + model + simulation + decision</div>
+            <div class="arch-box"><b>Governance</b>Roles, permissions, policies, audit</div>
+            <div class="arch-box"><b>Monitoring</b>Data/model drift, errors, latency, data quality</div>
+          </div>
+        </div>
+        <h3>Principles that should remain hard constraints</h3>
+        <ol>
+          <li><strong>Do not let AI certify physical correctness.</strong> Managed grid state and verifiable calculations are the basis.</li>
+          <li><strong>Do not substitute model confidence for verification.</strong> Model confidence and electrical feasibility are different.</li>
+          <li><strong>Do not check only the final state.</strong> Intermediate states in a switching sequence must also be safe.</li>
+          <li><strong>Do not hide uncertainty.</strong> The system must report poor data, out-of-distribution states, or solver non-convergence.</li>
+          <li><strong>Do not let an AI agent exceed its authority.</strong> Tools, action scope, and approval gates must follow operational roles.</li>
+          <li><strong>Always preserve reproducibility.</strong> Important recommendations must be reconstructable from the data, model version, and calculations used.</li>
+          <li><strong>Maintain a path when AI is unavailable.</strong> Core operational capability must continue even if AI stops.</li>
+        </ol>
+        <p>The goal should not be an all-knowing “virtual dispatcher.” AI is better used as an intelligent support layer that helps humans process a larger state space more quickly and with stronger evidence.</p>
+      </section>
+      <section id="value">
+        <h2>10. Where does the real operational value lie?</h2>
+        <p>The value of this approach is not automation at any cost. It lies in helping operators see emerging states sooner, explore more options in less time, verify each option on the same grid model, and preserve the basis for a decision.</p>
+        <p>AI does not diminish the dispatcher’s role. It improves context, expands analytical coverage, and shortens the path from detecting a problem to selecting an executable option.</p>
+        <div class="value-flow">
+          <div class="value-title">From current state to preventive action</div>
+          <div class="value-stage"><div class="value-stage-title">Step 1 · See sooner</div><div class="value-grid">
+            <div class="value-box"><b>Current state</b>Snapshot, topology, measurements, limits</div>
+            <div class="value-box"><b>Expected state</b>Load, renewables, work schedule, near-term scenarios</div>
+            <div class="value-box"><b>Risk screening</b>Potential violations, vulnerable areas, priorities</div>
+          </div></div>
+          <div class="value-down">↓</div>
+          <div class="value-stage"><div class="value-stage-title">Step 2 · Explore wider</div><div class="value-grid">
+            <div class="value-box"><b>Candidate options</b>Switching, load transfer, setpoints, operating plans</div>
+            <div class="value-box"><b>Physics verification</b>Load flow, N-1, intermediate states, margins</div>
+            <div class="value-box"><b>Evidence package</b>Calculations, ranking rationale, assumptions, limits</div>
+          </div></div>
+          <div class="value-down">↓</div>
+          <div class="value-stage"><div class="value-stage-title">Step 3 · Decide with confidence</div><div class="value-grid">
+            <div class="value-box"><b>Operational decision</b>Review, edit, approve, and execute within authority</div>
+            <div class="value-box"><b>Reproducibility</b>Replay for verification, training, and post-event analysis</div>
+            <div class="value-box"><b>Operational value</b>Earlier detection, faster evaluation, lower risk, stronger decisions</div>
+          </div></div>
+          <div class="value-note">When risk screening, option assessment, switching preparation, and post-event analysis use the same digital state, the entire operational chain begins to speak the same language.</div>
+        </div>
+        <p>This is the distinction between an AI demonstration and a platform with operational value. A demonstration often stops at an answer. An operational platform must complete the chain from state and computation through recommendation, verification, evidence, and decision.</p>
+      </section>
+      <section id="closing">
+        <h2>11. Conclusion</h2>
+        <p>The difficult part of grid AI is not making a model propose an option. It is placing that proposal inside a process where the grid state is explicit, feasibility is verified, evidence is retained, and decision authority is unambiguous.</p>
+        <p>AI should reduce the search space, learn from history, recognize patterns, connect tools, and deliver the right information to the right person. Physics calculations keep the system anchored to reality, evidence makes each decision reviewable, and dispatchers retain final authority.</p>
+        <div class="closing">
+          <p><strong>The core principle can be stated simply:</strong></p>
+          <p style="font-size:1.3rem;line-height:1.5;margin-top:8px"><strong>AI proposes. Physics verifies. Every result carries evidence. Humans decide.</strong></p>
+          <p>That is how AI should enter the control room.</p>
+        </div>
+      </section>
+      <div class="small-note"><em>Note:</em> The examples in this article illustrate architecture and engineering methods; they are not operating instructions for a specific power system.</div>
+      <div class="author-box"><div class="author-copy"><h4>Van Tuan Dang</h4><p>Researching AI/ML and digital grid architecture, with a focus on physics-informed machine learning, operational digital twins, decision support, and agentic AI systems for critical infrastructure.</p></div></div>
+    </article>
+  </main>
+  <footer>© 2026 Van Tuan Dang.</footer>
+</body>
+
+</html>
