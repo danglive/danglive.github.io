@@ -1,0 +1,1671 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phân tích an ninh N-1</title>
+<meta name="description" content="Phân tích an ninh N-1: phạm vi cắt theo vùng bảo vệ, các hệ số PTDF, LODF, GLODF, ISDF và đánh giá AI trong sàng lọc sự cố.">
+<meta name="author" content="Van Tuan Dang">
+<link rel="canonical" href="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis_vi.html">
+<link rel="alternate" hreflang="vi" href="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis_vi.html">
+<link rel="alternate" hreflang="en" href="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:title" content="Phân tích an ninh N-1">
+<meta property="og:description" content="Vùng bảo vệ, phân bố công suất sau sự cố và vai trò của AI trong sàng lọc an ninh vận hành.">
+<meta property="og:url" content="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis_vi.html">
+<meta property="og:image" content="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/Image_N1_VN.png">
+<meta property="og:image:width" content="1672">
+<meta property="og:image:height" content="941">
+<meta property="og:image:alt" content="Phân tích an ninh N-1 từ sự cố vật lý đến sàng lọc hỗ trợ quyết định">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Phân tích an ninh N-1">
+<meta name="twitter:description" content="Vùng bảo vệ, phân bố công suất sau sự cố và vai trò của AI trong sàng lọc an ninh vận hành.">
+<meta name="twitter:image" content="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/Image_N1_VN.png">
+<style>
+:root{
+  --ground:#f4f5f7; --surface:#fff; --surface-2:#eceef1;
+  --ink:#171b21; --ink-2:#4a525e; --ink-3:#79828f;
+  --rule:#d4d8de; --rule-soft:#e4e7eb;
+  --hv:#a8342a; --mv:#2c6a4d; --lv:#27598a; --or:#b06a12; --isl:#7a4fc4;
+  --hv-w:#f7e9e7; --mv-w:#e7f1eb; --lv-w:#e6eef6; --or-w:#f9efe0;
+  --serif:Arial,"Helvetica Neue",sans-serif;
+  --sans:Arial,"Helvetica Neue",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#12161b; --surface:#191e25; --surface-2:#20262e;
+  --ink:#e2e6ec; --ink-2:#a7b0bc; --ink-3:#7b8593;
+  --rule:#2e353e; --rule-soft:#242b33;
+  --hv:#e8796a; --mv:#74c39a; --lv:#7fb2df; --or:#e0a352; --isl:#b995f5;
+  --hv-w:#2a1c1a; --mv-w:#15261e; --lv-w:#162330; --or-w:#2a2115;}}
+:root[data-theme="dark"]{
+  --ground:#12161b; --surface:#191e25; --surface-2:#20262e;
+  --ink:#e2e6ec; --ink-2:#a7b0bc; --ink-3:#7b8593;
+  --rule:#2e353e; --rule-soft:#242b33;
+  --hv:#e8796a; --mv:#74c39a; --lv:#7fb2df; --or:#e0a352; --isl:#b995f5;
+  --hv-w:#2a1c1a; --mv-w:#15261e; --lv-w:#162330; --or-w:#2a2115;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.7;padding-inline:22px}
+.wrap{max-width:1180px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;padding-block:18px 0;font-size:13.5px}
+.top a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
+.top a:hover{color:var(--ink)}
+header{padding-block:48px 36px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 18px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5.6vw,46px);line-height:1.12;
+  margin:0 0 8px;letter-spacing:-.012em;text-wrap:balance}
+.sub{font-family:var(--serif);font-size:clamp(20px,3.6vw,26px);font-weight:400;color:var(--ink-2);
+  margin:0 0 22px;line-height:1.3;text-wrap:balance}
+.lede{font-size:18.5px;color:var(--ink-2);margin:0}
+.screening-funnel{margin:28px 0 2px}
+.screening-funnel .funnel-scroll{overflow-x:auto;padding-bottom:2px}
+.screening-funnel svg{min-width:760px}
+.screening-funnel figcaption{max-width:none}
+.byline{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:22px 0 0;letter-spacing:.04em}
+.author-banner{margin:28px 0 0;overflow:hidden;border:1px solid var(--rule);border-radius:18px;background:var(--surface);box-shadow:0 12px 30px rgba(22,55,82,.08)}
+.author-cover{display:block;width:100%;height:auto;aspect-ratio:4/1;object-fit:cover;object-position:center}
+.article-cover{margin:28px 0 0;overflow:hidden;border:1px solid var(--rule);border-radius:18px;background:var(--surface);box-shadow:0 12px 30px rgba(22,55,82,.08)}
+.article-cover img{display:block;width:100%;height:auto;aspect-ratio:1672/941;object-fit:contain}
+.article-cover figcaption{max-width:none;margin:0;padding:12px 16px 13px;border-left:none;border-top:1px solid var(--rule-soft);text-align:left}
+.article-meta{display:flex;flex-wrap:wrap;gap:5px 18px;margin:22px 0 0;color:var(--ink-3);font-size:14px}
+.article-meta span{display:inline-flex;align-items:center}
+.article-meta span+span::before{content:"·";margin-right:18px;color:var(--ink-3)}
+.article-meta strong{color:var(--ink);font-weight:700}
+nav.toc{padding-block:26px;border-bottom:1px solid var(--rule-soft);font-size:14.5px}
+nav.toc ol{max-width:900px;margin:0;padding:0;list-style:none;display:block}
+nav.toc li{margin:0;padding:13px 0 14px;border-top:1px solid var(--rule-soft)}
+nav.toc li:first-child{border-top:none;padding-top:0}
+nav.toc li:last-child{padding-bottom:0}
+nav.toc br{display:none}
+nav.toc a{position:relative;display:block;color:var(--ink-2);text-decoration:none;padding:4px 0 4px 20px;line-height:1.45}
+nav.toc a::before{content:"";position:absolute;left:1px;top:14px;width:9px;height:1px;background:var(--rule)}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a:hover::before{background:var(--hv)}
+nav.toc .p{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--hv);text-transform:uppercase;display:block;margin:0 0 3px}
+section{padding-block:50px;border-bottom:1px solid var(--rule-soft)}
+section:last-of-type{border-bottom:none}
+.num{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--hv);display:block;margin-bottom:10px;text-transform:uppercase}
+h2{font-family:var(--serif);font-weight:600;font-size:clamp(22px,4vw,30px);line-height:1.22;
+  margin:0 0 20px;text-wrap:balance}
+h3{font-weight:700;font-size:19px;line-height:1.35;margin:38px 0 11px;text-wrap:balance}
+p{margin:0 0 16px}
+p,li,figcaption,.lede,.doc{text-align:justify;text-justify:inter-word;hyphens:manual;-webkit-hyphens:manual}
+a{color:var(--lv)}
+.key{border-left:3px solid var(--hv);padding:2px 0 2px 20px;margin:24px 0;
+  font-family:var(--serif);font-size:19.5px;line-height:1.5;text-align:left;hyphens:manual}
+.key.mv{border-left-color:var(--mv)} .key.lv{border-left-color:var(--lv)}
+.transition{margin:32px 0 0;padding-top:18px;border-top:1px solid var(--rule);color:var(--ink-2);font-size:16px}
+.transition strong{color:var(--ink)}
+.contribution-note{margin:26px 0 32px;padding:17px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.contribution-note .label{display:block;margin-bottom:7px;font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mv)}
+.contribution-note p{margin:0;color:var(--ink-2);font-size:16px}
+.references{font-size:14px;color:var(--ink-2);padding-left:22px}
+.references li{margin:0 0 10px;padding-left:4px}
+.references a{overflow-wrap:anywhere}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--surface-2);font-weight:500}
+tbody tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+figure{margin:30px 0}
+figure svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--rule);border-radius:10px}
+figcaption{max-width:920px;font-size:14px;line-height:1.6;color:var(--ink-2);margin-top:11px;padding-left:14px;border-left:2px solid var(--rule)}
+figcaption b{color:var(--ink)}
+.interactive-figure{background:var(--surface);border:1px solid var(--rule);margin:26px 0}
+.interactive-figure-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px}
+@media(max-width:720px){.interactive-figure-grid{grid-template-columns:1fr}}
+.interactive-figure svg{display:block;width:100%;height:auto}
+.panel{border-left:1px solid var(--rule);padding:18px 18px 22px}
+@media(max-width:720px){.panel{border-left:none;border-top:1px solid var(--rule)}}
+.panel .hd{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.panel .co{font-family:var(--serif);font-size:23px;font-weight:600;line-height:1.2;margin-bottom:4px}
+.q{display:flex;gap:9px;align-items:flex-start;margin:10px 0;font-size:13.5px;line-height:1.45}
+.q b{font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:0 0 auto;padding-top:2px}
+.yes{color:var(--hv);font-weight:650} .no{color:var(--mv);font-weight:650}
+.hint{font-size:12.5px;color:var(--ink-3);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-soft)}
+.br{cursor:pointer} .br:hover{opacity:.7}
+.leg{display:flex;flex-wrap:wrap;gap:6px 18px;padding:12px 16px;border-top:1px solid var(--rule);
+  font-size:12.5px;color:var(--ink-2);font-family:var(--mono)}
+.leg i{display:inline-block;width:22px;height:3px;vertical-align:3px;margin-right:6px}
+.formula{font-family:var(--serif);font-size:19px;text-align:center;margin:20px auto;padding:14px 18px;
+  background:var(--surface);border:1px solid var(--rule);line-height:1.6}
+.formula sub,.formula sup{font-size:.62em}
+.formula .doc{display:block;font-family:var(--sans);font-size:13px;color:var(--ink-2);margin-top:8px;text-align:left}
+.formula .doc b{color:var(--ink)}
+ul{margin:0 0 16px;padding-left:22px} li{margin-bottom:8px}
+.claims{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0}
+.claim{background:var(--surface);border:1px solid var(--rule);padding:16px 18px}
+.claim .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.claim h4{font-family:var(--serif);font-size:18px;font-weight:600;margin:0 0 6px;line-height:1.3}
+.claim p{font-size:15px;line-height:1.65;margin:0;color:var(--ink-2);text-align:justify;hyphens:manual}
+.case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:28px 0}
+.case-card{padding:20px 20px 18px;background:var(--surface);border:1px solid var(--rule);border-top:4px solid var(--lv)}
+.case-card:nth-child(2){border-top-color:var(--mv)}
+.case-card:nth-child(3){border-top-color:var(--or)}
+.case-card .case-label{display:block;margin-bottom:8px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.case-card h3{margin:0 0 10px;font-size:17px;line-height:1.35}
+.case-card p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.65;text-align:justify}
+.point-grid{max-width:none!important;list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0 30px}
+.point-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.point-grid li{margin:0;padding:17px 18px 18px;background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--lv);font-size:15px;line-height:1.65;color:var(--ink-2)}
+.point-grid li:nth-child(2){border-top-color:var(--mv)}
+.point-grid li:nth-child(3){border-top-color:var(--or)}
+.point-grid li:nth-child(4){border-top-color:var(--isl)}
+.point-grid li b{display:block;margin-bottom:5px;color:var(--ink);font-size:16px}
+.topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:28px 0 34px}
+.topic-card{padding:20px;background:var(--surface);border:1px solid var(--rule)}
+.topic-card:last-child{grid-column:1/-1}
+.topic-card h3{margin:0 0 9px;font-size:18px}
+.topic-card p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.68;text-align:justify}
+.close{background:var(--surface);border:1px solid var(--rule);padding:28px 30px;margin:36px 0 0}
+.close h2{margin-top:0}
+.close li{padding:10px 0 10px 4px;margin:0;border-top:1px solid var(--rule-soft)}
+.close li:first-child{border-top:none}
+.author-box{margin:40px 0 0;padding:22px 24px 24px;border:1px solid var(--rule);border-radius:18px;background:linear-gradient(145deg,var(--surface),var(--surface-2));box-shadow:0 12px 30px rgba(22,55,82,.08)}
+.author-box h4{margin:0 0 5px;font-size:18px;color:var(--ink)}
+.author-box p{margin:0;color:var(--ink-2);font-size:15px}
+footer{padding-block:36px 64px;border-top:2px solid var(--ink);margin-top:50px;font-size:13.5px;color:var(--ink-3);line-height:1.6}
+footer p{text-align:justify}
+@media(max-width:840px){.case-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.point-grid,.point-grid.three,.topic-grid{grid-template-columns:1fr}.topic-card:last-child{grid-column:auto}}
+@media(max-width:720px){.claims{grid-template-columns:1fr}}
+@media(max-width:560px){body{font-size:16px;padding-inline:16px}section{padding-block:36px}.close{padding:22px 18px}}
+
+/* ─── node-breaker interactive illustration (section 8) ─── */
+.wide{max-width:1180px;margin:0 auto}
+#nb{background:var(--surface);border:1px solid var(--rule);padding:14px;margin:26px 0}
+#nb .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+#nb button,#nb select{font:600 13.5px var(--sans);border:1px solid var(--rule);background:var(--surface);color:var(--ink);padding:6px 12px;cursor:pointer;border-radius:4px}
+#nb .tabs button[aria-pressed="true"]{border-color:var(--lv);color:var(--lv);box-shadow:inset 0 -2px 0 var(--lv)}
+#nb button:focus-visible,#nb select:focus-visible{outline:2px solid var(--lv);outline-offset:2px}
+#nb .ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+#nb .ctl label{font-size:13px;color:var(--ink-2)}
+#nb .stage{margin-left:auto;font:600 12.5px var(--mono);color:var(--ink-2)}
+#nb #nbPlay[aria-pressed="true"]{border-color:var(--lv);color:var(--lv)}
+#nb .grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+@media (max-width:980px){#nb .grid{grid-template-columns:1fr}}
+#nbSvg{width:100%;height:auto;display:block;border:1px solid var(--rule-soft);background:var(--surface)}
+#nbSvg text{font-family:var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+#nbSvg .name{font-size:15px;font-weight:700}
+#nbSvg .flow{font-family:var(--mono);font-size:13px}
+#nbSvg .swl{font-size:12.5px;fill:var(--ink-2)}
+#nbSvg .nodel{font-size:11.5px;fill:var(--ink-3)}
+#nbSvg .busl{font-size:14px;font-weight:700}
+#nbSvg .injl{font-family:var(--mono);font-size:13px}
+#nbSvg .viol{fill:var(--hv);font-weight:700}
+#nbLog{font-size:13.5px;line-height:1.5;max-height:620px;overflow:auto;position:relative;border:1px solid var(--rule-soft);padding:10px 12px}
+#nbLog ol{margin:0;padding-left:22px;max-width:none} #nbLog li{margin:0 0 5px}
+#nbLog li.cur{font-weight:700;background:var(--surface-2)}
+#nbLog li,#nbLog .box,.panel p,.panel div{text-align:left;hyphens:manual}
+#nb .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink-2);margin-top:10px;align-items:center}
+#nb .legend span{display:inline-flex;align-items:center;gap:6px}
+#nb .legend svg{width:20px;height:20px;flex:none;color:var(--ink)}
+#nb .box{background:var(--surface-2);padding:8px 10px;margin:0 0 8px;font-size:13.5px}
+#nb table{font-size:13px;font-variant-numeric:tabular-nums;margin-top:6px}
+#nb th,#nb td{border:1px solid var(--rule-soft);padding:4px 6px;text-align:right}
+#nb th:first-child,#nb td:first-child{text-align:left}
+#nb thead th{font-size:10.5px}
+#nb td.viol,#nb b.viol{color:var(--hv);font-weight:700}
+.badge{display:inline-block;font:700 11.5px var(--mono);letter-spacing:.03em;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.b-go{color:var(--mv);border:1.5px solid var(--mv)} .b-stop{color:var(--hv);border:1.5px solid var(--hv)} .b-lost{color:var(--or);border:1.5px solid var(--or)}
+.rules td,.rules th{vertical-align:middle}
+.rules td.sym{width:46px;text-align:center}
+.rules td.sym svg{width:28px;height:28px;color:var(--ink);display:inline-block;border:none;background:none}
+.rules tr.go td:first-child{box-shadow:inset 4px 0 0 var(--mv)} .rules tr.stop td:first-child{box-shadow:inset 4px 0 0 var(--hv)} .rules tr.lost td:first-child{box-shadow:inset 4px 0 0 var(--or)}
+@media (prefers-reduced-motion: reduce){#nbSvg *{transition:none!important}}
+
+/* Typography aligned with the existing article system. */
+h1,h2,h3,h4,.sub,.key,.panel .co{font-family:var(--sans)}
+.byline{font-family:var(--sans);font-size:14px;letter-spacing:0}
+p,li{line-height:1.72}
+.claim p,.key,footer p{text-align:justify;hyphens:manual}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top"><a href="../blog.html">← Tất cả bài viết</a><span style="font-family:var(--mono);font-size:12px;color:var(--ink-3)"><a href="n1_security_analysis.html" hreflang="en">English</a> · Tiếng Việt</span></div>
+
+<div class="author-banner">
+  <img class="author-cover" src="../blog/author.jpg" width="1400" height="350" alt="Van Tuan Dang — Principal Digital Grid Architect" fetchpriority="high" decoding="async">
+</div>
+
+<header>
+
+  <h1>Phân tích an ninh N-1</h1>
+  <p class="sub">Vùng bảo vệ, phân bố công suất sau sự cố và vai trò của AI trong sàng lọc an ninh vận hành</p>
+  <p class="lede">Phân tích an ninh N-1 đánh giá khả năng vận hành của lưới sau các sự cố đơn lẻ trong danh sách xét. Kết quả phụ thuộc trước hết vào cách mô hình hoá sự cố: một phần tử bị sự cố có thể khiến nhiều thiết bị cùng bị cắt bởi bảo vệ. Bài viết phân tích mối quan hệ giữa phạm vi cắt, cấu trúc lưới và các hệ số độ nhạy, từ đó xác định cách dùng AI để xếp hạng sự cố cần kiểm tra bằng tính toán AC.</p>
+  <p>Trong bài <a href="https://dangvantuan.info/blog/ai_trong_phong_dieu_do.html"><i>Khi AI bước vào phòng điều độ: Từ dự đoán đúng đến quyết định có thể kiểm chứng</i></a>, tôi đã đặt yêu cầu về bằng chứng và quyền kiểm soát của điều độ viên. Bài này đi vào một trường hợp cụ thể: kiểm chứng cách AI hỗ trợ sàng lọc sự cố N-1.</p>
+  <figure class="screening-funnel">
+    <div class="funnel-scroll">
+      <svg viewBox="0 0 1100 250" role="img" aria-label="Ví dụ minh hoạ phễu sàng lọc: khoảng mười nghìn sự cố được xếp hạng; năm trăm sự cố đầu được ưu tiên mô phỏng AC chi tiết; các vi phạm được xác nhận chuyển tới điều độ viên, còn vi phạm ngoài ngân sách top 500 được tính là bỏ sót trong đánh giá sàng lọc.">
+        <polygon points="40,40 400,40 400,210 40,210" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="220" y="118" text-anchor="middle" font-family="var(--serif)" font-size="30" font-weight="600" fill="var(--ink)">≈ 10 000</text>
+        <text x="220" y="146" text-anchor="middle" font-family="var(--sans)" font-size="14" fill="var(--ink-2)">Toàn bộ sự cố trong một trạng thái lưới</text>
+        <polygon points="400,40 560,95 560,155 400,210" fill="var(--lv-w)" stroke="var(--lv)"/>
+        <text x="480" y="130" text-anchor="middle" font-family="var(--sans)" font-size="13" font-weight="650" fill="var(--lv)">AI xếp hạng nhanh</text>
+        <rect x="560" y="95" width="250" height="60" fill="var(--or-w)" stroke="var(--or)" stroke-width="1.6"/>
+        <text x="685" y="122" text-anchor="middle" font-family="var(--serif)" font-size="22" font-weight="600" fill="var(--or)">500</text>
+        <text x="685" y="143" text-anchor="middle" font-family="var(--sans)" font-size="12.5" fill="var(--ink-2)">Ưu tiên mô phỏng AC chi tiết</text>
+        <line x1="810" y1="125" x2="858" y2="125" stroke="var(--ink-3)" stroke-width="1.6"/><path d="M858 119 L868 125 L858 131 Z" fill="var(--ink-3)"/>
+        <rect x="870" y="95" width="210" height="60" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+        <text x="975" y="121" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="650" fill="var(--ink)">Vi phạm được xác nhận</text>
+        <text x="975" y="140" text-anchor="middle" font-family="var(--sans)" font-size="12.5" fill="var(--ink-2)">→ điều độ viên</text>
+        <path d="M480 172 C 520 205, 600 222, 660 222" stroke="var(--hv)" stroke-width="1.6" fill="none" stroke-dasharray="5 4"/>
+        <circle cx="668" cy="222" r="5" fill="var(--hv)"/>
+        <text x="682" y="226" font-family="var(--sans)" font-size="12.5" fill="var(--hv)">Vi phạm ngoài top 500 = bỏ sót khi sàng lọc</text>
+      </svg>
+    </div>
+    <figcaption><b>Trong ví dụ minh hoạ về ngân sách tính toán, mô hình AI thực hiện chức năng xếp hạng như một phễu sàng lọc.</b> Với ngân sách 500 phép tính AC chi tiết, mọi sự cố trong danh sách chính thức vẫn thuộc phạm vi quản lý; mô hình chỉ xác định trường hợp nào được ưu tiên kiểm chứng trong cửa sổ tính toán. Một vi phạm nằm ngoài top 500 được tính là bỏ sót khi đánh giá chất lượng sàng lọc, không phải một sự cố bị xoá khỏi danh sách.</figcaption>
+  </figure>
+  <div class="article-meta"><span><strong>Van Tuan Dang</strong></span><span>28 tháng 9, 2026</span><span>An ninh hệ thống điện · AI hỗ trợ quyết định</span></div>
+</header>
+
+<figure class="article-cover">
+  <img src="Image_N1_VN.png" width="1672" height="941" alt="Phân tích an ninh N-1 từ sự cố vật lý đến sàng lọc hỗ trợ quyết định" loading="lazy" decoding="async">
+  <figcaption><b>Sơ đồ khái niệm.</b> Hình đặt chuỗi tác động vật lý cạnh quy trình phân tích. Trong vận hành, sàng lọc N-1 và xếp hạng được thực hiện trên các sự cố giả định trước khi sự cố thực xảy ra; tính toán AC xác nhận các trường hợp được ưu tiên.</figcaption>
+</figure>
+
+<nav class="toc" aria-label="Mục lục">
+  <ol>
+    <li><span class="p">Phần I · Từ sự cố đến trạng thái sau sự cố</span>
+      <a href="#s1">1. Tiêu chí N-1 trong vận hành lưới truyền tải</a><br>
+      <a href="#s2">2. Cấu trúc lưới và phạm vi tác động của bảo vệ</a><br>
+      <a href="#s3">3. Phân bố công suất sau sự cố</a></li>
+    <li><span class="p">Phần II · Bài toán quy mô</span>
+      <a href="#s4">4. Quy mô tính toán và sàng lọc sự cố</a></li>
+    <li><span class="p">Phần III · Chọn đúng mô hình vật lý</span>
+      <a href="#s5">5. GLODF và ISDF trong một khung độ nhạy thống nhất</a><br>
+      <a href="#s6">6. Chọn mô hình theo cấu trúc sau sự cố</a><br>
+      <a href="#s7">7. Minh hoạ phân loại sự cố trên lưới nhỏ</a><br>
+      <a href="#s8">8. Lan truyền sự cố và tập phần tử bị loại trên mô hình node-breaker</a></li>
+    <li><span class="p">Phần IV · Kiểm chứng và khả năng áp dụng</span>
+      <a href="#s9">9. Thiết kế và đánh giá bản đồ độ nhạy</a><br>
+      <a href="#s10">10. Áp dụng cho các lưới truyền tải khác nhau</a></li>
+    <li><span class="p">Phần V · AI trong quy trình vận hành</span>
+      <a href="#s11">11. AI trong xếp hạng và sàng lọc sự cố</a><br>
+      <a href="#s12">12. Từ sàng lọc N-1 diện rộng đến phân tích chuyên sâu</a></li>
+  </ol>
+</nav>
+
+<!-- ═══════════════════ PHẦN I ═══════════════════ -->
+<section id="s1">
+  <span class="num">Phần I · Từ sự cố đến trạng thái sau sự cố</span>
+  <h2>1. Tiêu chí N-1 trong vận hành lưới truyền tải</h2>
+
+  <p>Đường dây, máy biến áp và thiết bị đóng cắt đều có thể gặp sự cố trong vận hành. Khi một phần tử bị loại khỏi hệ thống, các phần tử còn lại phải tiếp nhận sự thay đổi về công suất và điện áp. Thiết kế lưới, dự trữ vận hành và các biện pháp khắc phục cần được phối hợp để hạn chế gián đoạn cung cấp điện và tránh sự cố tiếp diễn.</p>
+
+  <p>Theo tiêu chí N-1, hệ thống cần đáp ứng các giới hạn an ninh đã quy định sau một sự cố đơn lẻ thuộc danh sách xét, có tính đến các biện pháp khắc phục được phép. Vì vậy, đánh giá N-1 phải gắn với trạng thái lưới, phạm vi sự cố và thời gian thực hiện biện pháp cụ thể. Chỉ kiểm tra chế độ bình thường chưa đủ để kết luận hệ thống có thể chịu được sự cố tiếp theo.</p>
+
+  <h3>Thời gian tác động của bảo vệ và thời gian xử lý vận hành</h3>
+  <p>Quá trình quá độ điện và tác động của bảo vệ có thể diễn ra nhanh hơn khả năng nhận diện và xử lý của điều độ viên. Thời gian cho phép xử lý quá tải phụ thuộc vào loại thiết bị, mức quá tải và chỉnh định bảo vệ. Phân tích trước sự cố giúp xác định phương án xử lý trong khoảng thời gian thực tế cho phép.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 300" role="img" aria-label="Thang thời gian sau sự cố, trục logarit: dòng phân bố lại trong 20 mili giây, bảo vệ cắt trong 60 đến 150 mili giây, chuỗi sụp đổ có thể hoàn tất trong vài giây tới vài chục phút, con người cần vài phút, nên phân tích phải làm trước sự cố">
+      <defs><marker id="tl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <rect x="0" y="40" width="78" height="200" fill="var(--mv-w)"/>
+      <text x="39" y="66" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--mv)" letter-spacing=".06em">TRƯỚC</text>
+      <text x="39" y="80" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--mv)" letter-spacing=".06em">SỰ CỐ</text>
+      <text x="39" y="118" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink)" font-weight="650">Phân tích</text>
+      <text x="39" y="133" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink)" font-weight="650">an ninh N-1</text>
+      <text x="39" y="150" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Mỗi vài phút,</text>
+      <text x="39" y="163" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">cho mọi</text>
+      <text x="39" y="176" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">sự cố giả định</text>
+      <line x1="80" y1="36" x2="80" y2="246" stroke="var(--hv)" stroke-width="2"/>
+      <text x="80" y="28" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)" font-weight="650">t = 0 · sự cố</text>
+      <line x1="80" y1="240" x2="830" y2="240" stroke="var(--ink-3)" stroke-width="1.2" marker-end="url(#tl)"/>
+      <g font-family="var(--mono)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">
+        <line x1="188" y1="236" x2="188" y2="244" stroke="var(--ink-3)"/><text x="188" y="258">10 ms</text>
+        <line x1="296" y1="236" x2="296" y2="244" stroke="var(--ink-3)"/><text x="296" y="258">100 ms</text>
+        <line x1="404" y1="236" x2="404" y2="244" stroke="var(--ink-3)"/><text x="404" y="258">1 s</text>
+        <line x1="512" y1="236" x2="512" y2="244" stroke="var(--ink-3)"/><text x="512" y="258">10 s</text>
+        <line x1="596" y1="236" x2="596" y2="244" stroke="var(--ink-3)"/><text x="596" y="258">1 phút</text>
+        <line x1="704" y1="236" x2="704" y2="244" stroke="var(--ink-3)"/><text x="704" y="258">10 phút</text>
+        <line x1="788" y1="236" x2="788" y2="244" stroke="var(--ink-3)"/><text x="788" y="258">1 giờ</text>
+        <text x="455" y="284" fill="var(--ink-3)" font-size="10">Thang logarit: mỗi vạch gấp mười lần vạch trước</text>
+      </g>
+      <text x="92" y="64" font-family="var(--mono)" font-size="9.5" fill="var(--ink-3)" letter-spacing=".08em">VẬT LÝ</text>
+      <circle cx="220" cy="80" r="6" fill="var(--lv)"/>
+      <text x="232" y="77" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Dòng phân bố lại</text>
+      <text x="232" y="91" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Một chu kỳ 50 Hz · 20 ms · thang thời gian minh hoạ</text>
+      <rect x="272" y="100" width="43" height="12" fill="var(--lv)"/>
+      <text x="322" y="110" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Bảo vệ cắt sự cố</text>
+      <text x="440" y="110" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">60 – 150 ms</text>
+      <text x="92" y="140" font-family="var(--mono)" font-size="9.5" fill="var(--ink-3)" letter-spacing=".08em">HỆ THỐNG</text>
+      <rect x="512" y="148" width="192" height="12" fill="var(--or)" opacity=".55"/>
+      <text x="470" y="158" text-anchor="end" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Phần tử quá tải chịu được vài phút → vài chục phút</text>
+      <rect x="480" y="128" width="224" height="12" fill="var(--hv)" opacity=".85"/>
+      <text x="486" y="124" font-family="var(--sans)" font-size="12" fill="var(--hv)" font-weight="650">Chuỗi sụp đổ có thể hoàn tất</text>
+      <text x="710" y="138" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Vài giây … vài chục phút</text>
+      <text x="92" y="204" font-family="var(--mono)" font-size="9.5" fill="var(--ink-3)" letter-spacing=".08em">CON NGƯỜI</text>
+      <rect x="629" y="196" width="130" height="12" fill="var(--ink-3)" opacity=".6"/>
+      <text x="629" y="192" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Điều độ viên nhận diện · quyết định · thao tác</text>
+      <text x="629" y="222" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Nhiều phút</text>
+      <path d="M480 128 L480 178" stroke="var(--hv)" stroke-width="1" stroke-dasharray="3 3"/>
+      <path d="M629 128 L629 178" stroke="var(--hv)" stroke-width="1" stroke-dasharray="3 3"/>
+    </svg>
+    <figcaption><b>So sánh các thang thời gian.</b> Hình minh hoạ sự chênh lệch giữa quá trình điện, tác động bảo vệ và xử lý của con người. Các mốc thời gian mang tính minh hoạ; khi áp dụng cần dùng thông số thiết bị và chỉnh định của hệ thống cụ thể.</figcaption>
+  </figure>
+
+  <div class="key">Phân tích trước sự cố cần được cập nhật theo trạng thái lưới và danh sách sự cố đang xét. Kết quả phải đủ sớm để điều độ viên chuẩn bị biện pháp xử lý.</div>
+
+  <p>Phân tích N-1 sử dụng một trạng thái lưới tham chiếu, lần lượt áp dụng các sự cố giả định, tính trạng thái sau sự cố và kiểm tra giới hạn. Với ví dụ quy mô 7 000 nút và 10 000 nhánh trong bài, danh sách có thể gồm hàng nghìn trường hợp. Danh sách và kết quả cần được cập nhật theo cấu trúc lưới và trạng thái vận hành.</p>
+  <p class="transition"><strong>Trước khi lựa chọn bộ giải, cần mô tả đúng sự kiện vật lý.</strong> Việc đánh giá khả năng chịu sự cố của hệ thống phụ thuộc trước hết vào tập thiết bị mà bảo vệ sẽ loại khỏi vận hành.</p>
+</section>
+
+<section id="s2">
+  <span class="num">Phần I · Từ sự cố đến trạng thái sau sự cố</span>
+  <h2>2. Cấu trúc lưới và phạm vi tác động của bảo vệ</h2>
+
+  <p>Khả năng chịu sự cố phụ thuộc vào cả cấu trúc truyền tải và cách hệ thống bảo vệ cô lập phần tử bị sự cố.</p>
+
+  <h3>Dự phòng từ cấu trúc mạch vòng</h3>
+  <p>Trong lưới mạch vòng, khi một đường dây bị cắt, công suất phân bố lại qua các đường còn lại theo trở kháng mạng. Khả năng duy trì vận hành phụ thuộc vào dung lượng và giới hạn của các đường này. Các nhánh hình tia có ít phương án cấp điện thay thế hơn, nên cần được phân biệt khi đánh giá sự cố.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 270" role="img" aria-label="Mật độ mắt lưới giảm dần từ xương sống siêu cao áp nhiều mạch vòng, qua cấp cao áp trung gian vài mạch vòng, tới rìa lưới phân phối cao áp chỉ còn một đường">
+      <g font-family="var(--sans)" font-size="12.5" text-anchor="middle" font-weight="650">
+        <text x="180" y="30" fill="var(--hv)">Xương sống siêu cao áp</text>
+        <text x="470" y="30" fill="var(--mv)">Cấp cao áp trung gian</text>
+        <text x="760" y="30" fill="var(--lv)">Rìa lưới</text>
+      </g>
+      <g stroke="var(--hv)" stroke-width="2.4" fill="none">
+        <polygon points="120,70 240,70 290,140 240,210 120,210 70,140"/>
+        <line x1="120" y1="70" x2="240" y2="210"/><line x1="240" y1="70" x2="120" y2="210"/>
+        <line x1="70" y1="140" x2="290" y2="140"/>
+      </g>
+      <g fill="var(--ink)"><circle cx="120" cy="70" r="5"/><circle cx="240" cy="70" r="5"/><circle cx="290" cy="140" r="5"/><circle cx="240" cy="210" r="5"/><circle cx="120" cy="210" r="5"/><circle cx="70" cy="140" r="5"/><circle cx="180" cy="140" r="5"/></g>
+      <line x1="290" y1="140" x2="380" y2="140" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 4"/>
+      <g stroke="var(--mv)" stroke-width="2.2" fill="none">
+        <rect x="380" y="90" width="150" height="100"/><line x1="380" y1="90" x2="530" y2="190"/>
+      </g>
+      <g fill="var(--ink)"><circle cx="380" cy="90" r="5"/><circle cx="530" cy="90" r="5"/><circle cx="380" cy="190" r="5"/><circle cx="530" cy="190" r="5"/></g>
+      <line x1="530" y1="140" x2="620" y2="140" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 4"/>
+      <g stroke="var(--lv)" stroke-width="2.2" fill="none">
+        <line x1="620" y1="140" x2="700" y2="140"/><line x1="700" y1="140" x2="770" y2="100"/><line x1="700" y1="140" x2="770" y2="180"/><line x1="770" y1="180" x2="840" y2="200"/>
+      </g>
+      <g fill="var(--ink)"><circle cx="620" cy="140" r="5"/><circle cx="700" cy="140" r="5"/></g>
+      <g fill="var(--lv)"><circle cx="770" cy="100" r="7"/><circle cx="770" cy="180" r="7"/><circle cx="840" cy="200" r="7"/></g>
+      <g fill="var(--surface)"><circle cx="770" cy="100" r="3"/><circle cx="770" cy="180" r="3"/><circle cx="840" cy="200" r="3"/></g>
+      <g font-family="var(--sans)" font-size="12" text-anchor="middle" fill="var(--ink-2)">
+        <text x="180" y="245">Nhiều đường vòng giữa hai điểm bất kỳ</text>
+        <text x="455" y="245">Vài đường</text>
+        <text x="760" y="245">Một đường duy nhất tới nơi tiêu thụ</text>
+      </g>
+      <g font-family="var(--mono)" font-size="10" text-anchor="middle" fill="var(--ink-3)">
+        <text x="180" y="262">Dự trữ cao · đầu tư lớn</text><text x="455" y="262">Dự trữ vừa</text><text x="760" y="262">Không dự trữ</text>
+      </g>
+    </svg>
+    <figcaption><b>Mạch vòng và nhánh hình tia.</b> Trong sơ đồ này, lưới chính có đường truyền thay thế; nhánh cấp điện ở rìa chỉ có một kết nối. Cắt kết nối đó sẽ tách phần lưới phía sau.</figcaption>
+  </figure>
+
+  <h3>Bảo vệ và phạm vi cắt sự cố</h3>
+  <p>Rơ-le sử dụng tín hiệu đo và logic bảo vệ để phát hiện sự cố, sau đó gửi lệnh mở các máy cắt liên quan. Trong mô hình xét ở đây, máy cắt thực có khả năng cắt dòng sự cố; dao cách ly và liên kết thanh cái không thực hiện chức năng này.</p>
+
+  <p>Trong bài, đối tượng tính toán được gọi chính xác là <strong>tập phần tử bị cắt do bảo vệ</strong> (<i>protection-induced outage set</i>): tập thiết bị bị loại khỏi vận hành khi các máy cắt biên mở để cô lập sự cố. Tập này được suy ra từ kết nối node-breaker và logic cắt nêu ở mục 8. Thuật ngữ này không đồng nhất với “vùng bảo vệ” của rơ-le theo nghĩa chỉnh định, CT/VT hay bảo vệ so lệch; khi áp dụng phải đối chiếu với cấu hình bảo vệ chính, dự phòng và trạng thái thực của thiết bị.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 900 300" role="img" aria-label="Hình động: dòng sự cố lan từ điểm sự cố qua đường dây, dao cách ly và thanh cái, chỉ bị chặn tại các máy cắt A, B, C, D đang đóng, rồi các máy cắt này mở; tập thiết bị nằm giữa chúng là vùng bảo vệ">
+      <path data-appear=".50" d="M118 88 L782 88 L782 112 L470 112 L470 165 L640 165 L640 187 L610 187 L610 200 L590 200 L590 187 L310 187 L310 200 L290 200 L290 187 L260 187 L260 165 L430 165 L430 112 L118 112 Z" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <line x1="60" y1="100" x2="840" y2="100" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="450" y1="100" x2="450" y2="175" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="443" y1="125" x2="457" y2="145" stroke="var(--ink)" stroke-width="2"/>
+      <line x1="270" y1="175" x2="630" y2="175" stroke="var(--ink)" stroke-width="5"/>
+      <line x1="300" y1="175" x2="300" y2="250" stroke="var(--ink-3)" stroke-width="2.2"/>
+      <line x1="600" y1="175" x2="600" y2="250" stroke="var(--ink-3)" stroke-width="2.2"/>
+      <g fill="var(--ink)"><rect x="104" y="93" width="14" height="14"/><rect x="782" y="93" width="14" height="14"/><rect x="293" y="200" width="14" height="14"/><rect x="593" y="200" width="14" height="14"/></g>
+      <g data-appear=".30"><rect x="102" y="91" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M106 95 L116 105 M106 105 L116 95" stroke="var(--hv)" stroke-width="2"/></g><g data-appear=".30"><rect x="780" y="91" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M784 95 L794 105 M784 105 L794 95" stroke="var(--hv)" stroke-width="2"/></g><g data-appear=".46"><rect x="291" y="198" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M295 202 L305 212 M295 212 L305 202" stroke="var(--hv)" stroke-width="2"/></g><g data-appear=".46"><rect x="591" y="198" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M595 202 L605 212 M595 212 L605 202" stroke="var(--hv)" stroke-width="2"/></g>
+      <g font-family="var(--mono)" font-size="10.5" fill="var(--ink)">
+        <text x="111" y="80" text-anchor="middle">Máy cắt A</text><text x="789" y="80" text-anchor="middle">Máy cắt B</text>
+        <text x="316" y="211">Máy cắt C</text><text x="616" y="211">Máy cắt D</text>
+      </g>
+      <path data-blink="1" d="M448 58 L438 80 L445 80 L441 98 L455 74 L448 74 L453 58 Z" fill="var(--hv)"/>
+      <text x="466" y="72" font-family="var(--sans)" font-size="11.5" fill="var(--hv)" font-weight="650">Điểm sự cố</text>
+      <text x="480" y="140" font-family="var(--mono)" font-size="10" fill="var(--ink-3)">Dao cách ly</text>
+      <text x="652" y="179" font-family="var(--mono)" font-size="10.5" fill="var(--ink-2)">Thanh cái</text>
+      <g stroke="var(--hv)" stroke-width="2.6" fill="none">
+        <path data-grow=".06,.30" data-head="1" d="M430 100 L138 100"/><path data-grow=".06,.30" data-head="1" d="M470 100 L762 100"/>
+        <path data-grow=".10,.27" data-head="1" d="M450 112 L450 160"/>
+        <path data-grow=".30,.46" data-head="1" d="M436 175 L320 175"/><path data-grow=".30,.46" data-head="1" d="M464 175 L580 175"/>
+      </g>
+      <text x="150" y="134" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Đi qua đường dây, dao cách ly, thanh cái:</text>
+      <text x="150" y="149" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Chỉ dừng ở máy cắt đang đóng</text>
+      <g font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">
+        <rect x="40" y="274" width="14" height="14" fill="var(--ink)"/><text x="62" y="285">Máy cắt đang đóng</text>
+        <line x1="200" y1="281" x2="224" y2="281" stroke="var(--ink)" stroke-width="2"/><line x1="208" y1="275" x2="216" y2="287" stroke="var(--ink)" stroke-width="2"/><text x="232" y="285">Dao cách ly</text>
+        <line x1="340" y1="281" x2="380" y2="281" stroke="var(--ink)" stroke-width="5"/><text x="388" y="285">Thanh cái</text>
+        <line x1="480" y1="281" x2="506" y2="281" stroke="var(--hv)" stroke-width="2.5"/><path d="M506 276 L514 281 L506 286 Z" fill="var(--hv)"/><text x="522" y="285">Dòng sự cố</text>
+        <rect x="650" y="275" width="30" height="12" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.5"/><text x="688" y="285">Vùng bảo vệ</text>
+      </g>
+    </svg>
+    <figcaption><b>Phạm vi cắt trong sơ đồ minh hoạ.</b> Điểm rẽ không có máy cắt nên đường dây và thanh cái cùng nằm trong vùng được cô lập bởi A, B, C và D. Nếu bổ sung máy cắt tại điểm rẽ, phạm vi cắt có thể thay đổi theo cấu hình bảo vệ.</figcaption>
+  </figure>
+
+  <p>Khi một phần tử có các máy cắt riêng để cô lập nó, phạm vi cắt có thể trùng với chính phần tử đó. Giả định sự cố đơn phần tử phù hợp với trường hợp này. Với các cấu hình dùng chung máy cắt hoặc đấu rẽ, cần xác định lại tập thiết bị thực sự bị cắt.</p>
+
+  <h3>Các cấu hình có phạm vi cắt nhiều phần tử</h3>
+  <p>Đấu rẽ đường dây (tee-off, hay <em>piquage</em>) cho phép kết nối một trạm mà không bố trí đầy đủ máy cắt tại điểm rẽ. Cấu hình này giảm thiết bị và chi phí xây dựng, nhưng có thể làm tăng phạm vi mất điện khi xảy ra sự cố. Trong ví dụ ba nhánh không có máy cắt tại điểm rẽ, các máy cắt ở ba đầu xa phải mở để cô lập vùng.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 300" role="img" aria-label="Hai cách đấu một trạm nhỏ vào đường dây: ngăn lộ đầy đủ với ba máy cắt tại điểm rẽ tạo ba vùng bảo vệ riêng; đấu rẽ không máy cắt rẻ hơn nhưng ba nhánh cùng nhảy">
+      <g font-family="var(--sans)" font-size="13" font-weight="650" text-anchor="middle">
+        <text x="225" y="30" fill="var(--ink)">Ngăn lộ đầy đủ tại điểm rẽ</text>
+        <text x="675" y="30" fill="var(--ink)">Đấu rẽ (piquage)</text>
+      </g>
+      <line x1="450" y1="15" x2="450" y2="285" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <rect x="60" y="86" width="140" height="28" fill="var(--lv-w)" stroke="var(--lv)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <rect x="250" y="86" width="140" height="28" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <rect x="211" y="128" width="28" height="90" fill="var(--or-w)" stroke="var(--or)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="40" y1="100" x2="410" y2="100" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="225" y1="100" x2="225" y2="235" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <g fill="var(--ink)">
+        <rect x="46" y="93" width="14" height="14"/><rect x="390" y="93" width="14" height="14"/><rect x="218" y="222" width="14" height="14"/>
+        <rect x="196" y="93" width="14" height="14"/><rect x="240" y="93" width="14" height="14"/><rect x="218" y="114" width="14" height="14"/>
+      </g>
+      <circle cx="225" cy="100" r="4" fill="var(--ink)"/>
+      <circle cx="225" cy="250" r="8" fill="var(--ink)"/><circle cx="225" cy="250" r="3" fill="var(--surface)"/>
+      <text x="245" y="254" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Trạm nhỏ</text>
+      <text x="225" y="78" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink-3)">3 máy cắt thêm tại điểm rẽ</text>
+      <text x="225" y="278" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Sự cố ở nhánh nào → mất đúng nhánh đó</text>
+      <path d="M510 86 L840 86 L840 114 L689 114 L689 218 L661 218 L661 114 L510 114 Z" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <line x1="490" y1="100" x2="860" y2="100" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="675" y1="100" x2="675" y2="235" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <g fill="var(--ink)">
+        <rect x="496" y="93" width="14" height="14"/><rect x="840" y="93" width="14" height="14"/><rect x="668" y="222" width="14" height="14"/>
+      </g>
+      <circle cx="675" cy="100" r="7" fill="var(--surface)" stroke="var(--hv)" stroke-width="2.5"/>
+      <circle cx="675" cy="250" r="8" fill="var(--ink)"/><circle cx="675" cy="250" r="3" fill="var(--surface)"/>
+      <text x="695" y="254" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Trạm nhỏ</text>
+      <text x="675" y="78" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--hv)">Không máy cắt tại điểm rẽ</text>
+      <text x="675" y="278" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--hv)" font-weight="650">Sự cố ở đâu → cả ba nhánh cùng nhảy</text>
+      <g font-family="var(--mono)" font-size="10.5" text-anchor="middle" fill="var(--ink-3)">
+        <text x="225" y="50">6 máy cắt · 3 vùng bảo vệ</text>
+        <text x="675" y="50">3 máy cắt · 1 vùng bảo vệ</text>
+      </g>
+    </svg>
+    <figcaption><b>Ảnh hưởng của máy cắt tại điểm rẽ.</b> Cấu hình bên trái có máy cắt phân chia các nhánh. Cấu hình bên phải dùng các máy cắt ở đầu xa, nên sự cố trong vùng dẫn đến cắt cả ba nhánh theo giả thiết bảo vệ của ví dụ.</figcaption>
+  </figure>
+
+  <p>Các cấu hình máy biến áp ba cuộn dây và ngăn lộ liên kết qua dao cách ly cũng cần được xem xét ở mức node-breaker. Số lượng và kích thước các vùng phụ thuộc vào thiết kế trạm và trạng thái đóng cắt. Không nên suy ra các thông tin này chỉ từ số đường dây hay số nút của mô hình nút–nhánh.</p>
+  <p class="transition"><strong>Khi phạm vi cắt đã được xác định ở mức thiết bị, bài toán mới chuyển sang miền điện.</strong> Phần công suất từng đi qua các thiết bị bị loại sẽ phân bố lại theo những đường nào, và giới hạn nào của phần lưới còn lại có thể bị vi phạm?</p>
+</section>
+
+<section id="s3">
+  <span class="num">Phần I · Từ sự cố đến trạng thái sau sự cố</span>
+  <h2>3. Phân bố công suất sau sự cố</h2>
+
+  <p>Sau khi cắt đường dây, công suất trên các nhánh còn lại thay đổi theo cấu trúc mạng, trở kháng và trạng thái nguồn–tải. Phân tích an ninh tính trước trạng thái này để xác định vi phạm và nhu cầu khắc phục.</p>
+
+  <p>Ba trường hợp dưới đây minh hoạ các tình huống cần phân biệt trong bài.</p>
+
+  <figure>
+    <svg id="kb" viewBox="0 0 900 310" role="img" aria-label="Ba kết cục sau sự cố N-1 trên cùng một lưới nền: mất một phần tử, lưới vẫn liền; mất cả vùng bảo vệ; một phần lưới bị tách"></svg>
+    <figcaption><b>Ba trường hợp trên cùng sơ đồ lưới.</b> Vị trí sự cố và phạm vi cắt quyết định kết nối còn lại. Mức tải và vi phạm sau sự cố vẫn cần được tính toán.</figcaption>
+  </figure>
+
+  <div class="case-grid" aria-label="Ba trường hợp phân bố công suất sau sự cố">
+    <article class="case-card">
+      <span class="case-label">Trường hợp 1 · LODF</span>
+      <h3>Mất một phần tử, lưới còn liên thông</h3>
+      <p>Khi mạng còn liên thông, công suất phân bố lại qua các nhánh còn lại và có thể gây quá tải. LODF ước lượng thay đổi công suất tác dụng trên các nhánh trong xấp xỉ DC, với điều kiện sự cố không làm tách lưới và giả thiết công suất nút phù hợp.</p>
+    </article>
+    <article class="case-card">
+      <span class="case-label">Trường hợp 2 · GLODF</span>
+      <h3>Một sự cố làm cắt nhiều phần tử</h3>
+      <p>Nếu nhiều phần tử cùng bị cắt nhưng mạng còn liên thông, phải tính ảnh hưởng của cả nhóm đồng thời. Tổng các LODF đơn lẻ trên lưới ban đầu không phản ánh đầy đủ tương tác giữa các phần tử bị cắt. GLODF xử lý trường hợp này trong cùng xấp xỉ tuyến tính.</p>
+    </article>
+    <article class="case-card">
+      <span class="case-label">Trường hợp 3 · Tách đảo</span>
+      <h3>Sự cố gây tách đảo</h3>
+      <p>Cắt một nhánh cầu hoặc một tập nhánh liên kết có thể chia lưới thành các thành phần riêng. Mỗi thành phần cần được kiểm tra nguồn, tải và khả năng cân bằng. Với phần lưới được giữ lại trong mô hình, thay đổi công suất trao đổi với phần bị tách phải được bù theo giả thiết cân bằng đã chọn. Công thức LODF thông thường không áp dụng trực tiếp cho trường hợp tách đảo.</p>
+    </article>
+  </div>
+
+  <div class="key">Phân loại cấu trúc cần xét đồng thời phạm vi cắt, các thành phần liên thông và nguồn–tải trong từng thành phần. Phân bố công suất và giới hạn vận hành được kiểm tra ở bước tính toán tiếp theo.</div>
+  <p class="transition"><strong>Trên lưới nhỏ, ba cơ chế này có thể được nhận diện trực tiếp.</strong> Trong vận hành thực tế, cùng một phép phân loại và tính toán phải được lặp lại cho hàng nghìn sự cố, khi cấu trúc lưới thay đổi và thời gian xử lý bị giới hạn.</p>
+</section>
+
+<!-- ═══════════════════ PHẦN II ═══════════════════ -->
+<section id="s4">
+  <span class="num">Phần II · Bài toán quy mô</span>
+  <h2>4. Quy mô tính toán và sàng lọc sự cố</h2>
+
+  <p>Chi phí thực hiện phép tính AC chi tiết cho toàn bộ danh sách phụ thuộc vào quy mô lưới, số sự cố, khả năng hội tụ và hạ tầng tính toán. Danh sách sự cố chính thức vẫn là phạm vi phải được quản lý theo quy trình vận hành; sàng lọc không định nghĩa lại hay loại bớt danh sách đó. Khi thời gian xử lý bị giới hạn, sàng lọc chỉ giảm hoặc ưu tiên số phép tính AC chi tiết cần thực hiện trong cửa sổ quyết định, theo một chính sách an toàn đã được phê duyệt. Chất lượng của bước ưu tiên phải được đánh giá bằng tỷ lệ phát hiện và mức nghiêm trọng của các trường hợp bị bỏ sót.</p>
+
+  <p>Học máy có thể học từ các kết quả mô phỏng để xếp hạng sự cố trên trạng thái lưới mới. Chỉ tiêu trực tiếp là tỷ lệ sự cố gây vi phạm được giữ trong top-K, cùng với thời gian tính toán và mức nghiêm trọng của các trường hợp bị bỏ sót.</p>
+
+  <h3>Chọn các quan hệ sự cố–phần tử cần xét</h3>
+  <p>Với 10 000 sự cố và 10 000 phần tử giám sát, có 100 triệu cặp cần xét nếu kết nối đầy đủ. Hệ số độ nhạy cho phép chọn các cặp có tương tác điện đáng kể trong mô hình tuyến tính. Số cặp được giữ phụ thuộc vào cấu trúc lưới và ngưỡng chọn; ngưỡng này cần được kiểm chứng theo chất lượng xếp hạng.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 200" role="img" aria-label="Từ một trăm triệu cặp khả dĩ, ngưỡng độ nhạy chỉ giữ lại một lát mỏng">
+      <g font-family="var(--sans)" font-size="13">
+        <rect x="60" y="40" width="740" height="34" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="430" y="63" text-anchor="middle" fill="var(--ink)" font-weight="650">10 000 sự cố × 10 000 phần tử giám sát = 100 000 000 cặp khả dĩ</text>
+        <path d="M430 74 L430 112" stroke="var(--ink-3)" stroke-width="1.4" fill="none"/>
+        <path d="M424 104 L430 114 L436 104" stroke="var(--ink-3)" stroke-width="1.4" fill="none"/>
+        <text x="445" y="96" font-family="var(--mono)" font-size="11" fill="var(--ink-2)">Giữ cặp có |hệ số| ≥ ngưỡng</text>
+        <rect x="428" y="116" width="4" height="34" fill="var(--mv)"/>
+        <text x="440" y="139" fill="var(--mv)" font-weight="650">Một lát mỏng: một phần nhỏ của một phần trăm</text>
+        <text x="430" y="182" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">Lát mỏng ấy là phần bài toán mà vật lý nói có tương tác</text>
+      </g>
+    </svg>
+    <figcaption><b>Chọn cặp theo độ nhạy.</b> Các quan hệ được giữ tạo đầu vào thưa cho mô hình, giảm khối lượng xử lý so với xét đầy đủ mọi cặp.</figcaption>
+  </figure>
+
+  <p>Trong kiến trúc này, hệ số độ nhạy xác định các quan hệ đầu vào cho mô hình xếp hạng. Chúng cũng cho một ước lượng tuyến tính về thay đổi công suất, nhưng chưa thay thế kết quả AC. Mô hình học có thể bổ sung thông tin mà xấp xỉ DC chưa mô tả; khả năng này phải được đánh giá trên dữ liệu kiểm tra.</p>
+
+  <h3>Thống nhất phạm vi sự cố giữa đầu vào và nhãn</h3>
+  <p>Nếu nhãn được tạo bằng mô phỏng cắt cả vùng bảo vệ, còn bản đồ độ nhạy chỉ xét một phần tử, đầu vào và nhãn mô tả hai phạm vi sự cố khác nhau. Cần thống nhất tập phần tử bị cắt trước khi huấn luyện và đánh giá mô hình.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 270" role="img" aria-label="Cùng một sự cố nhìn hai cách: câu hỏi đặt cho mô hình chỉ đánh dấu một phần tử; điều thực sự xảy ra là cả ba phần tử của vùng cùng nhảy">
+      <g font-family="var(--mono)" font-size="11" letter-spacing="0.08em">
+        <text x="40" y="32" fill="var(--lv)">CÂU HỎI ĐẶT CHO MÔ HÌNH</text>
+        <text x="470" y="32" fill="var(--mv)">ĐIỀU BỘ GIẢI (VÀ BẢO VỆ THẬT) LÀM</text>
+      </g>
+      <g stroke="var(--rule)" stroke-width="2.4" fill="none">
+        <line x1="40" y1="130" x2="180" y2="130"/><line x1="180" y1="130" x2="320" y2="130"/><line x1="180" y1="130" x2="180" y2="210"/>
+      </g>
+      <line x1="40" y1="130" x2="180" y2="130" stroke="var(--lv)" stroke-width="5"/>
+      <circle cx="180" cy="130" r="5.5" fill="var(--ink)"/>
+      <g fill="var(--surface)" stroke="var(--ink-3)" stroke-width="1.6">
+        <rect x="32" y="123" width="14" height="14"/><rect x="313" y="123" width="14" height="14"/><rect x="173" y="203" width="14" height="14"/>
+      </g>
+      <text x="40" y="112" font-family="var(--sans)" font-size="12" fill="var(--lv)" font-weight="650">Phần tử A</text>
+      <text x="40" y="245" font-family="var(--sans)" font-size="13" fill="var(--ink-2)">“Nếu A nhảy, dòng phân bố lại thế nào?”</text>
+      <line x1="430" y1="20" x2="430" y2="255" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <g stroke="var(--mv)" stroke-width="5" fill="none">
+        <line x1="470" y1="130" x2="610" y2="130"/><line x1="610" y1="130" x2="750" y2="130"/><line x1="610" y1="130" x2="610" y2="210"/>
+      </g>
+      <circle cx="610" cy="130" r="5.5" fill="var(--ink)"/>
+      <g fill="var(--surface)" stroke="var(--mv)" stroke-width="2">
+        <rect x="462" y="123" width="14" height="14"/><rect x="743" y="123" width="14" height="14"/><rect x="603" y="203" width="14" height="14"/>
+      </g>
+      <text x="586" y="112" font-family="var(--mono)" font-size="10.5" fill="var(--mv)">Không máy cắt</text>
+      <text x="470" y="245" font-family="var(--sans)" font-size="13" fill="var(--ink-2)">Bảo vệ đầu xa tác động: cả ba phần tử cùng ra khỏi vận hành.</text>
+    </svg>
+    <figcaption><b>Sai khác phạm vi mô hình hoá.</b> Độ nhạy đơn phần tử và kết quả cắt cả vùng chỉ so sánh trực tiếp được khi chúng cùng mô tả một tập thiết bị bị cắt.</figcaption>
+  </figure>
+
+  <p>Một vùng nhiều phần tử có thể tạo ra nhiều bản ghi cho cùng một sự kiện, nhưng mỗi bản ghi dùng một bản đồ độ nhạy khác nhau. Các bản ghi trùng này ảnh hưởng đến huấn luyện và chiếm nhiều vị trí trong danh sách top-K. Gộp theo phạm vi cắt giúp xử lý cả hai vấn đề.</p>
+  <p class="transition"><strong>Giảm khối lượng tính toán chỉ có giá trị khi câu hỏi vật lý vẫn được giữ nguyên.</strong> Muốn tạo đầu vào thưa mà không đánh đồng các loại sự cố, cần hiểu rõ mỗi hệ số độ nhạy mô tả đại lượng nào và mất hiệu lực trong điều kiện nào.</p>
+</section>
+
+<!-- ═══════════════════ PHẦN III ═══════════════════ -->
+<section id="s5">
+  <span class="num">Phần III · Chọn đúng mô hình vật lý</span>
+  <h2>5. GLODF và ISDF trong một khung độ nhạy thống nhất</h2>
+
+  <p>PTDF mô tả đáp ứng tuyến tính với thay đổi công suất nút. LODF và GLODF sử dụng quan hệ đó để xét cắt một nhánh hoặc một nhóm nhánh. Khi sự cố gây tách đảo, cần xét riêng mất trao đổi công suất và cơ chế cân bằng; bài viết dùng ký hiệu riêng <strong>ISDF</strong> (<i>Islanding Sensitivity Distribution Factor</i>) cho hệ số đáp ứng này. Ký hiệu đó không mang nghĩa <i>Injection Shift Distribution Factor</i> thường gặp trong tài liệu hệ thống điện.</p>
+
+  <div class="key mv">Hệ số phải được chọn theo tập thiết bị thực sự bị cắt và cấu trúc lưới sau sự cố. Số phần tử trong vùng chưa đủ để quyết định công thức.</div>
+
+  <div class="contribution-note">
+    <span class="label">Đóng góp phương pháp của bài viết</span>
+    <p>Bài viết đặt GLODF và ISDF trong cùng một logic lựa chọn dựa trên phạm vi cắt do bảo vệ xác định. Khi một nhóm phần tử bị loại nhưng phần lưới còn lại vẫn liên thông, GLODF biểu diễn ảnh hưởng đồng thời của nhóm và tương tác giữa các phần tử bị cắt. Khi phạm vi đó làm tách một thành phần có trao đổi công suất, ISDF biểu diễn đáp ứng của phần lưới được giữ lại dưới một chính sách cân bằng được chỉ rõ. Đây là hai nhánh của cùng một phép phân loại cấu trúc, không phải hai công thức có thể thay thế tùy ý.</p>
+  </div>
+
+  <h3>5.1 PTDF: độ nhạy với giao dịch công suất</h3>
+  <p>Xét giao dịch tăng 1 MW tại nút <i>i</i> và giảm 1 MW tại nút <i>j</i>. PTDF của một nhánh là tỷ lệ thay đổi công suất trên nhánh đó so với công suất giao dịch, trong mô hình tuyến tính và cấu trúc lưới đang xét.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 860 250" role="img" aria-label="Hình động: bơm một mê-ga-oát vào nút i, rút ở nút j; dòng chia ra ba đường theo tỷ lệ 0,5 · 0,3 · 0,2 do trở kháng quyết định">
+      <defs><marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--mv)"/></marker></defs>
+      <g stroke="var(--ink-3)" stroke-width="2.4" fill="none">
+        <line x1="180" y1="130" x2="640" y2="130"/>
+        <line x1="180" y1="130" x2="410" y2="50"/><line x1="410" y1="50" x2="640" y2="130"/>
+        <line x1="180" y1="130" x2="410" y2="210"/><line x1="410" y1="210" x2="640" y2="130"/>
+      </g>
+      <path class="pulse-path" d="M180 130 L410 50 L640 130" fill="none" stroke="none" data-n="3" data-dur="3.2" data-color="var(--lv)"/>
+      <path class="pulse-path" d="M180 130 L640 130" fill="none" stroke="none" data-n="5" data-dur="3.2" data-color="var(--lv)"/>
+      <path class="pulse-path" d="M180 130 L410 210 L640 130" fill="none" stroke="none" data-n="2" data-dur="3.2" data-color="var(--lv)"/>
+      <g fill="var(--ink)"><circle cx="180" cy="130" r="7"/><circle cx="640" cy="130" r="7"/><circle cx="410" cy="50" r="6"/><circle cx="410" cy="210" r="6"/></g>
+      <g font-family="var(--mono)" font-size="12.5" fill="var(--ink)">
+        <text x="176" y="158" text-anchor="middle">i</text><text x="644" y="158" text-anchor="middle">j</text><text x="424" y="46">a</text><text x="424" y="222">b</text>
+      </g>
+      <line x1="80" y1="130" x2="165" y2="130" stroke="var(--mv)" stroke-width="3" marker-end="url(#pa)"/>
+      <text x="80" y="118" font-family="var(--sans)" font-size="12" fill="var(--mv)" font-weight="650">+1 MW</text>
+      <line x1="655" y1="130" x2="740" y2="130" stroke="var(--mv)" stroke-width="3" marker-end="url(#pa)"/>
+      <text x="740" y="118" text-anchor="end" font-family="var(--sans)" font-size="12" fill="var(--mv)" font-weight="650">−1 MW</text>
+      <g font-family="var(--mono)" font-size="13" font-weight="650" fill="var(--lv)">
+        <text x="410" y="120" text-anchor="middle">0,50</text>
+        <text x="282" y="76" text-anchor="end">0,30</text><text x="538" y="76">0,30</text>
+        <text x="282" y="194" text-anchor="end">0,20</text><text x="538" y="194">0,20</text>
+      </g>
+      <text x="410" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Trong ví dụ DC không tổn thất, tổng qua lát cắt bằng 1 · trở kháng quyết định tỷ lệ</text>
+    </svg>
+    <figcaption><b>PTDF cho giao dịch <i>i → j</i>.</b> Các giá trị trên hình biểu diễn phần công suất giao dịch đi qua từng nhánh trong ví dụ.</figcaption>
+  </figure>
+
+  <div class="formula">ΔF<sub>l</sub> = PTDF<sub>l,(i→j)</sub> · ΔP
+    <span class="doc"><b>Ý nghĩa:</b> trong mô hình DC tuyến tính, thay đổi công suất trên nhánh <i>l</i> bằng PTDF của nhánh đối với giao dịch <i>i → j</i> nhân với mức thay đổi công suất. Hệ số phụ thuộc cấu trúc lưới và tham số nhánh. Vì giao dịch đã cân bằng (+ΔP tại <i>i</i>, −ΔP tại <i>j</i>), PTDF này độc lập với lựa chọn nút tham chiếu; chính sách slack chỉ xuất hiện khi xét một thay đổi công suất nút chưa được cân bằng sẵn.</span></div>
+
+  <h3>5.2 LODF: độ nhạy khi cắt một nhánh</h3>
+  <p>LODF liên hệ thay đổi công suất trên nhánh còn lại với công suất trước sự cố <i>F<sub>k</sub></i> của nhánh bị cắt. Công thức dùng PTDF trên mạng ban đầu và hệ số hiệu chỉnh 1 − PTDF<sub>k,k</sub> để tính đến việc loại nhánh <i>k</i>.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 860 260" role="img" aria-label="Hình động: nhánh k nhảy, dòng của nó dồn lên hai đường còn lại theo tỷ lệ 0,6 và 0,4; hình phụ: khi k là cầu, không còn đường nào khác, mẫu số bằng không">
+      <g stroke="var(--ink-3)" stroke-width="2.4" fill="none">
+        <line x1="120" y1="130" x2="300" y2="55"/><line x1="300" y1="55" x2="480" y2="130"/>
+        <line x1="120" y1="130" x2="300" y2="205"/><line x1="300" y1="205" x2="480" y2="130"/>
+      </g>
+      <line x1="120" y1="130" x2="480" y2="130" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <path data-blink="1" d="M414 110 L404 132 L411 132 L407 150 L421 126 L414 126 L419 110 Z" fill="var(--hv)"/>
+      <g fill="var(--ink)"><circle cx="120" cy="130" r="7"/><circle cx="480" cy="130" r="7"/><circle cx="300" cy="55" r="6"/><circle cx="300" cy="205" r="6"/></g>
+      <text x="300" y="153" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--hv)" font-weight="650">Nhánh k nhảy · F<tspan font-size="9" dy="3">k</tspan></text>
+      <g stroke="var(--hv)" stroke-width="3" fill="none">
+        <path data-grow=".08,.40" data-head="1" d="M140 118 L280 62"/><path data-grow=".40,.70" data-head="1" d="M320 62 L460 118"/>
+        <path data-grow=".08,.40" data-head="1" d="M140 142 L280 198"/><path data-grow=".40,.70" data-head="1" d="M320 198 L460 142"/>
+      </g>
+      <g font-family="var(--mono)" font-size="13" font-weight="650" fill="var(--hv)">
+        <text x="192" y="74" text-anchor="end">0,60·F<tspan font-size="9" dy="3">k</tspan></text>
+        <text x="192" y="198" text-anchor="end">0,40·F<tspan font-size="9" dy="3">k</tspan></text>
+      </g>
+      <text x="300" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Hai đường còn lại chia nhau F<tspan font-size="9" dy="3">k</tspan><tspan dy="-3"> theo tỷ lệ 0,3 : 0,2, chuẩn hoá lại → 0,6 : 0,4</tspan></text>
+      <line x1="560" y1="30" x2="560" y2="240" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <text x="710" y="50" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Khi k là cầu</text>
+      <g stroke="var(--ink-3)" stroke-width="2" fill="none"><polygon points="590,110 630,90 650,130 610,150"/><polygon points="770,110 810,90 830,130 790,150"/></g>
+      <line x1="650" y1="120" x2="770" y2="120" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <text x="710" y="110" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--hv)">k</text>
+      <text x="710" y="185" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Không có đường khác</text>
+      <text x="710" y="205" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--hv)" font-weight="650">PTDF<tspan font-size="9" dy="3">k,k</tspan><tspan dy="-3"> = 1 → 1 − PTDF</tspan><tspan font-size="9" dy="3">k,k</tspan><tspan dy="-3"> = 0</tspan></text>
+      <text x="710" y="226" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--hv)">Công thức không xác định</text>
+    </svg>
+    <figcaption><b>Điều kiện áp dụng LODF.</b> Khi nhánh <i>k</i> là cầu, PTDF<sub>k,k</sub> bằng 1 trong mô hình DC lý tưởng và mẫu số bằng 0. Trường hợp này cần được xử lý như tách đảo.</figcaption>
+  </figure>
+
+  <div class="formula">LODF<sub>l,k</sub> = PTDF<sub>l,k</sub> ⁄ (1 − PTDF<sub>k,k</sub>) &nbsp;&nbsp;&nbsp; ΔF<sub>l</sub> = LODF<sub>l,k</sub> · F<sub>k</sub>
+    <span class="doc"><b>Ý nghĩa:</b> PTDF<sub>l,k</sub> là độ nhạy của nhánh <i>l</i> đối với giao dịch giữa hai đầu của <i>k</i>. Khi <i>k</i> là nhánh cầu trong mô hình DC lý tưởng, mẫu số bằng 0; trường hợp này phải được chuyển sang phân tích tách đảo.</span></div>
+
+  <h3>5.3 GLODF: độ nhạy khi cắt đồng thời một nhóm nhánh</h3>
+  <p>GLODF trả lời câu hỏi: khi toàn bộ tập nhánh <i>G</i> của một vùng bảo vệ cùng bị loại, công suất trên mỗi nhánh còn lại thay đổi bao nhiêu? Các nhánh trong <i>G</i> không còn tồn tại để tiếp nhận phần công suất phân bố lại của nhau, nên ảnh hưởng của chúng phải được giải đồng thời qua ma trận tương tác. Vì vậy, tổng các LODF đơn lẻ tính trên lưới ban đầu không tương đương với kết quả cắt cả nhóm. Trong khung của bài viết, tập <i>G</i> được lấy từ sự kiện vật lý do bảo vệ tạo ra, thay vì được ghép tùy ý từ các phần tử độc lập.</p>
+
+  <figure>
+    <svg class="anim-svg" data-cycle="5" viewBox="0 0 860 260" role="img" aria-label="GLODF: cộng riêng lẻ hai LODF là sai vì dòng của nhánh thứ nhất dồn lên nhánh thứ hai cũng đã mất; giải đồng thời bằng ma trận k nhân k; với k bằng một thu về LODF">
+      <defs><marker id="ga" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--hv)"/></marker></defs>
+      <g font-family="var(--sans)" font-size="12.5" font-weight="650" text-anchor="middle">
+        <text x="200" y="32" fill="var(--hv)">Cộng riêng lẻ: sai</text>
+        <text x="620" y="32" fill="var(--mv)">Giải đồng thời: GLODF</text>
+      </g>
+      <g stroke="var(--ink-3)" stroke-width="2.2" fill="none">
+        <line x1="80" y1="130" x2="200" y2="70"/><line x1="200" y1="70" x2="320" y2="130"/>
+        <line x1="80" y1="130" x2="200" y2="190"/><line x1="200" y1="190" x2="320" y2="130"/>
+      </g>
+      <line x1="80" y1="130" x2="320" y2="130" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <line x1="80" y1="130" x2="200" y2="70" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <g fill="var(--ink)"><circle cx="80" cy="130" r="6"/><circle cx="320" cy="130" r="6"/><circle cx="200" cy="70" r="5"/><circle cx="200" cy="190" r="5"/></g>
+      <text x="200" y="152" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">k₁</text>
+      <text x="125" y="92" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">k₂</text>
+      <path data-grow=".15,.55" data-head="1" d="M100 120 L176 84" stroke="var(--hv)" stroke-width="2.6" fill="none" opacity=".8"/>
+      <text x="200" y="228" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">LODF của k₁ đẩy dòng lên k₂,</text>
+      <text x="200" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Nhưng k₂ cũng đã mất</text>
+      <line x1="400" y1="20" x2="400" y2="250" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <g font-family="var(--serif)" font-size="15" fill="var(--ink)">
+        <text x="440" y="110">M =</text>
+        <path d="M485 78 q-8 27 0 54" stroke="var(--ink)" stroke-width="1.5" fill="none"/>
+        <path d="M655 78 q8 27 0 54" stroke="var(--ink)" stroke-width="1.5" fill="none"/>
+        <text x="500" y="98">1 − Ξ<tspan font-size="10" dy="3">11</tspan></text><text x="580" y="98">−Ξ<tspan font-size="10" dy="3">12</tspan></text>
+        <text x="500" y="126">−Ξ<tspan font-size="10" dy="3">21</tspan></text><text x="580" y="126">1 − Ξ<tspan font-size="10" dy="3">22</tspan></text>
+      </g>
+      <text x="560" y="160" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Ξ<tspan font-size="9" dy="3">ij</tspan><tspan dy="-3">: độ nhạy của i với giao dịch qua j</tspan></text>
+      <text x="560" y="178" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Số hạng ngoài đường chéo là <tspan font-weight="650">tương tác</tspan></text>
+      <rect x="690" y="88" width="150" height="70" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="1.5"/>
+      <text x="765" y="112" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--mv)" font-weight="650">k = 1</text>
+      <text x="765" y="132" text-anchor="middle" font-family="var(--serif)" font-size="13" fill="var(--ink)">M = 1 − Ξ<tspan font-size="9" dy="3">kk</tspan></text>
+      <text x="765" y="150" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Thu về đúng LODF</text>
+      <text x="620" y="228" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">M suy biến ⟺ nhóm là lát cắt của lưới</text>
+      <text x="620" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Cùng tín hiệu với mẫu số bằng không của LODF</text>
+    </svg>
+    <figcaption><b>Ma trận tương tác M.</b> Với nhóm một nhánh, M = 1 − Ξ<sub>kk</sub> và công thức trở về LODF. Khi tập nhánh bị cắt làm mất liên thông, M suy biến và cần xử lý cấu trúc tách đảo.</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th colspan="4">Ví dụ số: hai phần tử k₁, k₂ cùng nhảy, giám sát nhánh l</th></tr></thead>
+    <tbody>
+      <tr><td>Độ nhạy tự thân</td><td class="n">Ξ₁₁ = 0,30</td><td class="n">Ξ₂₂ = 0,25</td><td>Phần giao dịch đi qua chính nó</td></tr>
+      <tr><td>Độ nhạy tương hỗ</td><td class="n">Ξ₁₂ = 0,20</td><td class="n">Ξ₂₁ = 0,20</td><td>Tương tác giữa k₁ và k₂</td></tr>
+      <tr><td>Độ nhạy của l</td><td class="n">Ξ<sub>l1</sub> = 0,40</td><td class="n">Ξ<sub>l2</sub> = 0,10</td><td>Dòng trước sự cố F₁ = 100 MW, F₂ = 80 MW</td></tr>
+      <tr><td><b>Cộng riêng lẻ hai LODF</b></td><td class="n">0,571 × 100</td><td class="n">+ 0,133 × 80</td><td class="n"><b>= 67,8 MW</b></td></tr>
+      <tr><td><b>GLODF, giải đồng thời</b></td><td class="n">0,660 × 100</td><td class="n">+ 0,309 × 80</td><td class="n"><b>= 90,7 MW</b></td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:14px;color:var(--ink-2)">Trong ví dụ, cộng các ảnh hưởng đơn lẻ cho kết quả thấp hơn <strong>23 MW</strong> so với tính đồng thời. Sai lệch này có thể thay đổi quyết định giữ hay loại một cặp khi xây dựng bản đồ độ nhạy.</p>
+
+  <div class="formula">M = I − Ξ<sub>GG</sub> &nbsp;&nbsp;&nbsp; GLODF<sub>l,G</sub> = Ξ<sub>l,G</sub> · M<sup>−1</sup> &nbsp;&nbsp;&nbsp; ΔF<sub>l</sub> = GLODF<sub>l,G</sub> · F<sub>G</sub>
+    <span class="doc"><b>Ý nghĩa:</b> Ξ<sub>GG</sub> là ma trận <i>k</i>×<i>k</i> mô tả tương tác trong nhóm; Ξ<sub>l,G</sub> là hàng độ nhạy của nhánh giám sát <i>l</i>; F<sub>G</sub> là véc-tơ công suất trước sự cố. Nếu M suy biến hoặc kém điều kiện, cần kiểm tra liên thông và giả thiết cân bằng trước khi chọn phương pháp giải phù hợp.</span></div>
+
+  <h3>5.4 ISDF trong bài: đáp ứng của phần lưới còn lại khi tách đảo</h3>
+  <p>ISDF theo định nghĩa của bài trả lời một câu hỏi khác: khi một nhánh cầu hoặc tập cắt làm tách đảo, phần lưới được giữ lại phản ứng thế nào trước lượng công suất trao đổi vừa mất qua biên? Sự thay đổi được biểu diễn tại nút biên và được bù bởi các nguồn tham gia theo trọng số α. Hệ số ánh xạ biến động ròng đó thành thay đổi công suất trên các nhánh còn lại, theo công suất trước sự cố và chính sách cân bằng đã chọn. Vì α là một quyết định vận hành chứ không phải thuộc tính cố định của lưới, chiều công suất và giả thiết cân bằng phải được ghi rõ khi tính và kiểm chứng hệ số.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 860 280" role="img" aria-label="Hình động: cầu k nhảy tách đảo bên phải; phần lưới còn lại mất lượng bơm F_k tại nút đầu cầu và các máy phát bù theo trọng số alpha">
+      <text x="200" y="30" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="650" fill="var(--ink)">Phần lưới còn lại</text>
+      <text x="700" y="30" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="650" fill="var(--or)">Đảo</text>
+      <g stroke="var(--ink-3)" stroke-width="2.2" fill="none">
+        <polygon points="120,80 260,60 340,130 260,200 120,180 60,130"/>
+        <line x1="120" y1="80" x2="260" y2="200"/><line x1="260" y1="60" x2="120" y2="180"/>
+      </g>
+      <g stroke="var(--or)" stroke-width="2.2" fill="none"><polygon points="640,100 740,90 780,150 700,190 620,160"/></g>
+      <line x1="340" y1="130" x2="620" y2="150" stroke="var(--hv)" stroke-width="2.6" stroke-dasharray="8 6"/>
+      <path data-blink="1" d="M480 118 L470 140 L477 140 L473 158 L487 134 L480 134 L485 118 Z" fill="var(--hv)"/>
+      <text x="480" y="106" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)" font-weight="650">Cầu k · F<tspan font-size="8" dy="3">k</tspan></text>
+      <g fill="var(--ink)"><circle cx="260" cy="60" r="5"/><circle cx="260" cy="200" r="5"/><circle cx="60" cy="130" r="5"/></g>
+      <circle cx="340" cy="130" r="7" fill="var(--hv)"/>
+      <text x="352" y="116" font-family="var(--mono)" font-size="10.5" fill="var(--hv)">b<tspan font-size="8" dy="3">k</tspan><tspan dy="-3"> · mất F</tspan><tspan font-size="8" dy="3">k</tspan></text>
+      <g stroke="var(--mv)" stroke-width="2.6" fill="none">
+        <path data-grow=".15,.55" data-head="1" d="M152 88 L318 122"/><path data-grow=".15,.55" data-head="1" d="M152 172 L318 138"/>
+      </g>
+      <g fill="var(--mv)"><circle cx="120" cy="80" r="10"/><circle cx="120" cy="180" r="10"/></g>
+      <g font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--surface)" text-anchor="middle"><text x="120" y="84">G</text><text x="120" y="184">G</text></g>
+      <text x="60" y="62" font-family="var(--mono)" font-size="10.5" fill="var(--mv)" font-weight="650">−α₁·F<tspan font-size="8" dy="3">k</tspan></text>
+      <text x="60" y="212" font-family="var(--mono)" font-size="10.5" fill="var(--mv)" font-weight="650">−α₂·F<tspan font-size="8" dy="3">k</tspan></text>
+      <g fill="var(--or)"><circle cx="740" cy="90" r="8"/><circle cx="700" cy="190" r="8"/></g>
+      <g fill="var(--surface)"><circle cx="740" cy="90" r="3"/><circle cx="700" cy="190" r="3"/></g>
+      <g font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)" text-anchor="middle">
+        <text x="200" y="244">Máy phát bù theo trọng số α</text><text x="200" y="262">Rồi dòng các nhánh dịch theo PTDF</text>
+        <text x="700" y="244">Tự cân bằng nếu có nguồn</text><text x="700" y="262">Không thì mất điện</text>
+      </g>
+    </svg>
+    <figcaption><b>Hai thành phần của đáp ứng.</b> Mỗi giao dịch cân bằng từ nút biên <i>b<sub>k</sub></i> tới một nút tham gia <i>g</i> được quy đổi thành thay đổi công suất nhánh qua PTDF; trọng số α ghép các giao dịch đó thành chính sách cân bằng đã chọn. Khả năng vận hành của đảo bị tách cần được đánh giá riêng.</figcaption>
+  </figure>
+
+  <div class="formula">ISDF<sub>l,k</sub><sup>(α)</sup> = Σ<sub>g</sub> α<sub>g</sub> · PTDF<sub>l,(b<sub>k</sub>→g)</sub> &nbsp;&nbsp;&nbsp; ΔF<sub>l</sub> = ISDF<sub>l,k</sub><sup>(α)</sup> · F<sub>k</sub>
+    <span class="doc"><b>Ý nghĩa:</b> PTDF<sub>l,(b<sub>k</sub>→g)</sub> mô tả thay đổi công suất trên nhánh <i>l</i> do một giao dịch cân bằng: bơm tại nút biên <i>b<sub>k</sub></i> và rút tại nút tham gia <i>g</i>. Tổng có trọng số α, với Σα<sub>g</sub> = 1, biểu diễn chính sách cân bằng đã chọn. Cách viết theo giao dịch này nhất quán với định nghĩa PTDF ở mục 5.1; α là giả thiết vận hành, không phải tham số cố định của lưới, và phải thống nhất giữa mô hình sàng lọc với bộ giải dùng để đối chiếu.</span></div>
+
+  <h3>Phạm vi sử dụng các hệ số</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Hệ số</th><th>Đại lượng mô tả</th><th>Điều kiện áp dụng</th><th>Giả thiết bổ sung</th></tr></thead>
+    <tbody>
+      <tr><td><b>PTDF</b></td><td>Thay đổi công suất nhánh do một giao dịch</td><td>Cấu trúc tham chiếu và giao dịch cân bằng đã xác định</td><td>Cặp nguồn–đích; giao dịch cân bằng độc lập với slack</td></tr>
+      <tr><td><b>LODF</b></td><td>Phân bố lại công suất khi cắt một nhánh</td><td>Nhánh bị cắt không làm tách lưới</td><td>Trạng thái trước sự cố</td></tr>
+      <tr><td><b>GLODF</b></td><td>Phân bố lại công suất khi cắt một nhóm nhánh</td><td>Nhóm bị cắt không làm tách lưới</td><td>Ma trận tương tác; k = 1 trở về LODF</td></tr>
+      <tr><td><b>ISDF<sup>(α)</sup></b></td><td>Đáp ứng của phần lưới được giữ lại sau khi tách đảo</td><td>Thành phần liên thông và chênh lệch công suất đã xác định</td><td><b>Chính sách cân bằng α</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="key mv">Các hệ số sử dụng cùng nền tảng tuyến tính nhưng có điều kiện áp dụng khác nhau. Mẫu số bằng không hoặc ma trận suy biến cần được xử lý bằng phân tích cấu trúc, thay vì tiếp tục áp dụng công thức cho lưới liên thông.</div>
+  <p class="transition"><strong>Việc lựa chọn công thức phải dựa trên phân loại cấu trúc sau sự cố.</strong> Trước mỗi phép tính cần xác định tập thiết bị bị cắt, các thành phần liên thông còn lại và giả thiết xử lý mất cân bằng công suất.</p>
+</section>
+
+<section id="s6">
+  <span class="num">Phần III · Chọn đúng mô hình vật lý</span>
+  <h2>6. Chọn mô hình theo cấu trúc sau sự cố</h2>
+
+  <p>Sau khi xác định tập thiết bị bị cắt, bước đầu tiên là kiểm tra lưới còn liên thông hay đã tách thành nhiều thành phần. Mất nguồn hoặc tải không đồng nghĩa với tách đảo: một vùng cắt có thể làm mất một điểm bơm hoặc rút công suất trong khi phần lưới truyền tải còn lại vẫn liên thông. Vì vậy, cần phân loại theo liên thông trước, rồi xác định phần công suất phải cân bằng trong từng thành phần.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="Sơ đồ lựa chọn mô hình: kiểm tra tập phần tử bị cắt có làm tách lưới hay không, sau đó xử lý phân bố lại dòng và cân bằng injection theo từng trường hợp">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <g font-family="var(--sans)" font-size="13.5" text-anchor="middle">
+        <rect x="280" y="18" width="300" height="42" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="430" y="44" fill="var(--ink)" font-weight="650">Tập phần tử bị cắt do bảo vệ</text>
+        <g stroke="var(--ink-3)" stroke-width="1.3" fill="none" marker-end="url(#ar)">
+          <path d="M430 60 L430 88"/><path d="M320 136 L320 158 L215 158 L215 178"/><path d="M540 136 L540 158 L645 158 L645 178"/>
+        </g>
+        <rect x="245" y="90" width="370" height="46" fill="var(--surface)" stroke="var(--ink-3)"/>
+        <text x="430" y="118" fill="var(--ink)">Tập cắt có làm lưới <tspan font-weight="650">mất liên thông</tspan>?</text>
+        <text x="310" y="154" text-anchor="end" fill="var(--mv)" font-size="12" font-weight="650">Không</text>
+        <text x="550" y="154" text-anchor="start" fill="var(--hv)" font-size="12" font-weight="650">Có</text>
+        <rect x="40" y="180" width="350" height="92" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="2"/>
+        <text x="215" y="204" fill="var(--mv)" font-weight="650">Lưới còn liên thông</text>
+        <text x="215" y="226" fill="var(--ink-2)" font-size="12">LODF/GLODF cho phân bố lại dòng nhánh</text>
+        <text x="215" y="247" fill="var(--ink-2)" font-size="12">Nếu mất nguồn/tải: bổ sung cân bằng injection</text>
+        <text x="215" y="264" fill="var(--ink-2)" font-size="11">Một nhánh thì GLODF thu về LODF</text>
+        <rect x="470" y="180" width="350" height="92" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="2"/>
+        <text x="645" y="204" fill="var(--hv)" font-weight="650">Lưới tách thành nhiều thành phần</text>
+        <text x="645" y="226" fill="var(--ink-2)" font-size="12">Xác định nguồn–tải và trao đổi mất đi</text>
+        <text x="645" y="247" fill="var(--ink-2)" font-size="12">ISDF trong bài cho phần lưới được giữ lại</text>
+        <text x="645" y="264" fill="var(--ink-2)" font-size="11">Đánh giá và cân bằng riêng từng đảo</text>
+      </g>
+    </svg>
+    <figcaption><b>Liên thông được kiểm tra trước, cân bằng công suất được xét sau.</b> Khi mất một điểm bơm hoặc rút công suất nhưng lưới vẫn liên thông, cần kết hợp giả thiết cân bằng với LODF/GLODF. Xử lý tách đảo chỉ áp dụng khi cấu trúc lưới bị chia thành nhiều thành phần.</figcaption>
+  </figure>
+
+  <p>Trong mô hình DC, mất liên thông làm ma trận tương tác suy biến. Cần phân biệt việc cô lập một nút nối không có nguồn–tải với việc tách một vùng có công suất. Ngưỡng coi công suất bằng không và quy ước cân bằng phải được ghi rõ, nhất quán giữa mô hình độ nhạy và bộ giải tạo nhãn.</p>
+
+  <p>Tỷ lệ các trường hợp phụ thuộc vào cấu trúc trạm, nhánh hình tia và trạng thái đóng cắt. Cần thống kê trên dữ liệu của từng lưới để lựa chọn cách tổ chức tính toán.</p>
+  <p class="transition"><strong>Ví dụ lưới nhỏ dưới đây minh hoạ trực tiếp quy tắc lựa chọn mô hình.</strong> Ví dụ tách riêng ảnh hưởng của liên thông, nguồn–tải và phạm vi cắt trước khi mở rộng sang hệ thống có quy mô lớn hơn.</p>
+</section>
+
+<section id="s7">
+  <span class="num">Phần III · Chọn đúng mô hình vật lý</span>
+  <h2>7. Minh hoạ phân loại sự cố trên lưới nhỏ</h2>
+  <p>Chọn một phần tử trên sơ đồ để xem vùng bị cắt, phần lưới bị tách và cơ chế tính toán tương ứng. Minh hoạ tương tác này sử dụng các giả thiết cấu trúc và nguồn–tải của lưới mô phỏng.</p>
+
+  <div class="interactive-figure">
+    <div class="interactive-figure-grid">
+      <div><svg id="sv" viewBox="0 0 620 470" role="img" aria-label="Lưới thu nhỏ tương tác"></svg></div>
+      <div class="panel">
+        <div class="hd">Cơ chế</div>
+        <div class="co" id="co">—</div>
+        <div id="ly" style="font-size:13.5px;color:var(--ink-2);margin-bottom:12px"></div>
+        <div class="hd" style="margin-top:16px">Kiểm tra cấu trúc</div>
+        <div id="qs"></div>
+        <div class="hint" id="hint">Chọn một phần tử bất kỳ. Các phần tử cùng vùng bảo vệ sáng lên cùng lúc: đó là những gì thực sự ra
+        khỏi vận hành.</div>
+      </div>
+    </div>
+    <div class="leg">
+      <span><i style="background:var(--ink-3)"></i>Phần tử</span>
+      <span><i style="background:var(--hv)"></i>Vùng bị cắt</span>
+      <span><i style="background:var(--or)"></i>Phần bị tách</span>
+      <span>● nút · ◎ nút có tải · ○ T: điểm rẽ, không máy cắt</span>
+    </div>
+  </div>
+
+  <p>L8 và L9 đều là nhánh cụt và đều cô lập một nút khi bị cắt. Nút sau L8 có tải, còn nút sau L9 không có nguồn–tải. Vì vậy, hai trường hợp có cùng dạng mất liên thông nhưng yêu cầu xử lý cân bằng khác nhau.</p>
+  <p class="transition"><strong>Ví dụ này giả định vùng bị cắt đã được biết.</strong> Trong mô hình vận hành thật, thông tin đó không nên suy đoán từ sơ đồ nút–nhánh; nó phải được truy vết từ kết nối node-breaker và trạng thái thực của thiết bị đóng cắt.</p>
+</section>
+
+<section id="s8">
+  <span class="num">Phần III · Chọn đúng mô hình vật lý</span>
+  <h2>8. Lan truyền sự cố và tập phần tử bị loại trên mô hình node-breaker</h2>
+
+  <p>Mô hình node-breaker biểu diễn chi tiết máy cắt, dao cách ly và phân đoạn thanh cái. Minh hoạ tương tác dưới đây không chỉ xác định phạm vi cắt mà còn mô tả <strong>quá trình lan truyền sự cố ở lớp topology và bảo vệ</strong>: bắt đầu từ phần tử sự cố, thuật toán đi qua các phần tử không có khả năng cô lập, dừng tại các máy cắt biên và kéo theo những phần tử nằm trong cùng vùng. Kết quả của quá trình này là tập phần tử bị loại cuối cùng, không nhất thiết chỉ gồm phần tử khởi phát.</p>
+  <div class="key mv"><b>Chuỗi xử lý:</b> Sự cố khởi phát → Lan truyền theo topology và bảo vệ → Tập phần tử bị loại cuối cùng → Phân loại liên thông → LODF / GLODF / tách đảo → Kiểm chứng bằng phân bố công suất AC.</div>
+  <p>Cần phân biệt ba tầng. <strong>Lan truyền sự cố</strong> xác định phần tử nào thực sự rời vận hành. <strong>LODF, GLODF hoặc mô hình tách đảo</strong> cung cấp đánh giá nhanh về hậu quả điện của tập phần tử đó. <strong>Phân bố công suất AC</strong> xác nhận trạng thái xác lập cuối cùng theo mô hình và giới hạn vận hành được sử dụng. Minh hoạ cho phép chạy từng bước hoặc tự động; phần tính toán DC dùng S<sub>base</sub> = 100 MVA để làm rõ cơ chế.</p>
+</section>
+</div><!-- /wrap: minh hoạ tương tác rộng hơn cột chữ -->
+
+<div class="wide">
+<div id="nb">
+  <div class="tabs" id="nbTabs" role="group" aria-label="Trường hợp"></div>
+  <div class="ctl">
+    <button id="nbPlay" aria-pressed="false">▶ Tự chạy</button>
+    <button id="nbStep">Bước tiếp ▸</button>
+    <button id="nbBack">◂ Lùi</button>
+    <button id="nbReset">Làm lại</button>
+    <button id="nbAll">Xem kết quả</button>
+    <label for="nbSpeed">Tốc độ</label>
+    <select id="nbSpeed"><option value="2600">Rất chậm</option><option value="1700" selected>Chậm</option><option value="1000">Vừa</option><option value="500">Nhanh</option></select>
+    <span class="stage" id="nbStage"></span>
+  </div>
+  <div class="grid">
+    <div>
+      <svg id="nbSvg" viewBox="0 0 1000 610" role="img" aria-label="Sơ đồ node-breaker của trường hợp đang chọn"></svg>
+      <div class="legend">
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" fill="currentColor"/></svg>Máy cắt</span>
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/></svg>Máy cắt fictitious</span>
+        <span><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="4" y1="16" x2="16" y2="4" stroke="currentColor" stroke-width="2"/></svg>Dao cách ly</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--hv)"><rect x="3" y="3" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6L14 14M6 14L14 6" stroke="currentColor" stroke-width="2"/></svg>Máy cắt biên: mở</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--mv)"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="4" y1="16" x2="16" y2="4" stroke="currentColor" stroke-width="2"/></svg>Đi qua</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--or)"><circle cx="10" cy="10" r="5" fill="currentColor"/></svg>Nút đã quét</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--hv)"><line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="3" stroke-dasharray="5 3"/></svg>Ra khỏi lưới</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--isl)"><line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="3" stroke-dasharray="5 3"/></svg>Phần bị tách đảo</span>
+        <span><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><text x="10" y="14" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor">G</text></svg>Tổ máy</span>
+        <span><svg viewBox="0 0 20 20"><polygon points="3,5 17,5 10,17" fill="none" stroke="currentColor" stroke-width="2"/></svg>Tải</span>
+      </div>
+    </div>
+    <div id="nbLog" aria-live="polite"></div>
+  </div>
+</div>
+</div>
+
+<div class="wrap">
+<section style="padding-top:10px">
+  <h3 style="margin-top:0">Quy tắc duyệt theo loại thiết bị</h3>
+  <div class="tw rules"><table>
+    <thead><tr><th colspan="2">Gặp</th><th>Trạng thái</th><th>Quyết định</th><th>Hệ quả</th><th>Vì sao (vật lý)</th></tr></thead>
+    <tbody>
+      <tr class="go"><td class="sym"><svg viewBox="0 0 30 30"><rect x="3" y="12" width="24" height="6" rx="1.5" fill="currentColor"/></svg></td><td><b>Thanh cái / liên kết nội bộ</b></td><td>Luôn nối</td><td><span class="badge b-go">ĐI QUA</span></td><td>Quét tiếp mọi thứ nối vào</td><td>Thanh cái chỉ là một nút điện, không cắt được gì</td></tr>
+      <tr class="go"><td class="sym"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><line x1="8.5" y1="21.5" x2="21.5" y2="8.5" stroke="currentColor" stroke-width="2.4"/></svg></td><td><b>Dao cách ly</b></td><td>Đóng</td><td><span class="badge b-go">ĐI QUA</span></td><td>Lan sang phía bên kia</td><td>Trong mô hình này, không được dùng làm biên cắt dòng sự cố</td></tr>
+      <tr class="go"><td class="sym"><svg viewBox="0 0 30 30"><rect x="6" y="6" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4 3"/></svg></td><td><b>Máy cắt fictitious</b></td><td>Đóng</td><td><span class="badge b-go">ĐI QUA</span></td><td>Coi như dao cách ly</td><td>Sinh ra khi chuyển đổi mô hình, không phải thiết bị mở được</td></tr>
+      <tr class="stop"><td class="sym"><svg viewBox="0 0 30 30"><rect x="6" y="6" width="18" height="18" fill="currentColor"/></svg></td><td><b>Máy cắt thật</b></td><td>Đóng</td><td><span class="badge b-stop">DỪNG · MỞ</span></td><td>Thành biên của vùng, mở để cắt sự cố</td><td>Cắt được dòng sự cố</td></tr>
+      <tr class="stop"><td class="sym"><svg viewBox="0 0 30 30"><rect x="6" y="6" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"/><line x1="4" y1="26" x2="26" y2="4" stroke="currentColor" stroke-width="2"/></svg></td><td><b>Thiết bị đóng cắt bất kỳ</b></td><td>Đang mở</td><td><span class="badge b-stop">DỪNG</span></td><td>Không cần mở thêm</td><td>Nhánh đó vốn đã hở</td></tr>
+      <tr class="lost"><td class="sym"><svg viewBox="0 0 30 30"><line x1="3" y1="15" x2="27" y2="15" stroke="currentColor" stroke-width="3" stroke-dasharray="6 4"/></svg></td><td><b>Đầu một đường dây / máy biến áp khác</b></td><td>Nối không qua máy cắt</td><td><span class="badge b-lost">RA THEO</span> <span class="badge b-go">ĐI TIẾP</span></td><td>Phần tử đó ra khỏi lưới; quét tiếp từ đầu kia</td><td>Nằm trong vùng, không có máy cắt ngăn</td></tr>
+      <tr class="lost"><td class="sym"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><text x="15" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">G</text></svg></td><td><b>Tổ máy / tải</b></td><td>Nối vào vùng</td><td><span class="badge b-lost">RA THEO</span></td><td>Mất công suất đó, phải bù</td><td>Mất điện áp cùng vùng</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:14px;color:var(--ink-2)">Trong mô hình minh hoạ, các nút nối qua thiết bị đóng được gộp thành bus. Phần không nối với nút cân bằng được loại khỏi bài toán DC; vì vậy, phép tính không đánh giá vi phạm hay khả năng vận hành độc lập của phần đó. Công suất chênh lệch được phân bổ cho các tổ máy còn lại theo công suất cực đại. Đây là giả thiết tính toán của lưới minh hoạ.</p>
+  <div class="key hv"><strong>Phân bố công suất không mô tả quá trình lan truyền sự cố; nó chỉ giải trạng thái xác lập của lưới sau khi tập phần tử bị loại đã được xác định.</strong></div>
+  <div class="key or"><b>Giới hạn của minh hoạ.</b> Quá trình lan truyền ở đây dựa trên mô hình node-breaker và logic cô lập điện. Trong vận hành thực tế, sự cố có thể tiếp tục lan qua các phụ thuộc chức năng không thể suy ra chỉ từ topology điện, như nguồn tự dùng, hệ thống làm mát, nguồn điều khiển, tự động hoá hoặc liên động. Những quan hệ này cần được biểu diễn trong một lớp mô hình phụ thuộc riêng.</div>
+  <p class="transition"><strong>Khi phạm vi cắt có thể truy vết và được dùng nhất quán trong mô phỏng, đầu vào và nhãn mới cùng mô tả một sự kiện.</strong> Từ thời điểm đó, câu hỏi không còn là bản đồ độ nhạy có chạy được hay không, mà là nó sàng lọc tốt đến mức nào và bỏ sót rủi ro gì.</p>
+</section>
+
+<!-- ═══════════════════ PHẦN IV ═══════════════════ -->
+<section id="s9">
+  <span class="num">Phần IV · Kiểm chứng và khả năng áp dụng</span>
+  <h2>9. Thiết kế và đánh giá bản đồ độ nhạy</h2>
+
+  <p>Bản đồ độ nhạy cần được đánh giá qua chất lượng sàng lọc và chi phí xử lý. Các lựa chọn chính gồm ngưỡng giữ cặp, cách sử dụng quan hệ điện, đặc trưng của từng sự cố và đơn vị xếp hạng.</p>
+
+  <div class="claims">
+    <div class="claim"><div class="t">Độ thưa</div><h4>Ngưỡng chọn cặp và rủi ro bỏ sót</h4>
+      <p>Ngưỡng chọn cặp giảm số quan hệ cần xử lý nhưng có thể loại thông tin hữu ích. Cần đo ảnh hưởng của ngưỡng đến độ bao phủ sự cố vi phạm (recall) và mức nghiêm trọng của các trường hợp bị bỏ sót, cùng với bộ nhớ và thời gian tính toán.</p></div>
+    <div class="claim"><div class="t">Vật lý hay cấu trúc</div><h4>Quan hệ điện và khoảng cách đồ thị</h4>
+      <p>Khoảng cách đồ thị không phản ánh đầy đủ tương tác điện. Các phần tử xa nhau có thể cùng chịu ảnh hưởng của một hành lang truyền tải, trong khi các nhánh gần nhau có độ nhạy thấp. Lựa chọn cặp cần xét trở kháng và cấu trúc đường truyền.</p></div>
+    <div class="claim"><div class="t">Độ phủ</div><h4>Đánh giá lợi ích của việc mở rộng bản đồ</h4>
+      <p>Bổ sung láng giềng cấu trúc làm tăng số cặp và bộ nhớ. Mô hình còn sử dụng đặc trưng riêng của sự cố như mức tải và biên giới hạn, nên lợi ích của các cặp bổ sung cần được đo bằng thực nghiệm trên cùng bộ dữ liệu.</p></div>
+    <div class="claim"><div class="t">Đơn vị</div><h4>Xếp hạng theo sự kiện vật lý</h4>
+      <p>Một vùng gồm ba phần tử có thể chiếm ba vị trí top-K nếu xếp hạng riêng từng phần tử. Gộp theo vùng giúp tránh trùng lặp và thống nhất phạm vi giữa bản đồ độ nhạy, nhãn và trường hợp mô phỏng.</p></div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 860 240" role="img" aria-label="Gần về điện và gần trên đồ thị: hai phần tử xa nhau trên đồ thị ghép chặt qua một hành lang chung; hai xuất tuyến trên cùng thanh cái là láng giềng nhưng gần như không ghép">
+      <g font-family="var(--sans)" font-size="12.5" font-weight="650" text-anchor="middle">
+        <text x="220" y="28" fill="var(--hv)">Xa trên đồ thị, ghép chặt</text>
+        <text x="645" y="28" fill="var(--mv)">Cùng thanh cái, gần như không ghép</text>
+      </g>
+      <line x1="430" y1="15" x2="430" y2="230" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <line x1="40" y1="170" x2="400" y2="120" stroke="var(--hv)" stroke-width="5" opacity=".28"/>
+      <polyline points="40,170 80,120 120,170 160,120 200,170 240,120 280,170 320,120 360,170 400,120" stroke="var(--ink-3)" stroke-width="2" fill="none"/>
+      <line x1="40" y1="170" x2="80" y2="120" stroke="var(--hv)" stroke-width="4"/>
+      <line x1="360" y1="170" x2="400" y2="120" stroke="var(--hv)" stroke-width="4"/>
+      <g fill="var(--ink)"><circle cx="40" cy="170" r="4"/><circle cx="80" cy="120" r="4"/><circle cx="120" cy="170" r="4"/><circle cx="160" cy="120" r="4"/><circle cx="200" cy="170" r="4"/><circle cx="240" cy="120" r="4"/><circle cx="280" cy="170" r="4"/><circle cx="320" cy="120" r="4"/><circle cx="360" cy="170" r="4"/><circle cx="400" cy="120" r="4"/></g>
+      <text x="220" y="98" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--hv)">Hành lang chung</text>
+      <text x="48" y="192" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">k</text>
+      <text x="392" y="192" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">l</text>
+      <text x="220" y="218" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Cách nhau tám bước, chung một hành lang song song: độ nhạy lớn</text>
+      <rect x="520" y="56" width="250" height="84" fill="var(--surface-2)" stroke="var(--rule)"/>
+      <text x="645" y="80" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--ink-2)">Một thanh cái</text>
+      <line x1="545" y1="100" x2="745" y2="100" stroke="var(--ink)" stroke-width="5"/>
+      <line x1="590" y1="100" x2="590" y2="182" stroke="var(--mv)" stroke-width="3"/>
+      <line x1="700" y1="100" x2="700" y2="182" stroke="var(--mv)" stroke-width="3"/>
+      <circle cx="590" cy="188" r="7" fill="var(--mv)"/><circle cx="700" cy="188" r="7" fill="var(--mv)"/>
+      <text x="604" y="192" font-family="var(--mono)" font-size="11" fill="var(--mv)">Tuyến a</text>
+      <text x="714" y="192" font-family="var(--mono)" font-size="11" fill="var(--mv)">Tuyến b</text>
+      <text x="645" y="218" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Cách một bước, mỗi tuyến cấp tải riêng: độ nhạy gần bằng không</text>
+    </svg>
+    <figcaption><b>Ví dụ về khoảng cách và độ nhạy.</b> Bên trái, hai phần tử thuộc các đường truyền song song nên có tương tác đáng kể. Bên phải, hai nhánh cấp tải riêng có tương tác thấp trong giả thiết cân bằng của ví dụ.</figcaption>
+  </figure>
+
+  <h3>Giới hạn của xấp xỉ tuyến tính</h3>
+  <p>Ba yếu tố cần được kiểm tra khi sử dụng bản đồ độ nhạy trong sàng lọc:</p>
+  <ul class="point-grid three">
+    <li><b>Xấp xỉ DC.</b> Mô hình không mô tả đầy đủ tổn thất, công suất phản kháng và biên độ điện áp. Cần đối chiếu với kết quả AC; mô hình học chỉ có thể bù một phần sai lệch nếu dữ liệu và đánh giá chứng minh được điều đó.</li>
+    <li><b>Thay đổi cấu trúc lưới.</b> Cắt điện bảo trì có thể làm giảm số đường truyền thay thế và thay đổi độ nhạy. Bản đồ cần được cập nhật hoặc kiểm tra lại khi cấu trúc vận hành thay đổi đáng kể.</li>
+    <li><b>Giới hạn điện áp và dòng điện.</b> Độ nhạy công suất tác dụng chỉ phản ánh một phần bài toán. Khi điện áp hoặc công suất phản kháng là ràng buộc quan trọng, cần bổ sung mô hình và chỉ tiêu phù hợp.</li>
+  </ul>
+
+  <h3>Các loại sự cố cần mô hình riêng</h3>
+  <p>Phạm vi cắt theo các quy tắc trên chưa bao quát mọi cơ chế bảo vệ. Sự cố thanh cái, máy cắt từ chối tác động và sự cố chung nguồn gốc cần các điểm khởi phát và quy tắc riêng. Chẳng hạn, máy cắt không mở có thể buộc bảo vệ dự phòng cắt rộng hơn; hai mạch cùng cột có thể bị sự cố đồng thời.</p>
+
+  <div class="key">Mở rộng danh sách sự cố cần đi kèm quy tắc bảo vệ, phạm vi cắt và giả thiết cân bằng tương ứng cho từng loại sự kiện.</div>
+  <p class="transition"><strong>Ngưỡng được hiệu chỉnh trên một cấu trúc lưới không mặc nhiên áp dụng cho cấu trúc khác.</strong> Mật độ mạch vòng, cách bố trí máy cắt và tỷ lệ nhánh hình tia làm thay đổi cả phân bố cơ chế sự cố lẫn độ thưa có thể chấp nhận của bản đồ.</p>
+</section>
+
+<section id="s10">
+  <span class="num">Phần IV · Kiểm chứng và khả năng áp dụng</span>
+  <h2>10. Áp dụng cho các lưới truyền tải khác nhau</h2>
+
+  <p>Có thể áp dụng cùng quy trình phân loại cho các lưới khác nhau nếu dữ liệu thể hiện đủ kết nối, loại và trạng thái thiết bị đóng cắt, cùng công suất nguồn–tải. Tách đảo cần được kiểm tra kể cả khi công suất trao đổi trước sự cố bằng không.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 230" role="img" aria-label="Ba kiểu lưới cách điệu và tỷ lệ hai cơ chế tương ứng">
+      <g font-family="var(--sans)" font-size="12.5" text-anchor="middle">
+        <text x="150" y="30" fill="var(--ink)" font-weight="650">Mắt lưới dày, đủ máy cắt</text>
+        <text x="430" y="30" fill="var(--ink)" font-weight="650">Nhiều điểm đấu rẽ</text>
+        <text x="710" y="30" fill="var(--ink)" font-weight="650">Hình tia, ít mạch vòng</text>
+      </g>
+      <g stroke="var(--ink-3)" stroke-width="1.8" fill="none">
+        <polygon points="100,60 200,60 220,120 180,160 120,160 80,120"/><line x1="100" y1="60" x2="180" y2="160"/><line x1="200" y1="60" x2="120" y2="160"/>
+        <line x1="380" y1="60" x2="480" y2="60"/><line x1="430" y1="60" x2="430" y2="110"/><line x1="380" y1="140" x2="480" y2="140"/><line x1="430" y1="140" x2="430" y2="110"/><line x1="380" y1="60" x2="380" y2="140"/><line x1="480" y1="60" x2="480" y2="140"/>
+        <line x1="710" y1="55" x2="710" y2="100"/><line x1="710" y1="100" x2="660" y2="140"/><line x1="710" y1="100" x2="760" y2="140"/><line x1="660" y1="140" x2="640" y2="170"/><line x1="760" y1="140" x2="780" y2="170"/><line x1="760" y1="140" x2="740" y2="170"/>
+      </g>
+      <g fill="var(--surface)" stroke="var(--hv)" stroke-width="2"><circle cx="430" cy="60" r="5"/><circle cx="430" cy="140" r="5"/></g>
+      <g font-family="var(--sans)" font-size="12" text-anchor="middle">
+        <rect x="60" y="185" width="180" height="16" fill="var(--mv)"/><rect x="240" y="185" width="20" height="16" fill="var(--hv)"/>
+        <text x="150" y="216" fill="var(--ink-2)">GLODF ≫ ISDF</text>
+        <rect x="340" y="185" width="140" height="16" fill="var(--mv)"/><rect x="480" y="185" width="60" height="16" fill="var(--hv)"/>
+        <text x="430" y="216" fill="var(--ink-2)">Phần nhóm lớn</text>
+        <rect x="620" y="185" width="70" height="16" fill="var(--mv)"/><rect x="690" y="185" width="130" height="16" fill="var(--hv)"/>
+        <text x="710" y="216" fill="var(--ink-2)">ISDF áp đảo</text>
+      </g>
+    </svg>
+    <figcaption><b>Phân bố các loại sự cố theo cấu trúc lưới.</b> Các thanh trong hình chỉ mang tính minh hoạ. Khi áp dụng, cần thống kê trên cấu trúc và trạng thái đóng cắt của lưới đang xét.</figcaption>
+  </figure>
+
+  <p>Mô hình nút–nhánh vẫn hỗ trợ tính độ nhạy nhưng thường không giữ đủ thông tin để xác định phạm vi tác động bảo vệ. Nếu dữ liệu trao đổi ở dạng này, cần kèm ánh xạ vùng hoặc danh sách sự cố đã xác định từ mô hình node-breaker. Đồng thời phải kiểm tra tính nhất quán của công suất nút và giả thiết cân bằng.</p>
+  <p class="transition"><strong>Khác biệt giữa các lưới không làm thay đổi yêu cầu về tính nhất quán của phép phân tích.</strong> Sự kiện, mô hình và phương pháp kiểm chứng phải mô tả cùng một trạng thái vật lý. Khi đưa AI vào quy trình, tốc độ tính toán không thể thay thế bằng chứng về độ tin cậy.</p>
+</section>
+
+<!-- ═══════════════════ PHẦN V ═══════════════════ -->
+<section id="s11">
+  <span class="num">Phần V · AI trong quy trình vận hành</span>
+  <h2>11. AI trong xếp hạng và sàng lọc sự cố</h2>
+
+  <p>AI có thể xếp hạng danh sách sự cố để ưu tiên tính AC trong thời gian cho phép. Kết quả xếp hạng là đầu vào cho bước kiểm chứng, chưa phải kết luận về an ninh lưới. Phải xác định rõ cách xử lý các trường hợp chưa được mô phỏng và cơ chế chuyển sang đánh giá đầy đủ khi cần.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 340" role="img" aria-label="Quy trình sàng lọc: trạng thái vận hành và danh sách sự cố đi qua tiên nghiệm vật lý và mô hình xếp hạng; các trường hợp rủi ro cao được ưu tiên kiểm chứng bằng phép tính xoay chiều chi tiết theo chính sách an toàn; vi phạm được xác nhận chuyển tới điều độ viên">
+      <defs><marker id="sp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <g stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#sp)">
+        <path d="M200 76 L236 90"/><path d="M200 174 L236 160"/>
+        <path d="M440 84 L476 110"/><path d="M440 166 L476 140"/>
+        <path d="M650 125 L686 125"/><path d="M860 162 L860 190"/>
+      </g>
+      <path class="pulse-path" d="M200 76 L238 91 L440 84 L478 111 L650 125 L688 125" fill="none" stroke="none" data-n="3" data-dur="4" data-color="var(--mv)" data-r="3"/>
+      <path class="pulse-path" d="M200 174 L238 159 L440 166 L478 139 L650 125 L688 125" fill="none" stroke="none" data-n="3" data-dur="4" data-color="var(--lv)" data-r="3"/>
+      <g font-family="var(--sans)" font-size="12.5" text-anchor="middle">
+        <rect x="20" y="40" width="180" height="72" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="110" y="64" fill="var(--ink)" font-weight="650">Trạng thái vận hành</text>
+        <text x="110" y="83" fill="var(--ink-2)" font-size="11.5">Ảnh chụp hoặc dự báo</text>
+        <text x="110" y="100" fill="var(--ink-2)" font-size="11.5">Cấu trúc node-breaker</text>
+        <rect x="20" y="138" width="180" height="72" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="110" y="162" fill="var(--ink)" font-weight="650">Danh sách sự cố</text>
+        <text x="110" y="181" fill="var(--ink-2)" font-size="11.5">~10 000 vùng</text>
+        <text x="110" y="198" fill="var(--ink-2)" font-size="11.5">Mỗi vùng bảo vệ một sự cố</text>
+        <rect x="240" y="50" width="200" height="66" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="1.6"/>
+        <text x="340" y="73" fill="var(--mv)" font-weight="650">Tiên nghiệm vật lý</text>
+        <text x="340" y="91" fill="var(--ink-2)" font-size="11.5">GLODF / ISDF · tuyến tính, rẻ</text>
+        <text x="340" y="107" fill="var(--ink-2)" font-size="11">Một điểm nguy hiểm mỗi vùng</text>
+        <rect x="240" y="134" width="200" height="66" fill="var(--lv-w)" stroke="var(--lv)" stroke-width="1.6"/>
+        <text x="340" y="157" fill="var(--lv)" font-weight="650">Mô hình xếp hạng</text>
+        <text x="340" y="175" fill="var(--ink-2)" font-size="11.5">Chú ý thưa trên bản đồ</text>
+        <text x="340" y="191" fill="var(--ink-2)" font-size="11">Học phần vật lý bỏ sót</text>
+        <line x1="340" y1="116" x2="340" y2="134" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <rect x="480" y="88" width="170" height="74" fill="var(--surface)" stroke="var(--ink-3)"/>
+        <text x="565" y="113" fill="var(--ink)" font-weight="650">Danh sách xếp hạng</text>
+        <text x="565" y="132" fill="var(--ink-2)" font-size="11.5">Tiên nghiệm ∪ mô hình</text>
+        <text x="565" y="150" fill="var(--ink-2)" font-size="11">Trong vài giây</text>
+        <rect x="690" y="88" width="290" height="74" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.6"/>
+        <text x="835" y="113" fill="var(--hv)" font-weight="650">Dòng công suất xoay chiều đầy đủ</text>
+        <text x="835" y="132" fill="var(--ink-2)" font-size="11.5">Top-K được kiểm chứng AC trước</text>
+        <text x="835" y="150" fill="var(--ink-2)" font-size="11">Phần còn lại theo chính sách an toàn</text>
+        <rect x="740" y="192" width="240" height="56" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+        <text x="860" y="216" fill="var(--ink)" font-weight="650">Vi phạm được xác nhận</text>
+        <text x="860" y="235" fill="var(--ink-2)" font-size="11.5">Tới điều độ viên, kèm biện pháp</text>
+      </g>
+      <text x="20" y="278" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">CHI PHÍ MỘT LẦN ĐÁNH GIÁ AN NINH (sơ đồ)</text>
+      <g font-family="var(--sans)" font-size="12" fill="var(--ink-2)">
+        <text x="20" y="302">Mô phỏng tất cả</text>
+        <rect x="240" y="291" width="740" height="14" fill="var(--ink-3)" opacity=".55"/>
+        <text x="20" y="326">Sàng lọc, ưu tiên AC theo rủi ro</text>
+        <rect x="240" y="315" width="14" height="14" fill="var(--mv)"/>
+        <rect x="254" y="315" width="80" height="14" fill="var(--hv)" opacity=".8"/>
+        <text x="344" y="326" font-size="11.5">Một lượt suy luận + K mô phỏng đầy đủ</text>
+      </g>
+    </svg>
+    <figcaption><b>Kết hợp xếp hạng vật lý và học máy.</b> Các trường hợp được chọn từ hai danh sách được gộp, loại trùng và ưu tiên kiểm chứng AC. Top-K là thứ tự ưu tiên tính toán, không mặc nhiên là ranh giới để loại các sự cố còn lại.</figcaption>
+  </figure>
+
+  <p>Trong triển khai TSO, sàng lọc phải đi kèm một chính sách an toàn được phê duyệt: tiêu chí sàng lọc đã kiểm chứng, giám sát thay đổi cấu trúc lưới và phân bố dữ liệu, cơ chế chuyển sang đánh giá toàn bộ danh sách hoặc một phép đánh giá tương đương, cùng quy tắc xử lý mọi trường hợp chưa được tính AC trong cửa sổ thời gian hiện tại. Trạng thái “ngoài top-K” không đồng nghĩa với “an toàn”.</p>
+
+  <h3>Kết hợp với phương pháp dựa trên vật lý</h3>
+  <p>Mô hình học có thể giảm chất lượng khi gặp cấu trúc lưới hoặc chế độ vận hành khác với dữ liệu huấn luyện. Phương pháp độ nhạy được tính lại trên cấu trúc hiện tại cung cấp một căn cứ độc lập, nhưng vẫn chịu giới hạn của mô hình tuyến tính và chất lượng dữ liệu. Có thể dành một phần số lượt tính AC cho các sự cố được phương pháp vật lý xếp hạng cao, rồi bổ sung theo kết quả học máy. Cách kết hợp này cần được đánh giá bằng độ bao phủ, mức nghiêm trọng của các trường hợp bị bỏ sót và tổng thời gian xử lý.</p>
+
+  <h3>Chỉ tiêu đánh giá sàng lọc</h3>
+  <ul class="point-grid">
+    <li><b>Độ bao phủ tại K cố định (recall@K).</b> Đo tỷ lệ sự cố gây vi phạm AC nằm trong top-K được chọn. Đồng thời theo dõi số báo động nhầm vì chúng chiếm thời gian tính toán có thể dành cho các trường hợp khác.</li>
+    <li><b>Đánh giá theo trạng thái vận hành.</b> Báo cáo kết quả riêng cho từng trạng thái, bao gồm các trường hợp xấu nhất. Giá trị trung bình không đủ để mô tả rủi ro vận hành.</li>
+    <li><b>Mức nghiêm trọng.</b> Phân biệt các mức vi phạm, chẳng hạn tải 101 % và 140 %. Báo cáo riêng những sự cố nghiêm trọng bị bỏ sót.</li>
+    <li><b>So sánh cùng điều kiện.</b> Đánh giá học máy, phương pháp vật lý và phương án kết hợp trên cùng dữ liệu và số lượt mô phỏng. Chọn ngưỡng trên tập hiệu chỉnh trước khi đánh giá độc lập trên tập kiểm tra.</li>
+  </ul>
+
+  <div class="key lv">AI hỗ trợ xếp thứ tự kiểm tra. Kết luận an ninh phải dựa trên các phép tính phù hợp, giới hạn vận hành và phạm vi sự cố đã được đánh giá. Điều độ viên giữ thẩm quyền quyết định.</div>
+  <p class="transition"><strong>Trong quy trình này, AI phân bổ thứ tự ưu tiên kiểm chứng và không tạo ra kết luận an ninh.</strong> Phần thời gian tính toán tiết kiệm được có thể dùng để đánh giá thêm trạng thái dự báo, phương án cắt điện và biện pháp khắc phục.</p>
+</section>
+
+<section id="s12">
+  <span class="num">Phần V · AI trong quy trình vận hành</span>
+  <h2>12. Từ sàng lọc N-1 diện rộng đến phân tích chuyên sâu</h2>
+
+  <div class="key mv"><strong>N-1 là tiêu chí an ninh nền tảng, không phải ranh giới cuối của phạm vi phân tích.</strong> Giá trị của lớp nền này nằm ở khả năng đánh giá có hệ thống nhiều trạng thái vận hành, sau đó tập trung nguồn lực vào các sự cố nhiều phần tử có cơ sở vật lý và các trường hợp cần mô hình chi tiết hơn.</div>
+  <p>Giảm chi phí mỗi lượt đánh giá cho phép xét thêm trạng thái dự báo, phương án cắt điện và biện pháp khắc phục. Kết quả N-1 cung cấp thông tin về dự phòng, nguy cơ quá tải, sự cố tới hạn và phương án xử lý có thể xem xét. Kết hợp với logic lan truyền sự cố, kết quả đó còn giúp nhận diện các tập phần tử bị loại có quan hệ topology, bảo vệ hoặc phụ thuộc chức năng, thay vì liệt kê không chọn lọc mọi tổ hợp N-2 hay N-3.</p>
+
+  <div class="case-grid" aria-label="Ba tầng sử dụng kết quả phân tích an ninh">
+    <article class="case-card"><span class="case-label">Tầng 1 · Bề rộng</span><h3>Đánh giá N-1 trên nhiều trạng thái</h3><p>Chạy thường xuyên trên nhiều trạng thái lưới và danh sách sự cố để theo dõi dự phòng, nguy cơ quá tải, các sự cố tới hạn và biện pháp khắc phục có thể thực hiện.</p></article>
+    <article class="case-card"><span class="case-label">Tầng 2 · Mở rộng có chọn lọc</span><h3>Sự cố N-k có cơ sở vật lý</h3><p>Ưu tiên sự cố phụ thuộc, sự cố chung nguồn gốc, máy cắt từ chối tác động, tách đảo và các tập phần tử sinh ra từ quá trình lan truyền; không liệt kê mù toàn bộ tổ hợp.</p></article>
+    <article class="case-card"><span class="case-label">Tầng 3 · Chiều sâu</span><h3>Kiểm chứng và nghiên cứu chi tiết</h3><p>Dùng AC để xác nhận trạng thái xác lập của các ca được ưu tiên; chuyển các trường hợp có mức nghiêm trọng cao, dự phòng thấp hoặc rủi ro động sang nghiên cứu RMS và EMT theo tiêu chí riêng.</p></article>
+  </div>
+
+  <div class="formula">Sàng lọc N-1 diện rộng → Sự cố N-k có cơ sở vật lý / tập sự cố lan truyền → Kiểm chứng AC → RMS / EMT cho các trường hợp tới hạn</div>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="Các khung thời gian vận hành từ ngày trước tới thời gian thực; sàng lọc xác lập nhanh cho phép đánh giá nhiều kịch bản để chủ động đón trước, và lọc ra các ca nguy hiểm cho nghiên cứu động học và quá độ điện từ">
+      <defs><marker id="hz" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <line x1="40" y1="60" x2="820" y2="60" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#hz)"/>
+      <g font-family="var(--mono)" font-size="11" fill="var(--ink-2)" text-anchor="middle">
+        <line x1="110" y1="54" x2="110" y2="66" stroke="var(--ink-3)"/><text x="110" y="44">Tuần tới</text>
+        <line x1="290" y1="54" x2="290" y2="66" stroke="var(--ink-3)"/><text x="290" y="44">Ngày tới (D-1)</text>
+        <line x1="480" y1="54" x2="480" y2="66" stroke="var(--ink-3)"/><text x="480" y="44">Trong ngày</text>
+        <line x1="680" y1="54" x2="680" y2="66" stroke="var(--ink-3)"/><text x="680" y="44">Thời gian thực</text>
+      </g>
+      <g font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)" text-anchor="middle">
+        <text x="110" y="84">Lịch cắt điện</text>
+        <text x="290" y="84">Tập kịch bản · phối hợp</text>
+        <text x="480" y="84">Đánh giá lại</text>
+        <text x="680" y="84">Mỗi vài phút</text>
+      </g>
+      <g stroke="var(--lv)" stroke-width="1.2" opacity=".75">
+        <line x1="200" y1="110" x2="200" y2="190"/><line x1="220" y1="110" x2="220" y2="190"/><line x1="240" y1="110" x2="240" y2="190"/><line x1="260" y1="110" x2="260" y2="190"/><line x1="280" y1="110" x2="280" y2="190"/><line x1="300" y1="110" x2="300" y2="190"/><line x1="320" y1="110" x2="320" y2="190"/><line x1="340" y1="110" x2="340" y2="190"/><line x1="360" y1="110" x2="360" y2="190"/><line x1="380" y1="110" x2="380" y2="190"/>
+      </g>
+      <text x="290" y="208" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--lv)" font-weight="650">Nhiều kịch bản, mỗi kịch bản sàng lọc đủ</text>
+      <text x="290" y="224" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Gió, mặt trời, phụ tải, trao đổi, cắt điện</text>
+      <path d="M430 150 L520 150" stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#hz)"/>
+      <rect x="524" y="118" width="130" height="64" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.6"/>
+      <text x="589" y="142" text-anchor="middle" font-family="var(--sans)" font-size="12.5" fill="var(--hv)" font-weight="650">Ca nguy hiểm</text>
+      <text x="589" y="160" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Ít, chọn kỹ</text>
+      <text x="589" y="174" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">(trạng thái × sự cố)</text>
+      <path d="M654 140 L700 118" stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#hz)"/>
+      <path d="M654 162 L700 190" stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#hz)"/>
+      <rect x="702" y="96" width="150" height="46" fill="var(--surface)" stroke="var(--ink-3)"/>
+      <text x="777" y="116" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Động học (RMS)</text>
+      <text x="777" y="132" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Ổn định quá độ, điện áp</text>
+      <rect x="702" y="168" width="150" height="46" fill="var(--surface)" stroke="var(--ink-3)"/>
+      <text x="777" y="188" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Nghiên cứu EMT</text>
+      <text x="777" y="204" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Vùng nhiều bộ biến đổi</text>
+      <g font-family="var(--mono)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">
+        <text x="290" y="262">Rẻ mỗi ca</text><text x="589" y="262">Màn lọc</text><text x="777" y="262">Đắt mỗi ca</text>
+      </g>
+      <line x1="200" y1="272" x2="820" y2="272" stroke="var(--rule)"/>
+      <text x="510" y="290" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Sàng lọc xác lập là cổng nối bề rộng (nhiều trạng thái) với chiều sâu (vật lý chi tiết)</text>
+    </svg>
+    <figcaption><b>Mở rộng tập trạng thái được đánh giá.</b> Sàng lọc hỗ trợ xét nhiều kịch bản xác lập và chọn một phần trường hợp để phân tích chi tiết hơn. Nghiên cứu động cần bổ sung tiêu chí lựa chọn riêng.</figcaption>
+  </figure>
+
+  <div class="topic-grid" aria-label="Ba hướng ứng dụng trong vận hành">
+    <article class="topic-card">
+      <h3>Đánh giá nhiều kịch bản dự báo</h3>
+      <p>Sản lượng gió, mặt trời, phụ tải và trao đổi công suất tạo ra nhiều trạng thái vận hành có thể xảy ra. Phân tích N-1 trên tập kịch bản cho biết điều kiện nào dẫn đến quá tải và phương án nào có thể giảm rủi ro. Điều độ viên có thể chuẩn bị thay đổi cấu hình lưới, điều chỉnh huy động hoặc nấc máy biến áp dịch pha trước thời điểm cần thực hiện.</p>
+    </article>
+    <article class="topic-card">
+      <h3>Phối hợp đánh giá giữa các đơn vị vận hành</h3>
+      <p>Trên mô hình ghép liên vùng, số phần tử và danh sách sự cố tăng trong khi thời hạn xử lý vẫn bị giới hạn. Sàng lọc có thể hỗ trợ cập nhật nghiên cứu ngày tới và trong ngày. Các đơn vị cần thống nhất danh sách sự cố, giới hạn, mô hình bảo vệ và giả thiết cân bằng để kết quả có thể sử dụng chung.</p>
+    </article>
+    <article class="topic-card">
+      <h3>Lựa chọn trường hợp cho nghiên cứu RMS và EMT</h3>
+      <p>Phân tích xác lập kiểm tra điểm vận hành sau sự cố theo các giả thiết đã chọn. Nó chưa xác nhận hệ thống có ổn định trong quá trình chuyển sang điểm đó hay không. Nghiên cứu RMS và EMT cần xem xét thêm động học nguồn, tải, bộ điều khiển và bảo vệ. Kết quả xác lập có thể hỗ trợ chọn trường hợp, nhưng các mất ổn định động vẫn có thể xảy ra khi không có quá tải xác lập. Vì vậy, không nên dùng riêng sàng lọc N-1 xác lập làm tiêu chí loại bỏ ca nghiên cứu động.</p>
+    </article>
+  </div>
+
+  <h3>Mở rộng phạm vi đánh giá và ứng dụng</h3>
+  <ul class="point-grid three">
+    <li><b>Sự cố phụ thuộc và nhiều phần tử.</b> N-2, N-3, máy cắt từ chối tác động, tách đảo và sự cố chung nguồn gốc làm tăng nhanh số trường hợp cần xét. Nên ưu tiên các sự kiện đáng tin cậy và có liên hệ vật lý; phương pháp sàng lọc phải được đánh giá riêng cho từng nhóm sự cố.</li>
+    <li><b>Quy hoạch và lịch cắt điện.</b> Đánh giá kế hoạch bảo trì trên nhiều trạng thái nguồn–tải giúp xác định các khoảng thời gian có rủi ro cao.</li>
+    <li><b>Giải thích kết quả.</b> Kết quả xếp hạng nên chỉ rõ phần tử có nguy cơ vi phạm, mức ảnh hưởng dự kiến và giả thiết tính toán để điều độ viên kiểm tra lại.</li>
+  </ul>
+
+  <h3>Phạm vi kiểm chứng và giới hạn hiện tại</h3>
+  <div class="key or"><b>Cần phân biệt bốn mức bằng chứng.</b> PTDF, LODF, GLODF và cân bằng công suất theo thành phần là nền tảng lý thuyết đã được thiết lập. Đóng góp của bài là tổ chức GLODF và ISDF do bài định nghĩa trong cùng một logic lựa chọn dựa trên tập phần tử bị cắt do bảo vệ, rồi dùng cấu trúc đó để tạo không gian tương tác thưa cho sàng lọc. Các hình và ví dụ số trong bài kiểm tra tính nhất quán của lập luận trên lưới minh hoạ; chúng chưa phải bằng chứng hiệu năng trên lưới TSO thực. Trước khi dùng trong vận hành cần kiểm chứng trên nhiều trạng thái và cấu trúc lưới thực, hiệu chỉnh ngưỡng, đánh giá sai số so với AC, kiểm tra trường hợp ngoài phân bố, đồng thời xây dựng hồ sơ luận chứng an toàn và cơ chế dự phòng.</div>
+
+  <div class="close">
+    <h2>Kết luận</h2>
+    <p>Độ tin cậy của phân tích an ninh N-1 phụ thuộc trước hết vào cách mô tả sự kiện trên lưới, thay vì vào riêng bộ giải hay mô hình AI. Một sự cố thiết bị chỉ trở thành trường hợp tính toán có ý nghĩa khi phạm vi tác động của bảo vệ, tập phần tử bị cắt và cấu trúc còn lại của hệ thống được xác định nhất quán. Trên cơ sở đó, LODF xử lý trường hợp mất một nhánh khi lưới còn liên thông; GLODF mở rộng phép tính cho nhóm phần tử bị cắt đồng thời; ISDF mô tả đáp ứng của phần lưới được giữ lại khi sự cố làm mất trao đổi công suất qua biên và cần một chính sách cân bằng được xác định rõ.</p>
+    <p>Khung phân tích không nhằm thay thế mô phỏng AC bằng công thức tuyến tính. Mục đích của nó là đưa cấu trúc vật lý của sự cố vào bước sàng lọc, giảm không gian tính toán nhưng vẫn truy vết được lý do giữ một quan hệ, hệ số được sử dụng và các giả thiết chi phối kết quả. Mô hình học máy có thể dùng thông tin đó để xếp hạng sự cố; kết quả chỉ có giá trị vận hành sau khi được kiểm chứng trên cấu trúc lưới hiện tại, đánh giá theo rủi ro bỏ sót và đặt dưới thẩm quyền của điều độ viên.</p>
+    <p><strong>Trong kiến trúc phân tích đề xuất, mô hình vật lý xác định sự kiện và không gian tương tác; AI thực hiện nhiệm vụ ưu tiên trong phạm vi đó.</strong> Sự phân định chức năng này cho phép đánh giá riêng chất lượng của mô hình học máy và tích hợp nó như một thành phần có thể kiểm chứng trong quy trình phân tích an ninh.</p>
+    <p>N-1 vì vậy là lớp đánh giá nền tảng tạo độ bao phủ, không phải giới hạn cuối của bài toán. Kết quả sàng lọc được dùng để mở rộng đánh giá đón trước trên nhiều trạng thái, lựa chọn các sự cố nhiều phần tử có cơ sở vật lý và dành mô phỏng AC, RMS hoặc EMT cho những trường hợp cần chiều sâu kiểm chứng tương ứng.</p>
+    <p>Để chuyển cách tiếp cận này từ mô hình nghiên cứu sang một quy trình có thể vận hành và kiểm chứng, năm nguyên tắc sau cần được giữ xuyên suốt:</p>
+    <ul style="margin-bottom:0">
+      <li><b>Xác định đúng phạm vi cắt.</b> Danh sách sự cố, độ nhạy và nhãn mô phỏng phải sử dụng cùng tập thiết bị bị loại khỏi vận hành.</li>
+      <li><b>Kiểm tra cấu trúc trước khi chọn công thức.</b> Dùng LODF/GLODF trong điều kiện phù hợp; khi tách đảo, xác định các thành phần và chính sách cân bằng trước khi tính đáp ứng.</li>
+      <li><b>Giữ thông tin node-breaker.</b> Nếu chuyển sang mô hình nút–nhánh, cần lưu kèm ánh xạ vùng và danh sách sự cố để truy vết phạm vi cắt.</li>
+      <li><b>Kiểm chứng giá trị của AI.</b> Đo độ bao phủ, mức nghiêm trọng của các trường hợp bị bỏ sót và thời gian xử lý theo từng trạng thái vận hành, so với phương pháp vật lý trong cùng điều kiện.</li>
+      <li><b>Mở rộng đánh giá có kiểm soát.</b> Dùng năng lực tính toán tiết kiệm được để xét thêm kịch bản và biện pháp khắc phục; lựa chọn ca nghiên cứu động bằng các tiêu chí phù hợp.</li>
+    </ul>
+  </div>
+
+  <h3>Tài liệu tham khảo chọn lọc</h3>
+  <ol class="references">
+    <li>European Commission, <a href="https://eur-lex.europa.eu/eli/reg/2017/1485/oj">Regulation (EU) 2017/1485 establishing a guideline on electricity transmission system operation</a>, đặc biệt các Điều 33–35 và 72–75.</li>
+    <li>NERC, <a href="https://www.nerc.com/standards/reliability-standards/top/top-001-6">TOP-001-6 — Transmission Operations</a> và <a href="https://www.nerc.com/standards/reliability-standards/iro/iro-008-3">IRO-008-3 — Reliability Coordinator Operational Analyses and Real-time Assessments</a>, về đánh giá vận hành, trạng thái trước/sau sự cố và phương pháp xác định vi phạm SOL.</li>
+    <li>R. D. Zimmerman và C. E. Murillo-Sánchez, <a href="https://www.pserc.cornell.edu/matpower/MATPOWER-manual.pdf">MATPOWER User’s Manual</a>, mục Linear Shift Factors và các hàm PTDF/LODF.</li>
+    <li>T. Güler, G. Gross và M. Liu, <a href="https://documents.pserc.wisc.edu/documents/publications/papers/2006_general_publications/guler_generalized_lodf.pdf">“Generalized Line Outage Distribution Factors”</a>, <i>IEEE Transactions on Power Systems</i>, 22(2), 2007.</li>
+    <li>L. Guo và cộng sự, <a href="https://alessandrozocca.github.io/assets/pdf/guo2021b.pdf">“Line Failure Localization of Power Networks — Part II: Cut Set Outages”</a>, <i>IEEE Transactions on Power Systems</i>, DOI 10.1109/TPWRS.2021.3068048.</li>
+    <li>PowSyBl, <a href="https://powsybl.readthedocs.io/projects/pypowsybl/en/stable/reference/network/node_breaker_topology.html">Node-breaker topology reference</a>, về biểu diễn node, switch và internal connection.</li>
+  </ol>
+</section>
+
+<aside class="author-box" aria-label="Thông tin tác giả">
+  <h4>Van Tuan Dang</h4>
+  <p>Nghiên cứu AI/ML và kiến trúc lưới điện số, tập trung vào học máy có định hướng vật lý, bản sao số vận hành, hỗ trợ ra quyết định và các hệ thống AI tác tử cho hạ tầng trọng yếu.</p>
+</aside>
+
+<footer>
+
+
+  <p>© Van Tuan Dang · <a href="../blog.html">Tất cả bài viết</a></p>
+</footer>
+</div>
+
+<script>
+/* ═══ FIGURE: three outcomes on one base grid ═══ */
+(function(){
+  const N={A:[50,75],B:[200,75],T:[125,75],C:[50,205],D:[200,205],E:[125,145],F:[275,150]};
+  const Ed=[["A","T"],["T","B"],["T","E"],["A","C"],["C","D"],["D","B"],["C","E"],["E","D"],["D","F"]];
+  const panels=[
+    {t:"1 · một phần tử nhảy", cut:[["A","C"]], hot:[["C","E"],["E","D"],["D","B"]], isl:[], note:"dòng đi vòng, vài nhánh nhận thêm tải"},
+    {t:"2 · cả vùng bảo vệ nhảy", cut:[["A","T"],["T","B"],["T","E"]], hot:[], isl:[], note:"ba nhánh cùng ra, lưới vẫn liền"},
+    {t:"3 · một phần lưới bị tách", cut:[["D","F"]], hot:[], isl:["F"], note:"F thành đảo, mất cân bằng công suất"}
+  ];
+  const same=(e,x)=>(e[0]===x[0]&&e[1]===x[1])||(e[0]===x[1]&&e[1]===x[0]);
+  let s="";
+  panels.forEach((p,i)=>{
+    const ox=i*300;
+    s+=`<text x="${ox+150}" y="34" text-anchor="middle" font-family="var(--sans)" font-size="13" font-weight="650" fill="var(--ink)">${p.t}</text>`;
+    Ed.forEach(e=>{
+      const a=N[e[0]],b=N[e[1]];
+      const cut=p.cut.some(x=>same(e,x)), hot=p.hot.some(x=>same(e,x)), isl=p.isl.includes(e[0])||p.isl.includes(e[1]);
+      const col=cut?"var(--hv)":(hot?"var(--or)":(isl?"var(--or)":"var(--ink-3)"));
+      s+=`<line x1="${ox+a[0]}" y1="${a[1]}" x2="${ox+b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${cut?5:(hot?4:2.2)}" ${cut?'stroke-dasharray="8 5" opacity=".85"':''}/>`;
+    });
+    for(const k in N){const [x,y]=N[k]; const isl=p.isl.includes(k);
+      const brk=k!=="T"; const load=(k==="F"||k==="E");
+      const col=isl?"var(--or)":"var(--ink)";
+      if(!brk) s+=`<circle cx="${ox+x}" cy="${y}" r="7" fill="var(--surface)" stroke="${p.cut.length>1?'var(--hv)':col}" stroke-width="2.2"/>`;
+      else if(load) s+=`<circle cx="${ox+x}" cy="${y}" r="7" fill="${col}"/><circle cx="${ox+x}" cy="${y}" r="3" fill="var(--surface)"/>`;
+      else s+=`<circle cx="${ox+x}" cy="${y}" r="5.5" fill="${col}"/>`;
+    }
+    if(i===2) s+=`<text x="${ox+275}" y="185" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--or)" font-weight="650">−12 MW</text>`;
+    if(i===1) s+=`<text x="${ox+125}" y="58" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--hv)">Không máy cắt</text>`;
+    s+=`<text x="${ox+150}" y="280" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink-2)">${p.note}</text>`;
+    if(i<2) s+=`<line x1="${ox+300}" y1="20" x2="${ox+300}" y2="295" stroke="var(--rule)" stroke-dasharray="4 4"/>`;
+  });
+  document.getElementById("kb").innerHTML=s;
+})();
+
+/* ═══ FIGURE ANIMATIONS: data-grow / data-head / data-appear / data-blink / .pulse-path (SMIL; static under reduced motion) ═══ */
+(function(){
+  const NS = "http://www.w3.org/2000/svg";
+  const still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+  const anim = (el, attr, values, keyTimes, dur) => mk("animate", { attributeName: attr, values, keyTimes, dur: dur + "s", repeatCount: "indefinite", calcMode: "linear" }, el);
+  const f = x => Math.min(0.999, Math.max(0.001, x)).toFixed(3);
+  document.querySelectorAll("svg.anim-svg").forEach(svg => {
+    const T = +(svg.dataset.cycle || 7);
+    svg.querySelectorAll("[data-grow]").forEach(p => {
+      const [a, b] = p.dataset.grow.split(",").map(Number);
+      const L = p.getTotalLength(), end = p.getPointAtLength(L), pre = p.getPointAtLength(Math.max(0, L - 1));
+      const col = p.getAttribute("stroke") || p.parentNode.getAttribute("stroke"), w = +(p.getAttribute("stroke-width") || p.parentNode.getAttribute("stroke-width") || 2.5);
+      if (p.dataset.head) {
+        const ang = Math.atan2(end.y - pre.y, end.x - pre.x), s = 4 + w * 1.6;
+        const P = (d, o) => [end.x + Math.cos(ang + o) * d, end.y + Math.sin(ang + o) * d];
+        const tip = P(s * 0.9, 0), l = P(s * 0.9, Math.PI - 0.5), r = P(s * 0.9, Math.PI + 0.5);
+        const head = mk("polygon", { points: [tip, l, r].map(q => q.map(v => v.toFixed(1)).join(",")).join(" "), fill: col, stroke: "none" }, p.parentNode);
+        if (!still) anim(head, "opacity", "0;0;1;1;0;0", `0;${f(b - 0.01)};${f(b)};0.9;0.97;1`, T);
+      }
+      if (still) return;
+      p.setAttribute("pathLength", "1"); p.setAttribute("stroke-dasharray", "1 1");
+      anim(p, "stroke-dashoffset", "1;1;0;0", `0;${f(a)};${f(b)};1`, T);
+      anim(p, "opacity", "1;1;0;0", "0;0.9;0.97;1", T);
+    });
+    if (still) return;
+    svg.querySelectorAll("[data-appear]").forEach(e => { const a = +e.dataset.appear; anim(e, "opacity", "0;0;1;1;0;0", `0;${f(a)};${f(Math.min(a + 0.05, 0.89))};0.9;0.97;1`, T); });
+    svg.querySelectorAll("[data-blink]").forEach(e => anim(e, "opacity", "1;0.25;1", "0;0.5;1", 0.9));
+    svg.querySelectorAll(".pulse-path").forEach(p => {
+      const n = +(p.dataset.n || 3), dur = +(p.dataset.dur || 3), r = p.dataset.r || 3.4, col = p.dataset.color || "var(--hv)";
+      for (let i = 0; i < n; i++) {
+        const c = mk("circle", { r, fill: col, opacity: "0", class: "pulse" });
+        const b = -(i * dur / n).toFixed(3) + "s";
+        mk("animateMotion", { dur: dur + "s", repeatCount: "indefinite", path: p.getAttribute("d"), begin: b }, c);
+        mk("animate", { attributeName: "opacity", values: "0;1;1;0", keyTimes: "0;0.08;0.9;1", dur: dur + "s", repeatCount: "indefinite", begin: b }, c);
+        p.parentNode.insertBefore(c, p.nextSibling);
+      }
+    });
+  });
+})();
+
+/* ═══ SECTION 7: interactive miniature grid ═══ */
+(function(){
+const N = {
+  A:{x:90, y:170,l:0,br:1}, B:{x:330,y:110,l:0,br:1}, T:{x:210,y:150,l:0,br:0},
+  S:{x:210,y:52, l:1,br:1}, C:{x:160,y:300,l:0,br:1}, D:{x:340,y:280,l:0,br:1},
+  E:{x:110,y:412,l:1,br:1}, F:{x:398,y:392,l:0,br:1},
+  G:{x:500,y:300,l:0,br:1}, H:{x:576,y:220,l:1,br:1}, I:{x:566,y:392,l:0,br:1}
+};
+const B = [
+  {id:"L1",a:"A",b:"T"},{id:"L2",a:"T",b:"B"},{id:"L3",a:"T",b:"S"},
+  {id:"L4",a:"A",b:"C"},{id:"L5",a:"B",b:"D"},{id:"L6",a:"C",b:"D"},
+  {id:"L7",a:"C",b:"S"},{id:"L8",a:"C",b:"E"},{id:"L9",a:"D",b:"F"},
+  {id:"L10",a:"D",b:"G"},{id:"L11",a:"G",b:"H"},{id:"L12",a:"H",b:"I"},{id:"L13",a:"I",b:"G"}
+];
+const BL = {L1:[146,152,"middle"],L2:[262,120,"middle"],L3:[220,104,"start"],L4:[110,240,"end"],L5:[347,199,"start"],L6:[250,308,"middle"],L7:[172,212,"end"],L8:[124,354,"end"],L9:[380,334,"start"],L10:[420,280,"middle"],L11:[528,252,"end"],L12:[582,310,"start"],L13:[524,360,"end"]};
+const NL = {C:[146,306,"end"],D:[352,274,"start"],E:[96,418,"end"],F:[410,398,"start"],I:[578,398,"start"],T:[222,172,"start"]};
+const by = id => B.find(b=>b.id===id);
+function zones(){
+  const p={}; B.forEach(b=>p[b.id]=b.id);
+  const f=x=>{while(p[x]!==x)x=p[x]=p[p[x]];return x};
+  const u=(x,y)=>{const a=f(x),b=f(y); if(a!==b)p[a]=b};
+  for(const n in N){ if(N[n].br) continue;
+    const inc=B.filter(b=>b.a===n||b.b===n);
+    for(let i=1;i<inc.length;i++) u(inc[0].id, inc[i].id);
+  }
+  const z={}; B.forEach(b=>{const r=f(b.id); (z[r]=z[r]||[]).push(b.id)});
+  return z;
+}
+const Z = zones();
+const zoneOf = id => Object.values(Z).find(v=>v.includes(id));
+function comps(rem){
+  const adj={}, live=new Set();
+  rem.forEach(b=>{live.add(b.a);live.add(b.b);(adj[b.a]=adj[b.a]||[]).push(b.b);(adj[b.b]=adj[b.b]||[]).push(b.a)});
+  const seen=new Set(), out=[];
+  for(const s of live){ if(seen.has(s))continue;
+    const st=[s], c=new Set(); seen.add(s);
+    while(st.length){const x=st.pop(); c.add(x);(adj[x]||[]).forEach(y=>{if(!seen.has(y)){seen.add(y);st.push(y)}})}
+    const e=rem.filter(b=>c.has(b.a)&&c.has(b.b)).length;
+    out.push({nodes:c, n:c.size, e, cyc:e>=c.size});
+  }
+  return out;
+}
+function classify(zid){
+  const zone = zoneOf(zid);
+  const rem = B.filter(b=>!zone.includes(b.id));
+  const live = new Set(); rem.forEach(b=>{live.add(b.a);live.add(b.b)});
+  const touched=new Set(); zone.forEach(i=>{touched.add(by(i).a);touched.add(by(i).b)});
+  const orph=[...touched].filter(n=>!live.has(n));
+  const cs = comps(rem).sort((a,b)=>b.n-a.n);
+  const vo = cs.length>1;
+  const orphLoad = orph.filter(n=>N[n].l);
+  let co, ly, mau="mv";
+  if(vo){ const iles=cs.slice(1);
+    co="ISDF"; mau="hv";
+    ly="Lưới tách thành "+cs.length+" phần. Phần tách ra "+(iles.some(c=>c.cyc)?"có mạch vòng: phải tự cân bằng như một lưới con.":"là nhánh cụt: lượng tải mất biết ngay.");
+  } else if(orphLoad.length){
+    co="ISDF"; mau="hv";
+    ly="Nút "+orphLoad.join(", ")+" bị cô lập trong khi đang mang tải: công suất thật rời khỏi cân bằng.";
+  } else if(orph.length){
+    co = zone.length>1 ? "GLODF" : "LODF";
+    ly="Nút "+orph.join(", ")+" bị cô lập nhưng không mang tải, nên không mất công suất. "+(zone.length>1?"Cắt cả nhóm, lưới còn lại phân bố lại dòng.":"Một phần tử ra khỏi vận hành, lưới còn lại phân bố lại dòng.");
+  } else {
+    co = zone.length>1 ? "GLODF" : "LODF";
+    ly = zone.length>1 ? "Mất "+zone.length+" phần tử cùng lúc, lưới vẫn liền: độ nhạy nhóm." : "Mất một phần tử, lưới vẫn liền: độ nhạy cổ điển.";
+  }
+  return {zone, orph, orphLoad, vo, cs, co, ly, mau};
+}
+function draw(sel){
+  const r = sel ? classify(sel) : null;
+  const inZ = r ? new Set(r.zone) : new Set();
+  const iles = r && r.vo ? r.cs.slice(1) : [];
+  const ileN = new Set(); iles.forEach(c=>c.nodes.forEach(n=>ileN.add(n)));
+  let s = "";
+  B.forEach(b=>{
+    const p=N[b.a], q=N[b.b];
+    const on = inZ.has(b.id);
+    const ile = !on && ileN.has(b.a) && ileN.has(b.b);
+    const col = on ? "var(--hv)" : (ile ? "var(--or)" : "var(--ink-3)");
+    s += `<line class="br" data-id="${b.id}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${col}" stroke-width="${on?6:(ile?3.5:2.4)}" ${on?'stroke-dasharray="9 5"':''}/>`;
+    s += `<line class="br" data-id="${b.id}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="transparent" stroke-width="16"/>`;
+    const [lx,ly,la]=BL[b.id];
+    s += `<text x="${lx}" y="${ly}" text-anchor="${la}" font-size="10.5" font-family="var(--mono)" fill="${on?'var(--hv)':'var(--ink-3)'}" pointer-events="none">${b.id}</text>`;
+  });
+  for(const n in N){
+    const d=N[n], orph = r && r.orph.includes(n);
+    const col = orph ? "var(--hv)" : (ileN.has(n) ? "var(--or)" : "var(--ink)");
+    if(!d.br){ s+=`<circle cx="${d.x}" cy="${d.y}" r="8" fill="var(--surface)" stroke="${col}" stroke-width="2.5"/>`; }
+    else if(d.l){ s+=`<circle cx="${d.x}" cy="${d.y}" r="8" fill="${col}"/><circle cx="${d.x}" cy="${d.y}" r="3.4" fill="var(--surface)"/>`; }
+    else { s+=`<circle cx="${d.x}" cy="${d.y}" r="6" fill="${col}"/>`; }
+    const [nx,ny,na]=NL[n]||[d.x,d.y-14,"middle"];
+    s+=`<text x="${nx}" y="${ny}" font-size="12.5" font-family="var(--mono)" fill="${col}" text-anchor="${na}">${n}</text>`;
+  }
+  document.getElementById("sv").innerHTML = s;
+  document.querySelectorAll("#sv .br").forEach(e=>e.onclick=()=>draw(e.dataset.id));
+  if(!r) return;
+  document.getElementById("co").textContent = r.co + (r.zone.length>1 ? " · "+r.zone.length+" phần tử" : "");
+  document.getElementById("co").style.color = r.mau==="hv" ? "var(--hv)" : "var(--mv)";
+  document.getElementById("ly").textContent = r.ly;
+  const yn=(v,t,f)=>`<span class="${v?'yes':'no'}">${v?t:f}</span>`;
+  document.getElementById("qs").innerHTML =
+    `<div class="q"><b>①</b><span>Lưới còn lại có vỡ? ${yn(r.vo,"Có: "+r.cs.length+" phần","Không")}</span></div>`+
+    `<div class="q"><b>②</b><span>Cô lập nút mang tải? ${yn(r.orphLoad.length>0,"Có: "+r.orphLoad.join(","),"Không")}</span></div>`+
+    `<div class="q"><b>③</b><span>Cô lập nút không tải? ${yn(r.orph.length>r.orphLoad.length,"Có: "+r.orph.filter(n=>!N[n].l).join(","),"Không")}</span></div>`;
+  document.getElementById("hint").textContent = "Vùng bảo vệ gồm " + r.zone.length + " phần tử: " + r.zone.join(", ") + (r.vo ? " · phần tách khỏi lưới hiện màu cam." : "");
+}
+draw("L2");
+})();
+
+/* ═══ SECTION 8: node-breaker interactive illustration (small networks, explicit geometry on a 1000 × 610 canvas) ═══ */
+(function(){
+"use strict";
+const SC = [
+{ title:"1 · LODF: một đường dây, lưới vẫn liền", fault:"L_AB",
+  intro:"Đường dây L_AB có máy cắt thật ở cả hai đầu. Lan truyền dừng tại hai máy cắt đó: vùng chỉ có L_AB. Lưới còn liên thông, nên trường hợp này được tính bằng LODF trong mô hình DC.",
+  nodes:{A:{x:200,y:110,bus:180},B:{x:800,y:110,bus:180},C:{x:500,y:450,bus:200,bl:[110,5,"start"]},
+    a1:{x:260,y:200},b1:{x:740,y:200,lab:[-8,-8,"end"]},a2:{x:140,y:200,lab:[-8,-8,"end"]},c1:{x:440,y:370,lab:[-8,-8,"end"]},b2:{x:860,y:200},c2:{x:560,y:370}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[260,110,260,200],l:[274,159,"start"]},{id:"cbB1",a:"b1",b:"B",t:"CB",g:[740,200,740,110],l:[726,159,"end"]},
+      {id:"cbA2",a:"A",b:"a2",t:"CB",g:[140,110,140,200],l:[126,159,"end"]},{id:"cbB2",a:"B",b:"b2",t:"CB",g:[860,110,860,200],l:[874,159,"start"]},
+      {id:"cbC1",a:"c1",b:"C",t:"CB",g:[440,370,440,450],l:[426,414,"end"]},{id:"cbC2",a:"c2",b:"C",t:"CB",g:[560,370,560,450],l:[574,414,"start"]}],
+  br:[{id:"L_AB",a:"a1",b:"b1",x:0.10,lim:300,kind:"line",p:[[260,200],[740,200]],n:[500,188,"middle"],f:[500,224,"middle"]},
+      {id:"L_AC",a:"a2",b:"c1",x:0.10,lim:250,kind:"line",p:[[140,200],[140,370],[440,370]],n:[152,286,"start"],f:[152,304,"start"]},
+      {id:"L_BC",a:"b2",b:"c2",x:0.10,lim:300,kind:"line",p:[[860,200],[860,370],[560,370]],n:[848,286,"end"],f:[848,304,"end"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:300,Pmax:600,slack:true,s:[200,50],st:[200,110,200,62],l:[216,55,"start"]},
+       {id:"G2",node:"C",kind:"gen",P:100,Pmax:300,s:[500,522],st:[500,450,500,510],l:[516,527,"start"]},
+       {id:"LB",node:"B",kind:"load",P:400,s:[800,52],st:[800,110,800,60],l:[816,56,"start"]}] },
+
+{ title:"2 · GLODF: dao cách ly kéo theo máy biến áp", fault:"L_AB",
+  intro:"Sự cố khởi phát nằm trên L_AB. Phía B, L_AB nối vào nút m chỉ qua dao cách ly d, thiết bị không có khả năng cắt dòng sự cố. Quá trình lan truyền đi qua d và kéo theo máy biến áp T không có máy cắt riêng. Vì vậy, một sự cố khởi phát tạo ra tập phần tử bị loại cuối cùng G = {L_AB, T}. Lưới vẫn liên thông; GLODF được dùng để đánh giá nhanh ảnh hưởng đồng thời của cả tập G trước khi kiểm chứng bằng phân bố công suất AC.",
+  nodes:{A:{x:200,y:110,bus:180},B:{x:760,y:110,bus:220},C:{x:400,y:450,bus:180,bl:[98,5,"start"]},D:{x:700,y:450,bus:160,bl:[-80,26,"start"]},
+    a1:{x:260,y:200},bt:{x:620,y:200,lab:[0,22,"middle"]},m:{x:700,y:200,lab:[10,22,"start"]},tD:{x:700,y:340,lab:[10,-6,"start"]},a2:{x:140,y:200,lab:[-8,-8,"end"]},
+    c1:{x:340,y:370,lab:[-8,-8,"end"]},b2:{x:840,y:200},c2:{x:440,y:530,lab:[-8,14,"end"]},c3:{x:480,y:370},d1:{x:660,y:370,lab:[8,-8,"start"]}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[260,110,260,200],l:[274,159,"start"]},{id:"d",a:"bt",b:"m",t:"DS",g:[620,200,700,200],l:[660,184,"middle"]},
+      {id:"cbB",a:"m",b:"B",t:"CB",g:[700,200,700,110],l:[686,159,"end"]},{id:"cbtD",a:"tD",b:"D",t:"CB",g:[700,340,700,450],l:[714,399,"start"]},
+      {id:"cbA2",a:"A",b:"a2",t:"CB",g:[140,110,140,200],l:[126,159,"end"]},{id:"cbC1",a:"c1",b:"C",t:"CB",g:[340,370,340,450],l:[326,414,"end"]},
+      {id:"cbB2",a:"B",b:"b2",t:"CB",g:[840,110,840,200],l:[854,159,"start"]},{id:"cbC2",a:"c2",b:"C",t:"CB",g:[440,530,440,450],l:[454,494,"start"]},
+      {id:"cbC3",a:"C",b:"c3",t:"CB",g:[480,450,480,370],l:[494,414,"start"]},{id:"cbD1",a:"d1",b:"D",t:"CB",g:[660,370,660,450],l:[646,414,"end"]}],
+  br:[{id:"L_AB",a:"a1",b:"bt",x:0.10,lim:300,kind:"line",p:[[260,200],[620,200]],n:[440,188,"middle"],f:[440,224,"middle"]},
+      {id:"T",a:"m",b:"tD",x:0.08,lim:250,kind:"trafo",p:[[700,200],[700,340]],n:[680,262,"end"],f:[680,280,"end"]},
+      {id:"L_AC",a:"a2",b:"c1",x:0.10,lim:300,kind:"line",p:[[140,200],[140,370],[340,370]],n:[152,286,"start"],f:[152,304,"start"]},
+      {id:"L_BC",a:"b2",b:"c2",x:0.12,lim:300,kind:"line",p:[[840,200],[840,570],[440,570],[440,530]],n:[640,560,"middle"],f:[640,594,"middle"]},
+      {id:"L_CD",a:"c3",b:"d1",x:0.10,lim:200,kind:"line",p:[[480,370],[660,370]],n:[570,358,"middle"],f:[570,392,"middle"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:350,Pmax:700,slack:true,s:[200,50],st:[200,110,200,62],l:[216,55,"start"]},
+       {id:"G2",node:"C",kind:"gen",P:100,Pmax:300,s:[262,450],st:[310,450,274,450],l:[262,482,"middle"]},
+       {id:"LB",node:"B",kind:"load",P:250,s:[760,52],st:[760,110,760,60],l:[776,56,"start"]},
+       {id:"LD",node:"D",kind:"load",P:200,s:[750,505],st:[750,450,750,496],l:[766,509,"start"]}] },
+
+{ title:"3 · Đấu rẽ, máy cắt fictitious, mất tổ máy", fault:"L1",
+  intro:"Tại điểm rẽ P không có máy cắt: L2 và L3 ra cùng L1. Ở trạm C, máy cắt fictitious f không mở được, nên lan tiếp lên thanh cái C1; qua dao cách ly dg, tổ máy G3 cũng ra. Dừng ở cbA1, cbB1 và máy cắt liên lạc cpl. Vùng = {L1, L2, L3, G3}: mất nguồn nhưng lưới chính vẫn liền, nên GLODF kèm bù công suất.",
+  nodes:{A:{x:180,y:110,bus:180},B:{x:820,y:110,bus:180},C1:{x:430,y:470,bus:120,bl:[-70,5,"end"]},C2:{x:650,y:470,bus:120,bl:[70,5,"start"]},
+    a1:{x:240,y:200},P:{x:450,y:200,lab:[0,-12,"middle"]},b1:{x:760,y:200,lab:[-8,-8,"end"]},pc:{x:450,y:390,lab:[-8,-6,"end"]},gn:{x:390,y:550,lab:[8,18,"start"]},
+    a4:{x:120,y:200,lab:[-8,-8,"end"]},c4:{x:620,y:550,lab:[8,18,"start"]},b5:{x:880,y:200},c5:{x:680,y:390,lab:[8,-6,"start"]}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[240,110,240,200],l:[254,159,"start"]},{id:"cbB1",a:"b1",b:"B",t:"CB",g:[760,200,760,110],l:[746,159,"end"]},
+      {id:"f",a:"pc",b:"C1",t:"FCB",g:[450,390,450,470],l:[464,434,"start"]},{id:"dg",a:"C1",b:"gn",t:"DS",g:[390,470,390,550],l:[376,514,"end"]},
+      {id:"cpl",a:"C1",b:"C2",t:"CB",g:[490,470,590,470],l:[540,454,"middle"]},{id:"cbA4",a:"A",b:"a4",t:"CB",g:[120,110,120,200],l:[106,159,"end"]},
+      {id:"cbC4",a:"c4",b:"C2",t:"CB",g:[620,550,620,470],l:[606,514,"end"]},{id:"cbB5",a:"B",b:"b5",t:"CB",g:[880,110,880,200],l:[894,159,"start"]},
+      {id:"cbC5",a:"c5",b:"C2",t:"CB",g:[680,390,680,470],l:[694,434,"start"]}],
+  br:[{id:"L1",a:"a1",b:"P",x:0.05,lim:300,kind:"line",p:[[240,200],[450,200]],n:[345,188,"middle"],f:[345,224,"middle"]},
+      {id:"L2",a:"P",b:"b1",x:0.05,lim:300,kind:"line",p:[[450,200],[760,200]],n:[605,188,"middle"],f:[605,224,"middle"]},
+      {id:"L3",a:"P",b:"pc",x:0.05,lim:300,kind:"line",p:[[450,200],[450,390]],n:[464,290,"start"],f:[464,308,"start"]},
+      {id:"L4",a:"a4",b:"c4",x:0.10,lim:300,kind:"line",p:[[120,200],[120,590],[620,590],[620,550]],n:[132,390,"start"],f:[132,408,"start"]},
+      {id:"L5",a:"b5",b:"c5",x:0.10,lim:300,kind:"line",p:[[880,200],[880,390],[680,390]],n:[866,290,"end"],f:[866,308,"end"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:300,Pmax:700,slack:true,s:[180,50],st:[180,110,180,62],l:[196,55,"start"]},
+       {id:"G3",node:"gn",kind:"gen",P:150,Pmax:300,s:[322,550],st:[390,550,334,550],l:[306,555,"end"]},
+       {id:"G4",node:"B",kind:"gen",P:100,Pmax:400,s:[820,50],st:[820,110,820,62],l:[836,55,"start"]},
+       {id:"LC",node:"C2",kind:"load",P:550,s:[690,527],st:[690,470,690,518],l:[706,531,"start"]}] },
+
+{ title:"4 · ISDF: trạm D bị tách đảo", fault:"L_CD",
+  intro:"L_CD là đường duy nhất nối trạm D (tải 120 MW, tổ máy 40 MW) với lưới. Vùng chỉ có L_CD, nhưng cắt nó làm D tách đảo. Phép tính minh hoạ chỉ xét phần lưới chính, bù chênh lệch 40 − 120 = −80 MW bằng các tổ máy còn lại; phần đảo phải được đánh giá riêng. Mẫu số LODF bằng 0 vì L_CD là nhánh cầu, nên dùng ISDF.",
+  nodes:{A:{x:200,y:110,bus:180},B:{x:800,y:110,bus:180},C:{x:500,y:320,bus:180,bl:[100,5,"start"]},D:{x:500,y:520,bus:160,bl:[-90,5,"end"]},
+    a1:{x:260,y:200},b1:{x:740,y:200,lab:[-8,-8,"end"]},a2:{x:140,y:200,lab:[-8,-8,"end"]},c1:{x:440,y:260,lab:[-8,-8,"end"]},
+    b2:{x:860,y:200},c2:{x:560,y:260},c3:{x:500,y:390,lab:[-8,4,"end"]},d1:{x:500,y:450,lab:[-8,4,"end"]}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[260,110,260,200],l:[274,159,"start"]},{id:"cbB1",a:"b1",b:"B",t:"CB",g:[740,200,740,110],l:[726,159,"end"]},
+      {id:"cbA2",a:"A",b:"a2",t:"CB",g:[140,110,140,200],l:[126,159,"end"]},{id:"cbB2",a:"B",b:"b2",t:"CB",g:[860,110,860,200],l:[874,159,"start"]},
+      {id:"cbC1",a:"c1",b:"C",t:"CB",g:[440,260,440,320],l:[426,294,"end"]},{id:"cbC2",a:"c2",b:"C",t:"CB",g:[560,260,560,320],l:[574,294,"start"]},
+      {id:"cbC3",a:"C",b:"c3",t:"CB",g:[500,320,500,390],l:[514,359,"start"]},{id:"cbD1",a:"d1",b:"D",t:"CB",g:[500,450,500,520],l:[514,489,"start"]}],
+  br:[{id:"L_AB",a:"a1",b:"b1",x:0.10,lim:300,kind:"line",p:[[260,200],[740,200]],n:[500,188,"middle"],f:[500,224,"middle"]},
+      {id:"L_AC",a:"a2",b:"c1",x:0.10,lim:300,kind:"line",p:[[140,200],[140,260],[440,260]],n:[290,248,"middle"],f:[290,284,"middle"]},
+      {id:"L_BC",a:"b2",b:"c2",x:0.10,lim:300,kind:"line",p:[[860,200],[860,260],[560,260]],n:[710,248,"middle"],f:[710,284,"middle"]},
+      {id:"L_CD",a:"c3",b:"d1",x:0.10,lim:150,kind:"line",p:[[500,390],[500,450]],n:[514,416,"start"],f:[514,434,"start"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:300,Pmax:600,slack:true,s:[200,50],st:[200,110,200,62],l:[216,55,"start"]},
+       {id:"G2",node:"B",kind:"gen",P:100,Pmax:300,s:[800,50],st:[800,110,800,62],l:[816,55,"start"]},
+       {id:"LC",node:"C",kind:"load",P:320,s:[440,378],st:[440,320,440,370],l:[426,382,"end"]},
+       {id:"LD",node:"D",kind:"load",P:120,s:[460,577],st:[460,520,460,568],l:[444,581,"end"]},
+       {id:"GD",node:"D",kind:"gen",P:40,Pmax:80,s:[540,577],st:[540,520,540,565],l:[556,582,"start"]}] },
+];
+
+const $ = s => document.querySelector(s);
+const fmt = (x, d = 1) => (Math.round(x * 10 ** d) / 10 ** d).toFixed(d).replace(".", ",").replace("-", "−");
+let S, k = 0, timer = null;
+
+function propagate(sc) {
+  const ev = [], visited = new Set(), lost = new Set([sc.fault]), boundary = new Set(), q = [];
+  const f = sc.br.find(b => b.id === sc.fault);
+  ev.push({ t: "start", msg: `Sự cố trên <b>${f.id}</b>: lan truyền bắt đầu từ <b>cả hai đầu</b> (nút ${f.a} và ${f.b}).`, lost: [f.id] });
+  q.push(f.a, f.b);
+  while (q.length) {
+    const n = q.shift(); if (visited.has(n)) continue; visited.add(n);
+    ev.push({ t: "visit", node: n, msg: `Quét nút <b>${n}</b>${sc.nodes[n].bus ? " (thanh cái: đi xuyên qua)" : ""}.` });
+    for (const s of sc.sw) {
+      if (s.a !== n && s.b !== n) continue;
+      const o = s.a === n ? s.b : s.a;
+      if (s.open) { ev.push({ t: "sw", sw: s.id, msg: `<span class="badge b-stop">DỪNG</span> ${s.id} đang mở.` }); continue; }
+      if (s.t === "CB") { if (!boundary.has(s.id)) { boundary.add(s.id); ev.push({ t: "sw", sw: s.id, open: true, msg: `<span class="badge b-stop">DỪNG · MỞ</span> Máy cắt thật <b>${s.id}</b>: biên của vùng, nó <b>sẽ mở</b>.` }); } }
+      else if (!visited.has(o)) { ev.push({ t: "sw", sw: s.id, pass: true, msg: s.t === "DS" ? `<span class="badge b-go">ĐI QUA</span> Dao cách ly <b>${s.id}</b> (đóng) → sang ${o}.` : `<span class="badge b-go">ĐI QUA</span> Máy cắt fictitious <b>${s.id}</b>, coi như dao cách ly → sang ${o}.` }); q.push(o); }
+    }
+    for (const b of sc.br) if ((b.a === n || b.b === n) && !lost.has(b.id)) { lost.add(b.id); const o = b.a === n ? b.b : b.a;
+      ev.push({ t: "lost", msg: `<span class="badge b-lost">RA THEO</span> <b>${b.id}</b> nối vào không qua máy cắt → ra cùng vùng; quét tiếp từ đầu kia (${o}).`, lost: [b.id] }); q.push(o); }
+    for (const i of sc.inj) if (i.node === n && !lost.has(i.id)) { lost.add(i.id);
+      ev.push({ t: "lost", msg: `<span class="badge b-lost">RA THEO</span> ${i.kind === "gen" ? "Tổ máy" : "Tải"} <b>${i.id}</b> (${i.P} MW) nối vào vùng.`, lost: [i.id] }); }
+  }
+  const zoneBr = sc.br.filter(b => lost.has(b.id)).map(b => b.id), zoneInj = sc.inj.filter(i => lost.has(i.id)).map(i => i.id);
+  ev.push({ t: "done", msg: `Hết nút để quét. <b>Vùng bảo vệ</b> = {${zoneBr.concat(zoneInj).join(", ")}}; máy cắt biên mở: ${[...boundary].join(", ")}.` });
+  return { ev, lost, boundary, zoneBr, zoneInj };
+}
+function buses(sc, openSet, lostSet) {
+  const par = {}; Object.keys(sc.nodes).forEach(n => par[n] = n);
+  const f = x => par[x] === x ? x : (par[x] = f(par[x]));
+  sc.sw.forEach(s => { if (!s.open && !openSet.has(s.id)) par[f(s.a)] = f(s.b); });
+  const busOf = {}; Object.keys(sc.nodes).forEach(n => busOf[n] = f(n));
+  const brs = sc.br.filter(b => !lostSet.has(b.id)).map(b => ({ id: b.id, a: busOf[b.a], b: busOf[b.b], x: b.x })).filter(e => e.a !== e.b);
+  const injs = sc.inj.filter(i => !lostSet.has(i.id)).map(i => ({ ...i, bus: busOf[i.node] }));
+  return { busOf, brs, injs };
+}
+function components(list, brs) {
+  const adj = {}; list.forEach(b => adj[b] = []); brs.forEach(e => { adj[e.a].push(e.b); adj[e.b].push(e.a); });
+  const c = {}; let n = 0; list.forEach(b => { if (c[b] !== undefined) return; const st = [b]; c[b] = n;
+    while (st.length) { const u = st.pop(); adj[u].forEach(v => { if (c[v] === undefined) { c[v] = n; st.push(v); } }); } n++; });
+  return c;
+}
+function dcflow(brs, inj, slackBus) {
+  const bl = Object.keys(inj), idx = {}; let n = 0; bl.forEach(b => { if (b !== slackBus) idx[b] = n++; });
+  const B = Array.from({ length: n }, () => new Array(n).fill(0)), P = new Array(n).fill(0);
+  brs.forEach(e => { const y = 1 / e.x, i = idx[e.a], j = idx[e.b];
+    if (i !== undefined) B[i][i] += y; if (j !== undefined) B[j][j] += y; if (i !== undefined && j !== undefined) { B[i][j] -= y; B[j][i] -= y; } });
+  bl.forEach(b => { if (idx[b] !== undefined) P[idx[b]] = inj[b] / 100; });
+  for (let c = 0; c < n; c++) { let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(B[r][c]) > Math.abs(B[p][c])) p = r;
+    [B[c], B[p]] = [B[p], B[c]]; [P[c], P[p]] = [P[p], P[c]];
+    for (let r = c + 1; r < n; r++) { const m = B[r][c] / B[c][c]; for (let q = c; q < n; q++) B[r][q] -= m * B[c][q]; P[r] -= m * P[c]; } }
+  const th = new Array(n).fill(0); for (let r = n - 1; r >= 0; r--) { let s = P[r]; for (let q = r + 1; q < n; q++) s -= B[r][q] * th[q]; th[r] = s / B[r][r]; }
+  const T = b => b === slackBus ? 0 : th[idx[b]]; const F = {}; brs.forEach(e => F[e.id] = (T(e.a) - T(e.b)) / e.x * 100); return F;
+}
+function balanceAndFlow(net, keep) {
+  const gens = net.injs.filter(i => i.kind === "gen" && keep.has(i.bus)), loads = net.injs.filter(i => i.kind === "load" && keep.has(i.bus));
+  const mismatch = loads.reduce((s, l) => s + l.P, 0) - gens.reduce((s, g) => s + g.P, 0), sumPmax = gens.reduce((s, g) => s + g.Pmax, 0);
+  const Pg = {}; gens.forEach(g => Pg[g.id] = g.P + mismatch * g.Pmax / sumPmax);
+  const inj = {}; keep.forEach(b => inj[b] = 0); gens.forEach(g => inj[g.bus] += Pg[g.id]); loads.forEach(l => inj[l.bus] -= l.P);
+  const slack = gens.find(g => g.slack) || gens.slice().sort((a, b) => b.Pmax - a.Pmax)[0];
+  return { F: dcflow(net.brs.filter(e => keep.has(e.a) && keep.has(e.b)), inj, slack.bus), mismatch, Pg };
+}
+function build(sc) {
+  const pr = propagate(sc), pre = buses(sc, new Set(), new Set()), allB = new Set(Object.values(pre.busOf));
+  const flowPre = balanceAndFlow(pre, allB), post = buses(sc, pr.boundary, pr.lost);
+  const live = new Set(); post.brs.forEach(e => { live.add(e.a); live.add(e.b); }); post.injs.forEach(i => live.add(i.bus));
+  const comp = components([...live], post.brs), sizes = {}; Object.values(comp).forEach(c => sizes[c] = (sizes[c] || 0) + 1);
+  const sl = post.injs.find(i => i.slack); let mainC = sl ? comp[sl.bus] : null, slackMoved = false;
+  if (mainC === null || sizes[mainC] < Math.max(...Object.values(sizes))) { mainC = +Object.keys(sizes).sort((a, b) => sizes[b] - sizes[a])[0]; slackMoved = true; }
+  const mainB = new Set(Object.keys(comp).filter(b => comp[b] === mainC));
+  const islandInj = post.injs.filter(i => !mainB.has(i.bus)), islandBr = post.brs.filter(e => !mainB.has(e.a) || !mainB.has(e.b)).map(e => e.id);
+  const islandNodes = new Set(Object.keys(sc.nodes).filter(n => live.has(post.busOf[n]) && !mainB.has(post.busOf[n])));
+  const flowPost = balanceAndFlow(post, mainB), islanded = islandInj.length > 0 || islandBr.length > 0;
+  const formula = islanded ? (pr.zoneBr.length > 1 ? "ISDF nhóm" : "ISDF") : (pr.zoneBr.length > 1 || pr.zoneInj.length ? "GLODF" : "LODF");
+  const st = pr.ev.map(e => ({ phase: 1, ...e }));
+  st.push({ phase: 2, t: "bus", msg: `<b>Gộp nút thành bus</b> (bus view): các nút nối nhau qua thiết bị đóng thành một bus. Sau khi mở ${[...pr.boundary].join(", ")} và bỏ vùng: còn ${live.size} bus có điện (trước sự cố: ${allB.size}).` });
+  if (islanded) { const lg = islandInj.filter(i => i.kind === "gen").reduce((s, i) => s + i.P, 0), ll = islandInj.filter(i => i.kind === "load").reduce((s, i) => s + i.P, 0);
+    st.push({ phase: 3, t: "island", msg: `<b>Tách đảo:</b> ${islandInj.map(i => i.id).join(", ")} không còn nối với nút cân bằng → phần này không được tính trong bài toán DC của lưới chính và phải được đánh giá riêng. Mất nguồn ${lg} MW, mất tải ${ll} MW → chênh ${fmt(lg - ll, 0)} MW.` }); }
+  else st.push({ phase: 3, t: "island", msg: `<b>Không tách đảo:</b> mọi bus còn nối với nút cân bằng.${pr.zoneInj.length ? " Công suất của " + pr.zoneInj.join(", ") + " mất theo vùng." : ""}` });
+  st.push({ phase: 3, t: "bal", msg: `<b>Bù công suất:</b> chênh ${fmt(flowPost.mismatch, 1)} MW chia theo P<sub>max</sub> cho ${Object.keys(flowPost.Pg).join(", ")}${slackMoved ? " (nút cân bằng dời sang phần lớn nhất)" : ""}.` });
+  st.push({ phase: 4, t: "flow", msg: `<b>Giải dòng DC sau sự cố</b> (B·θ = P). Cơ chế độ nhạy tương ứng: <b>${formula}</b> (${pr.zoneBr.length} nhánh trong vùng, ${islanded ? "có" : "không"} tách đảo). Với các giả thiết của mô hình minh hoạ, lời giải trực tiếp dùng để đối chiếu kết quả ${formula}.` });
+  return { sc, pr, flowPre, flowPost, islandNodes, islandBr, islandInj, formula, st };
+}
+
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, a, parent) { const e = document.createElementNS(NS, tag); for (const k2 in a) e.setAttribute(k2, a[k2]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, anchor, cls, s, style) { const t = el("text", { x, y, "text-anchor": anchor || "start", class: cls }, parent); if (style) t.setAttribute("style", style); t.textContent = s; return t; }
+
+function draw() {
+  const sc = S.sc, svg = $("#nbSvg"); svg.innerHTML = "";
+  const done = S.st.slice(0, k), last = done[done.length - 1];
+  const visited = new Set(done.filter(e => e.t === "visit").map(e => e.node));
+  const opened = new Set(done.filter(e => e.t === "sw" && e.open).map(e => e.sw)), passed = new Set(done.filter(e => e.t === "sw" && e.pass).map(e => e.sw));
+  const lost = new Set(done.flatMap(e => e.lost || [])), ph = last ? last.phase : 0, showIsl = ph >= 3, showPost = ph >= 4;
+  const curNode = last && last.t === "visit" ? last.node : null, curSw = last && last.t === "sw" ? last.sw : null;
+  const gL = el("g", {}, svg), gS = el("g", {}, svg), gN = el("g", {}, svg), gI = el("g", {}, svg), gT = el("g", {}, svg);
+  sc.br.forEach(b => {
+    const isl = showIsl && S.islandBr.includes(b.id), isLost = lost.has(b.id);
+    const color = isLost ? "var(--hv)" : isl ? "var(--isl)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gL);
+    el("polyline", { points: b.p.map(p => p.join(",")).join(" "), fill: "none", stroke: "currentColor", "stroke-width": isLost ? 3.2 : 2.4, "stroke-dasharray": isLost || isl ? "8 6" : "", "stroke-linejoin": "round" }, g);
+    if (b.kind === "trafo") { const [p0, p1] = b.p, mx = (p0[0] + p1[0]) / 2, my = (p0[1] + p1[1]) / 2, v = p0[0] === p1[0];
+      el("circle", { cx: v ? mx : mx - 7, cy: v ? my - 7 : my, r: 10, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g);
+      el("circle", { cx: v ? mx : mx + 7, cy: v ? my + 7 : my, r: 10, fill: "none", stroke: "currentColor", "stroke-width": 2.2 }, g); }
+    txt(gT, b.n[0], b.n[1], b.n[2], "name", b.id, `fill:${color}`);
+    const pre = S.flowPre.F[b.id]; let s = `${fmt(pre, 0)} MW`, cls = "flow";
+    if (showPost) { const post = S.flowPost.F[b.id];
+      if (post !== undefined) { const rho = Math.abs(post) / b.lim; s = `${fmt(pre, 0)} → ${fmt(post, 0)} MW · ρ ${fmt(rho, 2)}`; if (rho > 1) cls = "flow viol"; }
+      else if (isLost) s = `${fmt(pre, 0)} MW → cắt`; else if (isl) s = "trong đảo: không tính"; }
+    txt(gT, b.f[0], b.f[1], b.f[2], cls, s);
+  });
+  sc.sw.forEach(s => {
+    const [x1, y1, x2, y2] = s.g, mx = (x1 + x2) / 2, my = (y1 + y2) / 2, isOpen = opened.has(s.id);
+    const color = isOpen ? "var(--hv)" : passed.has(s.id) ? "var(--mv)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gS);
+    el("line", { x1, y1, x2, y2, stroke: "currentColor", "stroke-width": 2.2 }, g);
+    if (curSw === s.id) el("circle", { cx: mx, cy: my, r: 17, fill: "none", stroke: "var(--or)", "stroke-width": 2.5, "stroke-dasharray": "3 3" }, g);
+    if (s.t === "DS") { el("circle", { cx: mx, cy: my, r: 9, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g);
+      el("line", { x1: mx - 6.5, y1: my + 6.5, x2: mx + 6.5, y2: my - 6.5, stroke: "currentColor", "stroke-width": 2.2 }, g); }
+    else { el("rect", { x: mx - 9, y: my - 9, width: 18, height: 18, fill: s.t === "CB" && !isOpen ? "currentColor" : "var(--surface)", stroke: "currentColor", "stroke-width": 2.2, "stroke-dasharray": s.t === "FCB" ? "4 3" : "" }, g);
+      if (isOpen) el("path", { d: `M${mx - 6},${my - 6}L${mx + 6},${my + 6}M${mx - 6},${my + 6}L${mx + 6},${my - 6}`, stroke: "currentColor", "stroke-width": 2.2 }, g); }
+    txt(gT, s.l[0], s.l[1], s.l[2], "swl", s.id, `fill:${color === "var(--ink)" ? "var(--ink-2)" : color}`);
+  });
+  Object.entries(sc.nodes).forEach(([id, n]) => {
+    const isl = showIsl && S.islandNodes.has(id), v = visited.has(id);
+    const color = v ? "var(--or)" : isl ? "var(--isl)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gN);
+    if (n.bus) { el("rect", { x: n.x - n.bus / 2, y: n.y - 5, width: n.bus, height: 10, rx: 2, fill: "currentColor" }, g);
+      const bl = n.bl || [-n.bus / 2, -12, "start"]; txt(gT, n.x + bl[0], n.y + bl[1], bl[2], "busl", "Thanh cái " + id, `fill:${color}`);
+      if (curNode === id) el("rect", { x: n.x - n.bus / 2 - 6, y: n.y - 11, width: n.bus + 12, height: 22, rx: 5, fill: "none", stroke: "var(--or)", "stroke-width": 2.5 }, g); }
+    else { el("circle", { cx: n.x, cy: n.y, r: v ? 5.5 : 4, fill: "currentColor" }, g);
+      if (curNode === id) el("circle", { cx: n.x, cy: n.y, r: 14, fill: "none", stroke: "var(--or)", "stroke-width": 2.5 }, g);
+      if (n.lab !== false) { const [dx, dy, an] = n.lab || [8, -8, "start"]; txt(gT, n.x + dx, n.y + dy, an, "nodel", id, v ? "fill:var(--or)" : ""); } }
+  });
+  sc.inj.forEach(i => {
+    const isl = showIsl && S.islandInj.find(j => j.id === i.id), isLost = lost.has(i.id);
+    const color = isLost ? "var(--hv)" : isl ? "var(--isl)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gI), [cx, cy] = i.s, [x1, y1, x2, y2] = i.st;
+    el("line", { x1, y1, x2, y2, stroke: "currentColor", "stroke-width": 1.8, "stroke-dasharray": isLost || isl ? "5 4" : "" }, g);
+    if (i.kind === "gen") { el("circle", { cx, cy, r: 12, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g); txt(g, cx, cy + 5, "middle", "name", "G", "font-size:14px;fill:currentColor;stroke-width:0"); }
+    else el("polygon", { points: `${cx - 10},${cy - 8} ${cx + 10},${cy - 8} ${cx},${cy + 10}`, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g);
+    let p = `${i.P} MW`; if (showPost && S.flowPost.Pg[i.id] !== undefined && i.kind === "gen") p = `${i.P} → ${fmt(S.flowPost.Pg[i.id], 0)} MW`;
+    if (showPost && (isLost || isl)) p = `${i.P} MW → mất`;
+    txt(gT, i.l[0], i.l[1], i.l[2], "injl", `${i.id} ${p}${i.slack ? " · slack" : ""}`, `fill:${color}`);
+  });
+}
+
+function renderLog() {
+  const box = $("#nbLog"), cur = S.st.slice(0, k);
+  let h = `<div class="box">${S.sc.intro}</div><ol>`;
+  cur.forEach((e, i) => h += `<li class="${i === k - 1 ? "cur" : ""}">${e.msg}</li>`); h += "</ol>";
+  if (k >= S.st.length) {
+    const L = S.formula === "LODF", Fk = S.flowPre.F[S.sc.fault];
+    const rows = S.sc.br.map(b => { const pre = S.flowPre.F[b.id], post = S.flowPost.F[b.id], rho = post !== undefined ? Math.abs(post) / b.lim : null;
+      return `<tr><td>${b.id}</td><td>${fmt(pre, 1)}</td><td>${post !== undefined ? fmt(post, 1) : (S.pr.lost.has(b.id) ? "Cắt" : "Đảo")}</td><td>${post !== undefined ? fmt(post - pre, 1) : "–"}</td>${L ? `<td>${post !== undefined ? fmt((post - pre) / Fk, 3) : "–"}</td>` : ""}<td>${b.lim}</td><td class="${rho > 1 ? "viol" : ""}">${rho !== null ? fmt(rho, 3) : "–"}</td></tr>`; }).join("");
+    const rmax = Math.max(...S.sc.br.map(b => S.flowPost.F[b.id] !== undefined ? Math.abs(S.flowPost.F[b.id]) / b.lim : 0));
+    h += `<div class="box" style="margin-top:10px"><b>Kết quả (${S.formula}).</b> ρ = |F sau| / giới hạn; ρ<sub>max</sub> = <b class="${rmax > 1 ? "viol" : ""}">${fmt(rmax, 3)}</b>${rmax > 1 ? " → có nhánh được tính vượt giới hạn." : " → không có vi phạm trên các nhánh được tính."}</div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Nhánh</th><th>F trước</th><th>F sau</th><th>ΔF</th>${L ? "<th>LODF = ΔF / F(k)</th>" : ""}<th>Giới hạn</th><th>ρ</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  box.innerHTML = h;
+  const ph = cur.length ? cur[cur.length - 1].phase : 0;
+  $("#nbStage").textContent = ["Sẵn sàng", "1 · Lan truyền", "2 · Gộp bus", "3 · Tách đảo & bù", "4 · Dòng DC & ρ"][ph] + `  (${k}/${S.st.length})`;
+  const li = box.querySelector("li.cur"); if (li) box.scrollTop = Math.max(0, li.offsetTop - box.clientHeight + li.offsetHeight + 12);
+}
+function show() { draw(); renderLog(); }
+function stop() { if (timer) clearInterval(timer); timer = null; $("#nbPlay").setAttribute("aria-pressed", "false"); $("#nbPlay").textContent = "▶ Tự chạy"; }
+function play() { if (k >= S.st.length) k = 0; show(); $("#nbPlay").setAttribute("aria-pressed", "true"); $("#nbPlay").textContent = "❚❚ Tạm dừng";
+  timer = setInterval(() => { if (k < S.st.length) { k++; show(); } if (k >= S.st.length) stop(); }, +$("#nbSpeed").value); }
+function load(i) { stop(); S = build(SC[i]); k = 0; document.querySelectorAll("#nbTabs button").forEach((b, j) => b.setAttribute("aria-pressed", String(j === i))); show(); }
+SC.forEach((sc, i) => { const b = document.createElement("button"); b.textContent = sc.title; b.onclick = () => load(i); $("#nbTabs").appendChild(b); });
+$("#nbPlay").onclick = () => timer ? stop() : play();
+$("#nbStep").onclick = () => { stop(); if (k < S.st.length) { k++; show(); } };
+$("#nbBack").onclick = () => { stop(); if (k > 0) { k--; show(); } };
+$("#nbReset").onclick = () => { stop(); k = 0; show(); };
+$("#nbAll").onclick = () => { stop(); k = S.st.length; show(); };
+$("#nbSpeed").onchange = () => { if (timer) { stop(); play(); } };
+load(0); k = S.st.length; show();
+})();
+</script>
+</body>
+</html>

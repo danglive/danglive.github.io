@@ -1,0 +1,1671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>N-1 Security Analysis</title>
+<meta name="description" content="N-1 security analysis: protection-based disconnection scopes, PTDF, LODF, GLODF, ISDF and evaluation of AI contingency screening.">
+<meta name="author" content="Van Tuan Dang">
+<link rel="canonical" href="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis.html">
+<link rel="alternate" hreflang="en" href="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis.html">
+<link rel="alternate" hreflang="vi" href="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis_vi.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="N-1 Security Analysis">
+<meta property="og:description" content="Protection zones, post-contingency power flows and the role of AI in operational security screening.">
+<meta property="og:url" content="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/n1_security_analysis.html">
+<meta property="og:image" content="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/Image_N1_EN_v2.png">
+<meta property="og:image:width" content="1672">
+<meta property="og:image:height" content="941">
+<meta property="og:image:alt" content="N-1 security analysis from physical faults to decision-support screening">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="N-1 Security Analysis">
+<meta name="twitter:description" content="Protection zones, post-contingency power flows and the role of AI in operational security screening.">
+<meta name="twitter:image" content="https://dangvantuan.info/blog_phan_tich_an_ninh_N1/Image_N1_EN_v2.png">
+<style>
+:root{
+  --ground:#f4f5f7; --surface:#fff; --surface-2:#eceef1;
+  --ink:#171b21; --ink-2:#4a525e; --ink-3:#79828f;
+  --rule:#d4d8de; --rule-soft:#e4e7eb;
+  --hv:#a8342a; --mv:#2c6a4d; --lv:#27598a; --or:#b06a12; --isl:#7a4fc4;
+  --hv-w:#f7e9e7; --mv-w:#e7f1eb; --lv-w:#e6eef6; --or-w:#f9efe0;
+  --serif:Arial,"Helvetica Neue",sans-serif;
+  --sans:Arial,"Helvetica Neue",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#12161b; --surface:#191e25; --surface-2:#20262e;
+  --ink:#e2e6ec; --ink-2:#a7b0bc; --ink-3:#7b8593;
+  --rule:#2e353e; --rule-soft:#242b33;
+  --hv:#e8796a; --mv:#74c39a; --lv:#7fb2df; --or:#e0a352; --isl:#b995f5;
+  --hv-w:#2a1c1a; --mv-w:#15261e; --lv-w:#162330; --or-w:#2a2115;}}
+:root[data-theme="dark"]{
+  --ground:#12161b; --surface:#191e25; --surface-2:#20262e;
+  --ink:#e2e6ec; --ink-2:#a7b0bc; --ink-3:#7b8593;
+  --rule:#2e353e; --rule-soft:#242b33;
+  --hv:#e8796a; --mv:#74c39a; --lv:#7fb2df; --or:#e0a352; --isl:#b995f5;
+  --hv-w:#2a1c1a; --mv-w:#15261e; --lv-w:#162330; --or-w:#2a2115;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.7;padding-inline:22px}
+.wrap{max-width:1180px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;padding-block:18px 0;font-size:13.5px}
+.top a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule)}
+.top a:hover{color:var(--ink)}
+header{padding-block:48px 36px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 18px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5.6vw,46px);line-height:1.12;
+  margin:0 0 8px;letter-spacing:-.012em;text-wrap:balance}
+.sub{font-family:var(--serif);font-size:clamp(20px,3.6vw,26px);font-weight:400;color:var(--ink-2);
+  margin:0 0 22px;line-height:1.3;text-wrap:balance}
+.lede{font-size:18.5px;color:var(--ink-2);margin:0}
+.screening-funnel{margin:28px 0 2px}
+.screening-funnel .funnel-scroll{overflow-x:auto;padding-bottom:2px}
+.screening-funnel svg{min-width:760px}
+.screening-funnel figcaption{max-width:none}
+.byline{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:22px 0 0;letter-spacing:.04em}
+.author-banner{margin:28px 0 0;overflow:hidden;border:1px solid var(--rule);border-radius:18px;background:var(--surface);box-shadow:0 12px 30px rgba(22,55,82,.08)}
+.author-cover{display:block;width:100%;height:auto;aspect-ratio:4/1;object-fit:cover;object-position:center}
+.article-cover{margin:28px 0 0;overflow:hidden;border:1px solid var(--rule);border-radius:18px;background:var(--surface);box-shadow:0 12px 30px rgba(22,55,82,.08)}
+.article-cover img{display:block;width:100%;height:auto;aspect-ratio:1672/941;object-fit:contain}
+.article-cover figcaption{max-width:none;margin:0;padding:12px 16px 13px;border-left:none;border-top:1px solid var(--rule-soft);text-align:left}
+.article-meta{display:flex;flex-wrap:wrap;gap:5px 18px;margin:22px 0 0;color:var(--ink-3);font-size:14px}
+.article-meta span{display:inline-flex;align-items:center}
+.article-meta span+span::before{content:"·";margin-right:18px;color:var(--ink-3)}
+.article-meta strong{color:var(--ink);font-weight:700}
+nav.toc{padding-block:26px;border-bottom:1px solid var(--rule-soft);font-size:14.5px}
+nav.toc ol{max-width:900px;margin:0;padding:0;list-style:none;display:block}
+nav.toc li{margin:0;padding:13px 0 14px;border-top:1px solid var(--rule-soft)}
+nav.toc li:first-child{border-top:none;padding-top:0}
+nav.toc li:last-child{padding-bottom:0}
+nav.toc br{display:none}
+nav.toc a{position:relative;display:block;color:var(--ink-2);text-decoration:none;padding:4px 0 4px 20px;line-height:1.45}
+nav.toc a::before{content:"";position:absolute;left:1px;top:14px;width:9px;height:1px;background:var(--rule)}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a:hover::before{background:var(--hv)}
+nav.toc .p{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--hv);text-transform:uppercase;display:block;margin:0 0 3px}
+section{padding-block:50px;border-bottom:1px solid var(--rule-soft)}
+section:last-of-type{border-bottom:none}
+.num{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--hv);display:block;margin-bottom:10px;text-transform:uppercase}
+h2{font-family:var(--serif);font-weight:600;font-size:clamp(22px,4vw,30px);line-height:1.22;
+  margin:0 0 20px;text-wrap:balance}
+h3{font-weight:700;font-size:19px;line-height:1.35;margin:38px 0 11px;text-wrap:balance}
+p{margin:0 0 16px}
+p,li,figcaption,.lede,.doc{text-align:justify;text-justify:inter-word;hyphens:manual;-webkit-hyphens:manual}
+a{color:var(--lv)}
+.key{border-left:3px solid var(--hv);padding:2px 0 2px 20px;margin:24px 0;
+  font-family:var(--serif);font-size:19.5px;line-height:1.5;text-align:left;hyphens:manual}
+.key.mv{border-left-color:var(--mv)} .key.lv{border-left-color:var(--lv)}
+.transition{margin:32px 0 0;padding-top:18px;border-top:1px solid var(--rule);color:var(--ink-2);font-size:16px}
+.transition strong{color:var(--ink)}
+.contribution-note{margin:26px 0 32px;padding:17px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.contribution-note .label{display:block;margin-bottom:7px;font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mv)}
+.contribution-note p{margin:0;color:var(--ink-2);font-size:16px}
+.references{font-size:14px;color:var(--ink-2);padding-left:22px}
+.references li{margin:0 0 10px;padding-left:4px}
+.references a{overflow-wrap:anywhere}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--surface-2);font-weight:500}
+tbody tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+figure{margin:30px 0}
+figure svg{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--rule);border-radius:10px}
+figcaption{max-width:920px;font-size:14px;line-height:1.6;color:var(--ink-2);margin-top:11px;padding-left:14px;border-left:2px solid var(--rule)}
+figcaption b{color:var(--ink)}
+.interactive-figure{background:var(--surface);border:1px solid var(--rule);margin:26px 0}
+.interactive-figure-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px}
+@media(max-width:720px){.interactive-figure-grid{grid-template-columns:1fr}}
+.interactive-figure svg{display:block;width:100%;height:auto}
+.panel{border-left:1px solid var(--rule);padding:18px 18px 22px}
+@media(max-width:720px){.panel{border-left:none;border-top:1px solid var(--rule)}}
+.panel .hd{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.panel .co{font-family:var(--serif);font-size:23px;font-weight:600;line-height:1.2;margin-bottom:4px}
+.q{display:flex;gap:9px;align-items:flex-start;margin:10px 0;font-size:13.5px;line-height:1.45}
+.q b{font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:0 0 auto;padding-top:2px}
+.yes{color:var(--hv);font-weight:650} .no{color:var(--mv);font-weight:650}
+.hint{font-size:12.5px;color:var(--ink-3);margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-soft)}
+.br{cursor:pointer} .br:hover{opacity:.7}
+.leg{display:flex;flex-wrap:wrap;gap:6px 18px;padding:12px 16px;border-top:1px solid var(--rule);
+  font-size:12.5px;color:var(--ink-2);font-family:var(--mono)}
+.leg i{display:inline-block;width:22px;height:3px;vertical-align:3px;margin-right:6px}
+.formula{font-family:var(--serif);font-size:19px;text-align:center;margin:20px auto;padding:14px 18px;
+  background:var(--surface);border:1px solid var(--rule);line-height:1.6}
+.formula sub,.formula sup{font-size:.62em}
+.formula .doc{display:block;font-family:var(--sans);font-size:13px;color:var(--ink-2);margin-top:8px;text-align:left}
+.formula .doc b{color:var(--ink)}
+ul{margin:0 0 16px;padding-left:22px} li{margin-bottom:8px}
+.claims{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0}
+.claim{background:var(--surface);border:1px solid var(--rule);padding:16px 18px}
+.claim .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.claim h4{font-family:var(--serif);font-size:18px;font-weight:600;margin:0 0 6px;line-height:1.3}
+.claim p{font-size:15px;line-height:1.65;margin:0;color:var(--ink-2);text-align:justify;hyphens:manual}
+.case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:28px 0}
+.case-card{padding:20px 20px 18px;background:var(--surface);border:1px solid var(--rule);border-top:4px solid var(--lv)}
+.case-card:nth-child(2){border-top-color:var(--mv)}
+.case-card:nth-child(3){border-top-color:var(--or)}
+.case-card .case-label{display:block;margin-bottom:8px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.case-card h3{margin:0 0 10px;font-size:17px;line-height:1.35}
+.case-card p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.65;text-align:justify}
+.point-grid{max-width:none!important;list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0 30px}
+.point-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.point-grid li{margin:0;padding:17px 18px 18px;background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--lv);font-size:15px;line-height:1.65;color:var(--ink-2)}
+.point-grid li:nth-child(2){border-top-color:var(--mv)}
+.point-grid li:nth-child(3){border-top-color:var(--or)}
+.point-grid li:nth-child(4){border-top-color:var(--isl)}
+.point-grid li b{display:block;margin-bottom:5px;color:var(--ink);font-size:16px}
+.topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:28px 0 34px}
+.topic-card{padding:20px;background:var(--surface);border:1px solid var(--rule)}
+.topic-card:last-child{grid-column:1/-1}
+.topic-card h3{margin:0 0 9px;font-size:18px}
+.topic-card p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.68;text-align:justify}
+.close{background:var(--surface);border:1px solid var(--rule);padding:28px 30px;margin:36px 0 0}
+.close h2{margin-top:0}
+.close li{padding:10px 0 10px 4px;margin:0;border-top:1px solid var(--rule-soft)}
+.close li:first-child{border-top:none}
+.author-box{margin:40px 0 0;padding:22px 24px 24px;border:1px solid var(--rule);border-radius:18px;background:linear-gradient(145deg,var(--surface),var(--surface-2));box-shadow:0 12px 30px rgba(22,55,82,.08)}
+.author-box h4{margin:0 0 5px;font-size:18px;color:var(--ink)}
+.author-box p{margin:0;color:var(--ink-2);font-size:15px}
+footer{padding-block:36px 64px;border-top:2px solid var(--ink);margin-top:50px;font-size:13.5px;color:var(--ink-3);line-height:1.6}
+footer p{text-align:justify}
+@media(max-width:840px){.case-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.point-grid,.point-grid.three,.topic-grid{grid-template-columns:1fr}.topic-card:last-child{grid-column:auto}}
+@media(max-width:720px){.claims{grid-template-columns:1fr}}
+@media(max-width:560px){body{font-size:16px;padding-inline:16px}section{padding-block:36px}.close{padding:22px 18px}}
+
+/* ─── node-breaker interactive illustration (section 8) ─── */
+.wide{max-width:1180px;margin:0 auto}
+#nb{background:var(--surface);border:1px solid var(--rule);padding:14px;margin:26px 0}
+#nb .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+#nb button,#nb select{font:600 13.5px var(--sans);border:1px solid var(--rule);background:var(--surface);color:var(--ink);padding:6px 12px;cursor:pointer;border-radius:4px}
+#nb .tabs button[aria-pressed="true"]{border-color:var(--lv);color:var(--lv);box-shadow:inset 0 -2px 0 var(--lv)}
+#nb button:focus-visible,#nb select:focus-visible{outline:2px solid var(--lv);outline-offset:2px}
+#nb .ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+#nb .ctl label{font-size:13px;color:var(--ink-2)}
+#nb .stage{margin-left:auto;font:600 12.5px var(--mono);color:var(--ink-2)}
+#nb #nbPlay[aria-pressed="true"]{border-color:var(--lv);color:var(--lv)}
+#nb .grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+@media (max-width:980px){#nb .grid{grid-template-columns:1fr}}
+#nbSvg{width:100%;height:auto;display:block;border:1px solid var(--rule-soft);background:var(--surface)}
+#nbSvg text{font-family:var(--sans);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+#nbSvg .name{font-size:15px;font-weight:700}
+#nbSvg .flow{font-family:var(--mono);font-size:13px}
+#nbSvg .swl{font-size:12.5px;fill:var(--ink-2)}
+#nbSvg .nodel{font-size:11.5px;fill:var(--ink-3)}
+#nbSvg .busl{font-size:14px;font-weight:700}
+#nbSvg .injl{font-family:var(--mono);font-size:13px}
+#nbSvg .viol{fill:var(--hv);font-weight:700}
+#nbLog{font-size:13.5px;line-height:1.5;max-height:620px;overflow:auto;position:relative;border:1px solid var(--rule-soft);padding:10px 12px}
+#nbLog ol{margin:0;padding-left:22px;max-width:none} #nbLog li{margin:0 0 5px}
+#nbLog li.cur{font-weight:700;background:var(--surface-2)}
+#nbLog li,#nbLog .box,.panel p,.panel div{text-align:left;hyphens:manual}
+#nb .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink-2);margin-top:10px;align-items:center}
+#nb .legend span{display:inline-flex;align-items:center;gap:6px}
+#nb .legend svg{width:20px;height:20px;flex:none;color:var(--ink)}
+#nb .box{background:var(--surface-2);padding:8px 10px;margin:0 0 8px;font-size:13.5px}
+#nb table{font-size:13px;font-variant-numeric:tabular-nums;margin-top:6px}
+#nb th,#nb td{border:1px solid var(--rule-soft);padding:4px 6px;text-align:right}
+#nb th:first-child,#nb td:first-child{text-align:left}
+#nb thead th{font-size:10.5px}
+#nb td.viol,#nb b.viol{color:var(--hv);font-weight:700}
+.badge{display:inline-block;font:700 11.5px var(--mono);letter-spacing:.03em;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.b-go{color:var(--mv);border:1.5px solid var(--mv)} .b-stop{color:var(--hv);border:1.5px solid var(--hv)} .b-lost{color:var(--or);border:1.5px solid var(--or)}
+.rules td,.rules th{vertical-align:middle}
+.rules td.sym{width:46px;text-align:center}
+.rules td.sym svg{width:28px;height:28px;color:var(--ink);display:inline-block;border:none;background:none}
+.rules tr.go td:first-child{box-shadow:inset 4px 0 0 var(--mv)} .rules tr.stop td:first-child{box-shadow:inset 4px 0 0 var(--hv)} .rules tr.lost td:first-child{box-shadow:inset 4px 0 0 var(--or)}
+@media (prefers-reduced-motion: reduce){#nbSvg *{transition:none!important}}
+
+/* Typography aligned with the existing article system. */
+h1,h2,h3,h4,.sub,.key,.panel .co{font-family:var(--sans)}
+.byline{font-family:var(--sans);font-size:14px;letter-spacing:0}
+p,li{line-height:1.72}
+.claim p,.key,footer p{text-align:justify;hyphens:manual}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top"><a href="../blog.html">← All articles</a><span style="font-family:var(--mono);font-size:12px;color:var(--ink-3)">English · <a href="n1_security_analysis_vi.html" hreflang="vi">Tiếng Việt</a></span></div>
+
+<div class="author-banner">
+  <img class="author-cover" src="../blog/author.jpg" width="1400" height="350" alt="Van Tuan Dang — Principal Digital Grid Architect" fetchpriority="high" decoding="async">
+</div>
+
+<header>
+
+  <h1>N-1 Security Analysis</h1>
+  <p class="sub">Protection zones, post-contingency power flows and the role of AI in security screening</p>
+  <p class="lede">N-1 security analysis evaluates network operation after the individual contingencies in a defined list. The result depends first on how each contingency is modelled: a fault on one element can cause protection to disconnect several devices. This article examines the relationship between the disconnection scope, network topology and sensitivity factors, then considers how AI can rank contingencies for AC verification.</p>
+  <p>In <a href="https://dangvantuan.info/blog/ai_in_grid_control_room.html"><i>When AI enters the control room: from accurate prediction to verifiable decisions</i></a>, I set out the need for evidence and operator control. This article applies that principle to a specific task: verifying how AI supports N-1 contingency screening.</p>
+  <figure class="screening-funnel">
+    <div class="funnel-scroll">
+      <svg viewBox="0 0 1100 250" role="img" aria-label="Illustrative screening funnel: approximately ten thousand contingencies are ranked; the first five hundred are prioritised for detailed AC simulation; confirmed violations go to the operator, while violations outside the top-500 budget count as misses in the screening evaluation.">
+        <polygon points="40,40 400,40 400,210 40,210" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="220" y="118" text-anchor="middle" font-family="var(--serif)" font-size="30" font-weight="600" fill="var(--ink)">≈ 10,000</text>
+        <text x="220" y="146" text-anchor="middle" font-family="var(--sans)" font-size="14" fill="var(--ink-2)">All contingencies for one grid state</text>
+        <polygon points="400,40 560,95 560,155 400,210" fill="var(--lv-w)" stroke="var(--lv)"/>
+        <text x="480" y="130" text-anchor="middle" font-family="var(--sans)" font-size="13" font-weight="650" fill="var(--lv)">AI ranking</text>
+        <rect x="560" y="95" width="250" height="60" fill="var(--or-w)" stroke="var(--or)" stroke-width="1.6"/>
+        <text x="685" y="122" text-anchor="middle" font-family="var(--serif)" font-size="22" font-weight="600" fill="var(--or)">500</text>
+        <text x="685" y="143" text-anchor="middle" font-family="var(--sans)" font-size="12.5" fill="var(--ink-2)">Prioritised for detailed AC simulation</text>
+        <line x1="810" y1="125" x2="858" y2="125" stroke="var(--ink-3)" stroke-width="1.6"/><path d="M858 119 L868 125 L858 131 Z" fill="var(--ink-3)"/>
+        <rect x="870" y="95" width="210" height="60" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+        <text x="975" y="121" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="650" fill="var(--ink)">Confirmed violations</text>
+        <text x="975" y="140" text-anchor="middle" font-family="var(--sans)" font-size="12.5" fill="var(--ink-2)">→ operator</text>
+        <path d="M480 172 C 520 205, 600 222, 660 222" stroke="var(--hv)" stroke-width="1.6" fill="none" stroke-dasharray="5 4"/>
+        <circle cx="668" cy="222" r="5" fill="var(--hv)"/>
+        <text x="682" y="226" font-family="var(--sans)" font-size="12.5" fill="var(--hv)">Violation outside top 500 = screening miss</text>
+      </svg>
+    </div>
+    <figcaption><b>In this illustrative computation-budget example, the AI model performs a ranking function that acts as a screening funnel.</b> With a budget of 500 detailed AC calculations, every contingency in the official list remains within the governed scope; the model only determines which cases receive priority for verification inside the computation window. A violation outside the top 500 counts as a miss when screening quality is evaluated, not as a contingency removed from the list.</figcaption>
+  </figure>
+  <div class="article-meta"><span><strong>Van Tuan Dang</strong></span><span>September 28, 2026</span><span>Power-system security · AI decision support</span></div>
+</header>
+
+<figure class="article-cover">
+  <img src="Image_N1_EN_v2.png" width="1672" height="941" alt="N-1 security analysis from physical faults to decision-support screening" loading="lazy" decoding="async">
+  <figcaption><b>Conceptual overview.</b> The figure places the physical event sequence alongside the analytical workflow. In operation, N-1 screening and ranking are performed on hypothetical contingencies before a real event occurs; AC calculations confirm the prioritised cases.</figcaption>
+</figure>
+
+<nav class="toc" aria-label="Contents">
+  <ol>
+    <li><span class="p">Part I · From the event to the post-contingency state</span>
+      <a href="#s1">1. The N-1 criterion in transmission operation</a><br>
+      <a href="#s2">2. Network topology and protection scope</a><br>
+      <a href="#s3">3. Post-contingency power flows</a></li>
+    <li><span class="p">Part II · The scale problem</span>
+      <a href="#s4">4. Computational scale and contingency screening</a></li>
+    <li><span class="p">Part III · Selecting the right physical model</span>
+      <a href="#s5">5. GLODF and ISDF in a unified sensitivity framework</a><br>
+      <a href="#s6">6. Selecting the model from post-contingency topology</a><br>
+      <a href="#s7">7. Contingency classification on a small network</a><br>
+      <a href="#s8">8. Contingency propagation and the final outage set in a node-breaker model</a></li>
+    <li><span class="p">Part IV · Verification and transferability</span>
+      <a href="#s9">9. Designing and evaluating the sensitivity map</a><br>
+      <a href="#s10">10. Application across transmission networks</a></li>
+    <li><span class="p">Part V · AI in the operational workflow</span>
+      <a href="#s11">11. AI for contingency ranking and screening</a><br>
+      <a href="#s12">12. From broad N-1 screening to detailed studies</a></li>
+  </ol>
+</nav>
+
+<!-- ═══════════════════ PART I ═══════════════════ -->
+<section id="s1">
+  <span class="num">Part I · From the event to the post-contingency state</span>
+  <h2>1. The N-1 criterion in transmission operation</h2>
+
+  <p>Lines, transformers and switching equipment can fail during operation. When an element leaves service, the remaining system must accommodate the resulting changes in power flows and voltage. Network design, operating reserves and remedial actions must work together to limit supply interruptions and prevent further outages.</p>
+
+  <p>Under the N-1 criterion, the system must meet the specified security limits following a single contingency from the assessed list, taking permitted remedial actions into account. The assessment therefore depends on the operating state, contingency scope and time available for corrective action. An acceptable base case alone does not establish that the system can withstand the next outage.</p>
+
+  <h3>Protection timing and operator response</h3>
+  <p>Electrical transients and protection actions can develop faster than an operator can assess and respond to them. The time available to relieve an overload depends on the equipment, loading level and protection settings. Pre-contingency analysis helps establish actions that can be completed within that time.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 300" role="img" aria-label="Time scales after a contingency on a logarithmic axis: flows redistribute in 20 milliseconds, protection clears in 60 to 150 milliseconds, a cascade can complete in seconds to tens of minutes, operators need minutes, so the analysis must be done before the event">
+      <defs><marker id="tl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <rect x="0" y="40" width="78" height="200" fill="var(--mv-w)"/>
+      <text x="39" y="66" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--mv)" letter-spacing=".06em">BEFORE</text>
+      <text x="39" y="80" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--mv)" letter-spacing=".06em">THE EVENT</text>
+      <text x="39" y="118" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink)" font-weight="650">N-1 security</text>
+      <text x="39" y="133" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink)" font-weight="650">Analysis</text>
+      <text x="39" y="150" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Every few</text>
+      <text x="39" y="163" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">minutes, per</text>
+      <text x="39" y="176" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">contingency</text>
+      <line x1="80" y1="36" x2="80" y2="246" stroke="var(--hv)" stroke-width="2"/>
+      <text x="80" y="28" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)" font-weight="650">t = 0 · contingency</text>
+      <line x1="80" y1="240" x2="830" y2="240" stroke="var(--ink-3)" stroke-width="1.2" marker-end="url(#tl)"/>
+      <g font-family="var(--mono)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">
+        <line x1="188" y1="236" x2="188" y2="244" stroke="var(--ink-3)"/><text x="188" y="258">10 ms</text>
+        <line x1="296" y1="236" x2="296" y2="244" stroke="var(--ink-3)"/><text x="296" y="258">100 ms</text>
+        <line x1="404" y1="236" x2="404" y2="244" stroke="var(--ink-3)"/><text x="404" y="258">1 s</text>
+        <line x1="512" y1="236" x2="512" y2="244" stroke="var(--ink-3)"/><text x="512" y="258">10 s</text>
+        <line x1="596" y1="236" x2="596" y2="244" stroke="var(--ink-3)"/><text x="596" y="258">1 min</text>
+        <line x1="704" y1="236" x2="704" y2="244" stroke="var(--ink-3)"/><text x="704" y="258">10 min</text>
+        <line x1="788" y1="236" x2="788" y2="244" stroke="var(--ink-3)"/><text x="788" y="258">1 h</text>
+        <text x="455" y="284" fill="var(--ink-3)" font-size="10">Logarithmic scale: each tick is ten times the previous one</text>
+      </g>
+      <text x="92" y="64" font-family="var(--mono)" font-size="9.5" fill="var(--ink-3)" letter-spacing=".08em">PHYSICS</text>
+      <circle cx="220" cy="80" r="6" fill="var(--lv)"/>
+      <text x="232" y="77" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Flows redistribute</text>
+      <text x="232" y="91" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">One 50 Hz cycle · 20 ms · illustrative scale</text>
+      <rect x="272" y="100" width="43" height="12" fill="var(--lv)"/>
+      <text x="322" y="110" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Protection clears the fault</text>
+      <text x="480" y="110" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">60 – 150 ms</text>
+      <text x="92" y="140" font-family="var(--mono)" font-size="9.5" fill="var(--ink-3)" letter-spacing=".08em">SYSTEM</text>
+      <rect x="512" y="148" width="192" height="12" fill="var(--or)" opacity=".55"/>
+      <text x="470" y="158" text-anchor="end" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">An overloaded element holds for minutes to tens of minutes</text>
+      <rect x="480" y="128" width="224" height="12" fill="var(--hv)" opacity=".85"/>
+      <text x="486" y="124" font-family="var(--sans)" font-size="12" fill="var(--hv)" font-weight="650">A cascade can complete</text>
+      <text x="710" y="138" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Seconds … tens of minutes</text>
+      <text x="92" y="204" font-family="var(--mono)" font-size="9.5" fill="var(--ink-3)" letter-spacing=".08em">PEOPLE</text>
+      <rect x="629" y="196" width="130" height="12" fill="var(--ink-3)" opacity=".6"/>
+      <text x="629" y="192" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Operator recognises · decides · acts</text>
+      <text x="629" y="222" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Minutes</text>
+      <path d="M480 128 L480 178" stroke="var(--hv)" stroke-width="1" stroke-dasharray="3 3"/>
+      <path d="M629 128 L629 178" stroke="var(--hv)" stroke-width="1" stroke-dasharray="3 3"/>
+    </svg>
+    <figcaption><b>Response times.</b> The figure illustrates the difference between electrical processes, protection actions and operator response. The times shown are illustrative; an operational study must use the relevant equipment data and protection settings.</figcaption>
+  </figure>
+
+  <div class="key">Pre-contingency analysis must track the current network state and contingency list. Results need to arrive early enough for operators to prepare corrective actions.</div>
+
+  <p>N-1 analysis starts from a reference network state, applies each contingency, computes the resulting state and checks the limits. For the illustrative scale of 7,000 buses and 10,000 branches used here, the list can contain thousands of cases. Both the list and the results must be updated as topology and operating conditions change.</p>
+  <p class="transition"><strong>The physical event must be defined before a solver is selected.</strong> Assessing whether the system can withstand a contingency first requires identification of the equipment that protection will remove from service.</p>
+</section>
+
+<section id="s2">
+  <span class="num">Part I · From the event to the post-contingency state</span>
+  <h2>2. Network topology and protection scope</h2>
+
+  <p>Contingency resilience depends on both transmission topology and the way protection isolates the faulted equipment.</p>
+
+  <h3>Redundancy through meshed topology</h3>
+  <p>In a meshed network, disconnecting a line redistributes power through the remaining paths according to network impedances. Continued operation depends on the capacity and limits of those paths. Radial branches have fewer alternative supply paths and require separate treatment in the contingency assessment.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 270" role="img" aria-label="Meshing density falls from a heavily looped extra-high-voltage backbone, through an intermediate level with a few loops, to a radial sub-transmission edge with a single path">
+      <g font-family="var(--sans)" font-size="12.5" text-anchor="middle" font-weight="650">
+        <text x="180" y="30" fill="var(--hv)">EHV backbone</text>
+        <text x="470" y="30" fill="var(--mv)">HV intermediate level</text>
+        <text x="760" y="30" fill="var(--lv)">Sub-transmission edge</text>
+      </g>
+      <g stroke="var(--hv)" stroke-width="2.4" fill="none">
+        <polygon points="120,70 240,70 290,140 240,210 120,210 70,140"/>
+        <line x1="120" y1="70" x2="240" y2="210"/><line x1="240" y1="70" x2="120" y2="210"/>
+        <line x1="70" y1="140" x2="290" y2="140"/>
+      </g>
+      <g fill="var(--ink)"><circle cx="120" cy="70" r="5"/><circle cx="240" cy="70" r="5"/><circle cx="290" cy="140" r="5"/><circle cx="240" cy="210" r="5"/><circle cx="120" cy="210" r="5"/><circle cx="70" cy="140" r="5"/><circle cx="180" cy="140" r="5"/></g>
+      <line x1="290" y1="140" x2="380" y2="140" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 4"/>
+      <g stroke="var(--mv)" stroke-width="2.2" fill="none">
+        <rect x="380" y="90" width="150" height="100"/><line x1="380" y1="90" x2="530" y2="190"/>
+      </g>
+      <g fill="var(--ink)"><circle cx="380" cy="90" r="5"/><circle cx="530" cy="90" r="5"/><circle cx="380" cy="190" r="5"/><circle cx="530" cy="190" r="5"/></g>
+      <line x1="530" y1="140" x2="620" y2="140" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="6 4"/>
+      <g stroke="var(--lv)" stroke-width="2.2" fill="none">
+        <line x1="620" y1="140" x2="700" y2="140"/><line x1="700" y1="140" x2="770" y2="100"/><line x1="700" y1="140" x2="770" y2="180"/><line x1="770" y1="180" x2="840" y2="200"/>
+      </g>
+      <g fill="var(--ink)"><circle cx="620" cy="140" r="5"/><circle cx="700" cy="140" r="5"/></g>
+      <g fill="var(--lv)"><circle cx="770" cy="100" r="7"/><circle cx="770" cy="180" r="7"/><circle cx="840" cy="200" r="7"/></g>
+      <g fill="var(--surface)"><circle cx="770" cy="100" r="3"/><circle cx="770" cy="180" r="3"/><circle cx="840" cy="200" r="3"/></g>
+      <g font-family="var(--sans)" font-size="12" text-anchor="middle" fill="var(--ink-2)">
+        <text x="180" y="245">Many loops between any two points</text>
+        <text x="455" y="245">A few paths</text>
+        <text x="760" y="245">A single path to the consumer</text>
+      </g>
+      <g font-family="var(--mono)" font-size="10" text-anchor="middle" fill="var(--ink-3)">
+        <text x="180" y="262">High margin · high investment</text><text x="455" y="262">Medium margin</text><text x="760" y="262">No margin</text>
+      </g>
+    </svg>
+    <figcaption><b>Meshed and radial connections.</b> In this example, the main network has alternative transmission paths, while the peripheral feeder has one connection. Removing it separates the downstream network.</figcaption>
+  </figure>
+
+  <h3>Protection and fault isolation</h3>
+  <p>Relays use measurements and protection logic to detect faults and command the relevant circuit breakers. In the model considered here, real circuit breakers can interrupt fault current; disconnectors and busbar connections do not perform that function.</p>
+
+  <p>The computational object used here is more precisely called the <strong>protection-induced outage set</strong>: the equipment removed from service when boundary breakers open to isolate a fault. It is derived from node-breaker connectivity and the clearing logic in section 8. It is not identical to a relay protection zone defined by settings, CT/VT placement or differential protection; operational use requires checking primary and backup protection schemes and the actual device states.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 900 300" role="img" aria-label="Animated: fault current spreads from the fault point through the line, a disconnector and a busbar, and is stopped only at closed breakers A, B, C and D, which open; the equipment they enclose is the protection zone">
+      <path data-appear=".50" d="M118 88 L782 88 L782 112 L470 112 L470 165 L640 165 L640 187 L610 187 L610 200 L590 200 L590 187 L310 187 L310 200 L290 200 L290 187 L260 187 L260 165 L430 165 L430 112 L118 112 Z" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <line x1="60" y1="100" x2="840" y2="100" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="450" y1="100" x2="450" y2="175" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="443" y1="125" x2="457" y2="145" stroke="var(--ink)" stroke-width="2"/>
+      <line x1="270" y1="175" x2="630" y2="175" stroke="var(--ink)" stroke-width="5"/>
+      <line x1="300" y1="175" x2="300" y2="250" stroke="var(--ink-3)" stroke-width="2.2"/>
+      <line x1="600" y1="175" x2="600" y2="250" stroke="var(--ink-3)" stroke-width="2.2"/>
+      <g fill="var(--ink)"><rect x="104" y="93" width="14" height="14"/><rect x="782" y="93" width="14" height="14"/><rect x="293" y="200" width="14" height="14"/><rect x="593" y="200" width="14" height="14"/></g>
+      <g data-appear=".30"><rect x="102" y="91" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M106 95 L116 105 M106 105 L116 95" stroke="var(--hv)" stroke-width="2"/></g><g data-appear=".30"><rect x="780" y="91" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M784 95 L794 105 M784 105 L794 95" stroke="var(--hv)" stroke-width="2"/></g><g data-appear=".46"><rect x="291" y="198" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M295 202 L305 212 M295 212 L305 202" stroke="var(--hv)" stroke-width="2"/></g><g data-appear=".46"><rect x="591" y="198" width="18" height="18" fill="var(--surface)" stroke="var(--hv)" stroke-width="2"/><path d="M595 202 L605 212 M595 212 L605 202" stroke="var(--hv)" stroke-width="2"/></g>
+      <g font-family="var(--mono)" font-size="10.5" fill="var(--ink)">
+        <text x="111" y="80" text-anchor="middle">Breaker A</text><text x="789" y="80" text-anchor="middle">Breaker B</text>
+        <text x="316" y="211">Breaker C</text><text x="616" y="211">Breaker D</text>
+      </g>
+      <path data-blink="1" d="M448 58 L438 80 L445 80 L441 98 L455 74 L448 74 L453 58 Z" fill="var(--hv)"/>
+      <text x="466" y="72" font-family="var(--sans)" font-size="11.5" fill="var(--hv)" font-weight="650">Fault</text>
+      <text x="480" y="140" font-family="var(--mono)" font-size="10" fill="var(--ink-3)">Disconnector</text>
+      <text x="652" y="179" font-family="var(--mono)" font-size="10.5" fill="var(--ink-2)">Busbar</text>
+      <g stroke="var(--hv)" stroke-width="2.6" fill="none">
+        <path data-grow=".06,.30" data-head="1" d="M430 100 L138 100"/><path data-grow=".06,.30" data-head="1" d="M470 100 L762 100"/>
+        <path data-grow=".10,.27" data-head="1" d="M450 112 L450 160"/>
+        <path data-grow=".30,.46" data-head="1" d="M436 175 L320 175"/><path data-grow=".30,.46" data-head="1" d="M464 175 L580 175"/>
+      </g>
+      <text x="150" y="134" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Through the line, disconnector, busbar:</text>
+      <text x="150" y="149" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">It stops only at a closed breaker</text>
+      <g font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">
+        <rect x="40" y="274" width="14" height="14" fill="var(--ink)"/><text x="62" y="285">Closed breaker</text>
+        <line x1="200" y1="281" x2="224" y2="281" stroke="var(--ink)" stroke-width="2"/><line x1="208" y1="275" x2="216" y2="287" stroke="var(--ink)" stroke-width="2"/><text x="232" y="285">Disconnector</text>
+        <line x1="340" y1="281" x2="380" y2="281" stroke="var(--ink)" stroke-width="5"/><text x="388" y="285">Busbar</text>
+        <line x1="480" y1="281" x2="506" y2="281" stroke="var(--hv)" stroke-width="2.5"/><path d="M506 276 L514 281 L506 286 Z" fill="var(--hv)"/><text x="522" y="285">Fault current</text>
+        <rect x="650" y="275" width="30" height="12" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.5"/><text x="688" y="285">Protection zone</text>
+      </g>
+    </svg>
+    <figcaption><b>Disconnection scope in the example.</b> With no breaker at the tap, the line and busbar lie within the region isolated by A, B, C and D. A breaker at the tap can change that scope, depending on the protection configuration.</figcaption>
+  </figure>
+
+  <p>Where dedicated breakers isolate an element, the disconnection scope can coincide with that element. A single-element outage model is appropriate in that case. Shared-breaker and tapped configurations require explicit identification of the equipment actually disconnected.</p>
+
+  <h3>Configurations with multiple-element disconnection</h3>
+  <p>A line tap (tee-off, or <em>piquage</em>) connects a substation without a full set of breakers at the tapping point. This reduces equipment and construction costs but can enlarge the disconnection scope. In the three-branch example without breakers at the tap, the remote-end breakers open to isolate the region.</p>
+
+  <figure>
+    <svg viewBox="0 0 900 300" role="img" aria-label="Two ways of connecting a small substation to a passing line: a full bay with three breakers at the tap gives three separate protection zones; a tee-off without breakers is cheaper but all three legs trip together">
+      <g font-family="var(--sans)" font-size="13" font-weight="650" text-anchor="middle">
+        <text x="225" y="30" fill="var(--ink)">Full bay at the tap point</text>
+        <text x="675" y="30" fill="var(--ink)">Tee-off (tapped line)</text>
+      </g>
+      <line x1="450" y1="15" x2="450" y2="285" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <rect x="60" y="86" width="140" height="28" fill="var(--lv-w)" stroke="var(--lv)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <rect x="250" y="86" width="140" height="28" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <rect x="211" y="128" width="28" height="90" fill="var(--or-w)" stroke="var(--or)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <line x1="40" y1="100" x2="410" y2="100" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="225" y1="100" x2="225" y2="235" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <g fill="var(--ink)">
+        <rect x="46" y="93" width="14" height="14"/><rect x="390" y="93" width="14" height="14"/><rect x="218" y="222" width="14" height="14"/>
+        <rect x="196" y="93" width="14" height="14"/><rect x="240" y="93" width="14" height="14"/><rect x="218" y="114" width="14" height="14"/>
+      </g>
+      <circle cx="225" cy="100" r="4" fill="var(--ink)"/>
+      <circle cx="225" cy="250" r="8" fill="var(--ink)"/><circle cx="225" cy="250" r="3" fill="var(--surface)"/>
+      <text x="245" y="254" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Small substation</text>
+      <text x="225" y="78" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink-3)">3 extra breakers at the tap</text>
+      <text x="225" y="278" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Fault on a leg → only that leg trips</text>
+      <path d="M510 86 L840 86 L840 114 L689 114 L689 218 L661 218 L661 114 L510 114 Z" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <line x1="490" y1="100" x2="860" y2="100" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <line x1="675" y1="100" x2="675" y2="235" stroke="var(--ink-3)" stroke-width="2.6"/>
+      <g fill="var(--ink)">
+        <rect x="496" y="93" width="14" height="14"/><rect x="840" y="93" width="14" height="14"/><rect x="668" y="222" width="14" height="14"/>
+      </g>
+      <circle cx="675" cy="100" r="7" fill="var(--surface)" stroke="var(--hv)" stroke-width="2.5"/>
+      <circle cx="675" cy="250" r="8" fill="var(--ink)"/><circle cx="675" cy="250" r="3" fill="var(--surface)"/>
+      <text x="695" y="254" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Small substation</text>
+      <text x="675" y="78" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--hv)">No breaker at the tap</text>
+      <text x="675" y="278" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--hv)" font-weight="650">Fault anywhere → all three legs trip</text>
+      <g font-family="var(--mono)" font-size="10.5" text-anchor="middle" fill="var(--ink-3)">
+        <text x="225" y="50">6 breakers · 3 protection zones</text>
+        <text x="675" y="50">3 breakers · 1 protection zone</text>
+      </g>
+    </svg>
+    <figcaption><b>Effect of breakers at the tap.</b> The left configuration separates the branches with breakers. The right configuration relies on remote-end breakers, so a fault within the region disconnects all three branches under the example’s protection assumptions.</figcaption>
+  </figure>
+
+  <p>Three-winding transformer arrangements and bays linked through disconnectors also require node-breaker analysis. Zone count and size depend on substation design and switch states. They cannot be inferred from line or bus counts alone.</p>
+  <p class="transition"><strong>Once the disconnection scope is defined at equipment level, the problem moves into the electrical domain.</strong> Where will the power that previously used the removed equipment redistribute, and which limits on the surviving network may be violated?</p>
+</section>
+
+<section id="s3">
+  <span class="num">Part I · From the event to the post-contingency state</span>
+  <h2>3. Post-contingency power flows</h2>
+
+  <p>Following a line outage, flows on the remaining branches change according to topology, impedances and generation–load conditions. Security analysis calculates this state in advance to identify violations and remedial needs.</p>
+
+  <p>The following three cases illustrate the distinctions used in this article.</p>
+
+  <figure>
+    <svg id="kb" viewBox="0 0 900 310" role="img" aria-label="Three post-contingency outcomes on the same base grid: one element lost with the grid still connected; a whole protection zone lost; a part of the grid islanded"></svg>
+    <figcaption><b>Three cases on the same network.</b> The fault location and disconnection scope determine the remaining connectivity. Post-contingency loading and violations still require calculation.</figcaption>
+  </figure>
+
+  <div class="case-grid" aria-label="Three post-contingency power-flow cases">
+    <article class="case-card">
+      <span class="case-label">Case 1 · LODF</span>
+      <h3>One element removed, network remains connected</h3>
+      <p>When the network remains connected, flows redistribute and may overload surviving branches. LODF estimates active-power flow changes under the DC approximation, provided the outage does not split the network and the bus-injection assumptions remain appropriate.</p>
+    </article>
+    <article class="case-card">
+      <span class="case-label">Case 2 · GLODF</span>
+      <h3>One fault disconnects multiple elements</h3>
+      <p>If several elements are disconnected while the network remains connected, their combined effect must be calculated simultaneously. Summing individual LODFs on the original network does not capture the interactions among the removed elements. GLODF handles this case within the same linear approximation.</p>
+    </article>
+    <article class="case-card">
+      <span class="case-label">Case 3 · Islanding</span>
+      <h3>Islanding</h3>
+      <p>Removing a bridge or a cut set can separate the network into components. Each component requires a generation, load and balance assessment. In the retained network model, the change in exchange with the separated component must be compensated under an explicit balancing assumption. The usual LODF formula does not apply directly to islanding.</p>
+    </article>
+  </div>
+
+  <div class="key">Structural classification considers the disconnected set, connected components and injections in each component. Power flows and operating limits are checked in the subsequent calculation.</div>
+  <p class="transition"><strong>On a small network, these three mechanisms can be identified directly.</strong> In operational systems, the same classification and calculation must be repeated for thousands of contingencies as topology changes and processing time remains limited.</p>
+</section>
+
+<!-- ═══════════════════ PART II ═══════════════════ -->
+<section id="s4">
+  <span class="num">Part II · The scale problem</span>
+  <h2>4. Computational scale and contingency screening</h2>
+
+  <p>The cost of detailed AC assessment across the full contingency list depends on network size, case count, convergence and computing resources. The official contingency list remains the scope governed by the operational process; screening neither redefines nor removes cases from that list. Under a processing deadline, screening only reduces or prioritises the detailed AC calculations to be completed within the decision window, under an approved safety policy. The quality of that prioritisation must be assessed through detection performance and the severity of missed cases.</p>
+
+  <p>Machine learning can use simulation results to rank contingencies on new operating states. Relevant measures include the share of violating cases retained in the top-K, processing time and the severity of missed cases.</p>
+
+  <h3>Selecting contingency–element relationships</h3>
+  <p>With 10,000 contingencies and 10,000 monitored elements, full connectivity produces 100 million pairs. Sensitivity factors identify pairs with significant electrical interaction in the linear model. The retained count depends on topology and the selection threshold, which must be validated against ranking performance.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 200" role="img" aria-label="From a hundred million candidate pairs, a sensitivity threshold keeps only a thin sliver">
+      <g font-family="var(--sans)" font-size="13">
+        <rect x="60" y="40" width="740" height="34" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="430" y="63" text-anchor="middle" fill="var(--ink)" font-weight="650">10,000 contingencies × 10,000 monitored elements = 100,000,000 candidate pairs</text>
+        <path d="M430 74 L430 112" stroke="var(--ink-3)" stroke-width="1.4" fill="none"/>
+        <path d="M424 104 L430 114 L436 104" stroke="var(--ink-3)" stroke-width="1.4" fill="none"/>
+        <text x="445" y="96" font-family="var(--mono)" font-size="11" fill="var(--ink-2)">Keep pairs with |factor| ≥ threshold</text>
+        <rect x="428" y="116" width="4" height="34" fill="var(--mv)"/>
+        <text x="440" y="139" fill="var(--mv)" font-weight="650">A thin sliver: a fraction of a percent</text>
+        <text x="430" y="182" text-anchor="middle" font-size="11.5" fill="var(--ink-2)">The sliver is the part of the problem where physics says an interaction exists</text>
+      </g>
+    </svg>
+    <figcaption><b>Sensitivity-based pair selection.</b> Retained relationships form a sparse model input, reducing processing compared with a fully connected representation.</figcaption>
+  </figure>
+
+  <p>In this architecture, sensitivity factors define input relationships for the ranker. They also provide linear estimates of flow changes, but do not replace AC results. A learned model may capture information omitted by the DC approximation; that capability must be demonstrated on test data.</p>
+
+  <h3>Aligning contingency scope between inputs and labels</h3>
+  <p>If labels come from simulations that remove a whole protection zone while the sensitivity map assumes one element, inputs and labels describe different outages. The disconnected set must be aligned before training and evaluation.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 270" role="img" aria-label="One contingency seen two ways: the question asked of the model marks one element; what actually happens is that all three elements of the zone trip">
+      <g font-family="var(--mono)" font-size="11" letter-spacing="0.08em">
+        <text x="40" y="32" fill="var(--lv)">THE QUESTION ASKED OF THE MODEL</text>
+        <text x="470" y="32" fill="var(--mv)">WHAT THE SOLVER (AND REAL PROTECTION) DOES</text>
+      </g>
+      <g stroke="var(--rule)" stroke-width="2.4" fill="none">
+        <line x1="40" y1="130" x2="180" y2="130"/><line x1="180" y1="130" x2="320" y2="130"/><line x1="180" y1="130" x2="180" y2="210"/>
+      </g>
+      <line x1="40" y1="130" x2="180" y2="130" stroke="var(--lv)" stroke-width="5"/>
+      <circle cx="180" cy="130" r="5.5" fill="var(--ink)"/>
+      <g fill="var(--surface)" stroke="var(--ink-3)" stroke-width="1.6">
+        <rect x="32" y="123" width="14" height="14"/><rect x="313" y="123" width="14" height="14"/><rect x="173" y="203" width="14" height="14"/>
+      </g>
+      <text x="40" y="112" font-family="var(--sans)" font-size="12" fill="var(--lv)" font-weight="650">Element A</text>
+      <text x="40" y="245" font-family="var(--sans)" font-size="13" fill="var(--ink-2)">“If A trips, how do flows redistribute?”</text>
+      <line x1="430" y1="20" x2="430" y2="255" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <g stroke="var(--mv)" stroke-width="5" fill="none">
+        <line x1="470" y1="130" x2="610" y2="130"/><line x1="610" y1="130" x2="750" y2="130"/><line x1="610" y1="130" x2="610" y2="210"/>
+      </g>
+      <circle cx="610" cy="130" r="5.5" fill="var(--ink)"/>
+      <g fill="var(--surface)" stroke="var(--mv)" stroke-width="2">
+        <rect x="462" y="123" width="14" height="14"/><rect x="743" y="123" width="14" height="14"/><rect x="603" y="203" width="14" height="14"/>
+      </g>
+      <text x="586" y="112" font-family="var(--mono)" font-size="10.5" fill="var(--mv)">No breaker</text>
+      <text x="470" y="245" font-family="var(--sans)" font-size="13" fill="var(--ink-2)">Remote protection acts: all three elements leave service.</text>
+    </svg>
+    <figcaption><b>Mismatch in modelling scope.</b> Single-element sensitivities and zone-outage results are directly comparable only when they describe the same disconnected set.</figcaption>
+  </figure>
+
+  <p>A multi-element zone can produce several records for one event, each with a different sensitivity map. These duplicates affect training and occupy multiple top-K positions. Grouping by disconnection scope addresses both issues.</p>
+  <p class="transition"><strong>Reducing computation is valuable only when the physical question remains unchanged.</strong> Building sparse inputs without conflating different event types requires a precise understanding of what each sensitivity factor represents and when it ceases to apply.</p>
+</section>
+
+<!-- ═══════════════════ PART III ═══════════════════ -->
+<section id="s5">
+  <span class="num">Part III · Selecting the right physical model</span>
+  <h2>5. GLODF and ISDF in a unified sensitivity framework</h2>
+
+  <p>PTDF describes the linear response to changes in bus injections. LODF and GLODF use that relationship for single- and multiple-branch outages. Islanding requires separate treatment of lost power exchange and balancing; this article uses the article-specific symbol <strong>ISDF</strong> (<i>Islanding Sensitivity Distribution Factor</i>) for that response. It does not mean the <i>Injection Shift Distribution Factor</i> found elsewhere in power-system literature.</p>
+
+  <div class="key mv">The factor must be selected from the actual disconnection set and the post-contingency topology. The number of elements in the zone is not sufficient to determine the formula.</div>
+
+  <div class="contribution-note">
+    <span class="label">Methodological contribution of this article</span>
+    <p>The article places GLODF and ISDF within one selection logic driven by the protection-defined disconnection scope. When a group of elements is removed and the retained network remains connected, GLODF represents the simultaneous group effect and the interactions among the removed elements. When that scope separates a component carrying power exchange, ISDF represents the response of the retained network under an explicit balancing policy. They are two branches of the same structural classification, not interchangeable formulas.</p>
+  </div>
+
+  <h3>5.1 PTDF: sensitivity to a power transfer</h3>
+  <p>Consider a 1 MW increase at bus <i>i</i> and a 1 MW decrease at bus <i>j</i>. A branch PTDF is the ratio of its flow change to the transfer, for the linear model and topology under consideration.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 860 250" role="img" aria-label="Animated: one megawatt injected at bus i and withdrawn at bus j splits over three paths in the ratio 0.5, 0.3, 0.2 set by impedance">
+      <defs><marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--mv)"/></marker></defs>
+      <g stroke="var(--ink-3)" stroke-width="2.4" fill="none">
+        <line x1="180" y1="130" x2="640" y2="130"/>
+        <line x1="180" y1="130" x2="410" y2="50"/><line x1="410" y1="50" x2="640" y2="130"/>
+        <line x1="180" y1="130" x2="410" y2="210"/><line x1="410" y1="210" x2="640" y2="130"/>
+      </g>
+      <path class="pulse-path" d="M180 130 L410 50 L640 130" fill="none" stroke="none" data-n="3" data-dur="3.2" data-color="var(--lv)"/>
+      <path class="pulse-path" d="M180 130 L640 130" fill="none" stroke="none" data-n="5" data-dur="3.2" data-color="var(--lv)"/>
+      <path class="pulse-path" d="M180 130 L410 210 L640 130" fill="none" stroke="none" data-n="2" data-dur="3.2" data-color="var(--lv)"/>
+      <g fill="var(--ink)"><circle cx="180" cy="130" r="7"/><circle cx="640" cy="130" r="7"/><circle cx="410" cy="50" r="6"/><circle cx="410" cy="210" r="6"/></g>
+      <g font-family="var(--mono)" font-size="12.5" fill="var(--ink)">
+        <text x="176" y="158" text-anchor="middle">i</text><text x="644" y="158" text-anchor="middle">j</text><text x="424" y="46">a</text><text x="424" y="222">b</text>
+      </g>
+      <line x1="80" y1="130" x2="165" y2="130" stroke="var(--mv)" stroke-width="3" marker-end="url(#pa)"/>
+      <text x="80" y="118" font-family="var(--sans)" font-size="12" fill="var(--mv)" font-weight="650">+1 MW</text>
+      <line x1="655" y1="130" x2="740" y2="130" stroke="var(--mv)" stroke-width="3" marker-end="url(#pa)"/>
+      <text x="740" y="118" text-anchor="end" font-family="var(--sans)" font-size="12" fill="var(--mv)" font-weight="650">−1 MW</text>
+      <g font-family="var(--mono)" font-size="13" font-weight="650" fill="var(--lv)">
+        <text x="410" y="120" text-anchor="middle">0.50</text>
+        <text x="282" y="76" text-anchor="end">0.30</text><text x="538" y="76">0.30</text>
+        <text x="282" y="194" text-anchor="end">0.20</text><text x="538" y="194">0.20</text>
+      </g>
+      <text x="410" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">In this lossless DC example, paths across the cut sum to 1 · impedance sets the split</text>
+    </svg>
+    <figcaption><b>PTDF for transfer <i>i → j</i>.</b> Values indicate the share of the transfer carried by each branch in the example.</figcaption>
+  </figure>
+
+  <div class="formula">ΔF<sub>l</sub> = PTDF<sub>l,(i→j)</sub> · ΔP
+    <span class="doc"><b>Meaning:</b> in the linear DC model, the change in flow on branch <i>l</i> equals its PTDF for transfer <i>i → j</i> multiplied by the transfer change. The factor depends on network topology and branch parameters. Because the transaction is balanced (+ΔP at <i>i</i>, −ΔP at <i>j</i>), this PTDF is independent of the reference-bus choice; a slack policy is needed for an unbalanced single-bus injection change.</span></div>
+
+  <h3>5.2 LODF: sensitivity to a single-branch outage</h3>
+  <p>LODF relates the flow change on a surviving branch to the pre-outage flow <i>F<sub>k</sub></i> on the removed branch. It uses PTDFs on the original network and the correction 1 − PTDF<sub>k,k</sub> to account for removal of branch <i>k</i>.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 860 260" role="img" aria-label="Animated: branch k trips and its flow is pushed onto the two remaining paths in the ratio 0.6 and 0.4; inset: when k is a bridge there is no other path and the denominator is zero">
+      <g stroke="var(--ink-3)" stroke-width="2.4" fill="none">
+        <line x1="120" y1="130" x2="300" y2="55"/><line x1="300" y1="55" x2="480" y2="130"/>
+        <line x1="120" y1="130" x2="300" y2="205"/><line x1="300" y1="205" x2="480" y2="130"/>
+      </g>
+      <line x1="120" y1="130" x2="480" y2="130" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <path data-blink="1" d="M414 110 L404 132 L411 132 L407 150 L421 126 L414 126 L419 110 Z" fill="var(--hv)"/>
+      <g fill="var(--ink)"><circle cx="120" cy="130" r="7"/><circle cx="480" cy="130" r="7"/><circle cx="300" cy="55" r="6"/><circle cx="300" cy="205" r="6"/></g>
+      <text x="300" y="153" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--hv)" font-weight="650">Branch k trips · F<tspan font-size="9" dy="3">k</tspan></text>
+      <g stroke="var(--hv)" stroke-width="3" fill="none">
+        <path data-grow=".08,.40" data-head="1" d="M140 118 L280 62"/><path data-grow=".40,.70" data-head="1" d="M320 62 L460 118"/>
+        <path data-grow=".08,.40" data-head="1" d="M140 142 L280 198"/><path data-grow=".40,.70" data-head="1" d="M320 198 L460 142"/>
+      </g>
+      <g font-family="var(--mono)" font-size="13" font-weight="650" fill="var(--hv)">
+        <text x="192" y="74" text-anchor="end">0.60·F<tspan font-size="9" dy="3">k</tspan></text>
+        <text x="192" y="198" text-anchor="end">0.40·F<tspan font-size="9" dy="3">k</tspan></text>
+      </g>
+      <text x="300" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">The two remaining paths share F<tspan font-size="9" dy="3">k</tspan><tspan dy="-3"> in the ratio 0.3 : 0.2, renormalised → 0.6 : 0.4</tspan></text>
+      <line x1="560" y1="30" x2="560" y2="240" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <text x="710" y="50" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">When k is a bridge</text>
+      <g stroke="var(--ink-3)" stroke-width="2" fill="none"><polygon points="590,110 630,90 650,130 610,150"/><polygon points="770,110 810,90 830,130 790,150"/></g>
+      <line x1="650" y1="120" x2="770" y2="120" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <text x="710" y="110" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--hv)">k</text>
+      <text x="710" y="185" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">No other path</text>
+      <text x="710" y="205" text-anchor="middle" font-family="var(--mono)" font-size="12" fill="var(--hv)" font-weight="650">PTDF<tspan font-size="9" dy="3">k,k</tspan><tspan dy="-3"> = 1 → 1 − PTDF</tspan><tspan font-size="9" dy="3">k,k</tspan><tspan dy="-3"> = 0</tspan></text>
+      <text x="710" y="226" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--hv)">The formula is undefined</text>
+    </svg>
+    <figcaption><b>LODF applicability.</b> For a bridge, PTDF<sub>k,k</sub> equals 1 in the ideal DC model and the denominator is zero. This case requires islanding treatment.</figcaption>
+  </figure>
+
+  <div class="formula">LODF<sub>l,k</sub> = PTDF<sub>l,k</sub> ⁄ (1 − PTDF<sub>k,k</sub>) &nbsp;&nbsp;&nbsp; ΔF<sub>l</sub> = LODF<sub>l,k</sub> · F<sub>k</sub>
+    <span class="doc"><b>Meaning:</b> PTDF<sub>l,k</sub> is the sensitivity of branch <i>l</i> to a transfer between the two terminals of <i>k</i>. If <i>k</i> is a bridge in the ideal DC model, the denominator is zero and the case must be handled as an islanding problem.</span></div>
+
+  <h3>5.3 GLODF: simultaneous multiple-branch outages</h3>
+  <p>GLODF answers the following question: when the complete branch set <i>G</i> associated with a protection zone is removed, how much does the flow on each surviving branch change? Branches in <i>G</i> no longer exist to carry one another’s redistributed power, so their effects must be solved simultaneously through an interaction matrix. Summing individual LODFs calculated on the original network is therefore not equivalent to removing the group. In the framework developed here, <i>G</i> comes from the physical event created by protection rather than from an arbitrary collection of independent elements.</p>
+
+  <figure>
+    <svg class="anim-svg" data-cycle="5" viewBox="0 0 860 260" role="img" aria-label="GLODF: adding two LODFs separately is wrong because the flow of the first branch is pushed onto the second, which is also lost; the simultaneous solution uses a k by k matrix; with k equal to one it reduces to LODF">
+      <defs><marker id="ga" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--hv)"/></marker></defs>
+      <g font-family="var(--sans)" font-size="12.5" font-weight="650" text-anchor="middle">
+        <text x="200" y="32" fill="var(--hv)">Summed one by one: wrong</text>
+        <text x="620" y="32" fill="var(--mv)">Solved simultaneously: GLODF</text>
+      </g>
+      <g stroke="var(--ink-3)" stroke-width="2.2" fill="none">
+        <line x1="80" y1="130" x2="200" y2="70"/><line x1="200" y1="70" x2="320" y2="130"/>
+        <line x1="80" y1="130" x2="200" y2="190"/><line x1="200" y1="190" x2="320" y2="130"/>
+      </g>
+      <line x1="80" y1="130" x2="320" y2="130" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <line x1="80" y1="130" x2="200" y2="70" stroke="var(--hv)" stroke-width="2.4" stroke-dasharray="8 6"/>
+      <g fill="var(--ink)"><circle cx="80" cy="130" r="6"/><circle cx="320" cy="130" r="6"/><circle cx="200" cy="70" r="5"/><circle cx="200" cy="190" r="5"/></g>
+      <text x="200" y="152" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">k₁</text>
+      <text x="125" y="92" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">k₂</text>
+      <path data-grow=".15,.55" data-head="1" d="M100 120 L176 84" stroke="var(--hv)" stroke-width="2.6" fill="none" opacity=".8"/>
+      <text x="200" y="228" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">The LODF of k₁ pushes flow onto k₂,</text>
+      <text x="200" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">but k₂ is lost as well</text>
+      <line x1="400" y1="20" x2="400" y2="250" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <g font-family="var(--serif)" font-size="15" fill="var(--ink)">
+        <text x="440" y="110">M =</text>
+        <path d="M485 78 q-8 27 0 54" stroke="var(--ink)" stroke-width="1.5" fill="none"/>
+        <path d="M655 78 q8 27 0 54" stroke="var(--ink)" stroke-width="1.5" fill="none"/>
+        <text x="500" y="98">1 − Ξ<tspan font-size="10" dy="3">11</tspan></text><text x="580" y="98">−Ξ<tspan font-size="10" dy="3">12</tspan></text>
+        <text x="500" y="126">−Ξ<tspan font-size="10" dy="3">21</tspan></text><text x="580" y="126">1 − Ξ<tspan font-size="10" dy="3">22</tspan></text>
+      </g>
+      <text x="570" y="160" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Ξ<tspan font-size="9" dy="3">ij</tspan><tspan dy="-3">: sensitivity of i to a transfer across j</tspan></text>
+      <text x="570" y="178" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">The off-diagonal terms are the <tspan font-weight="650">interaction</tspan></text>
+      <rect x="690" y="88" width="150" height="70" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="1.5"/>
+      <text x="765" y="112" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--mv)" font-weight="650">k = 1</text>
+      <text x="765" y="132" text-anchor="middle" font-family="var(--serif)" font-size="13" fill="var(--ink)">M = 1 − Ξ<tspan font-size="9" dy="3">kk</tspan></text>
+      <text x="765" y="150" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Reduces exactly to LODF</text>
+      <text x="620" y="228" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">M singular ⟺ the group is a cut of the grid</text>
+      <text x="620" y="244" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">The same signal as LODF’s vanishing denominator</text>
+    </svg>
+    <figcaption><b>Interaction matrix M.</b> For one branch, M = 1 − Ξ<sub>kk</sub> and the expression reduces to LODF. When the removed set disconnects the network, M is singular and the islanding structure must be addressed.</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th colspan="4">Worked example: two elements k₁, k₂ trip together, branch l is monitored</th></tr></thead>
+    <tbody>
+      <tr><td>Self-sensitivity</td><td class="n">Ξ₁₁ = 0.30</td><td class="n">Ξ₂₂ = 0.25</td><td>Share of the transfer through itself</td></tr>
+      <tr><td>Mutual sensitivity</td><td class="n">Ξ₁₂ = 0.20</td><td class="n">Ξ₂₁ = 0.20</td><td>Interaction between k₁ and k₂</td></tr>
+      <tr><td>Sensitivity of l</td><td class="n">Ξ<sub>l1</sub> = 0.40</td><td class="n">Ξ<sub>l2</sub> = 0.10</td><td>Pre-contingency flows F₁ = 100 MW, F₂ = 80 MW</td></tr>
+      <tr><td><b>Two LODFs, summed</b></td><td class="n">0.571 × 100</td><td class="n">+ 0.133 × 80</td><td class="n"><b>= 67.8 MW</b></td></tr>
+      <tr><td><b>GLODF, simultaneous</b></td><td class="n">0.660 × 100</td><td class="n">+ 0.309 × 80</td><td class="n"><b>= 90.7 MW</b></td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:14px;color:var(--ink-2)">In the example, summing individual effects gives a result <strong>23 MW</strong> below the simultaneous calculation. This difference can change whether a pair is retained in the sensitivity map.</p>
+
+  <div class="formula">M = I − Ξ<sub>GG</sub> &nbsp;&nbsp;&nbsp; GLODF<sub>l,G</sub> = Ξ<sub>l,G</sub> · M<sup>−1</sup> &nbsp;&nbsp;&nbsp; ΔF<sub>l</sub> = GLODF<sub>l,G</sub> · F<sub>G</sub>
+    <span class="doc"><b>Meaning:</b> Ξ<sub>GG</sub> is the <i>k</i>×<i>k</i> interaction matrix; Ξ<sub>l,G</sub> is the sensitivity row for monitored branch <i>l</i>; and F<sub>G</sub> is the vector of pre-contingency flows. If M is singular or ill-conditioned, connectivity and balancing assumptions must be checked before selecting an appropriate solution method.</span></div>
+
+  <h3>5.4 ISDF in this article: response of the retained network after islanding</h3>
+  <p>ISDF as defined in this article addresses a different question: when a bridge or cut set causes islanding, how does the retained network respond to the power exchange that has just disappeared across the boundary? The change is represented at the boundary bus and compensated by participating generators with weights α. The factor maps that net disturbance to flow changes on the surviving branches using the pre-contingency exchange and the selected balancing policy. Because α is an operational choice rather than a fixed network property, flow direction and balancing assumptions must be recorded explicitly when calculating and verifying the factor.</p>
+
+  <figure>
+    <svg class="anim-svg" viewBox="0 0 860 280" role="img" aria-label="Animated: bridge k trips and islands the right part; the remaining grid loses the injection F_k at the bridge terminal and generators compensate with weights alpha">
+      <text x="200" y="30" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="650" fill="var(--ink)">Remaining grid</text>
+      <text x="700" y="30" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="650" fill="var(--or)">Island</text>
+      <g stroke="var(--ink-3)" stroke-width="2.2" fill="none">
+        <polygon points="120,80 260,60 340,130 260,200 120,180 60,130"/>
+        <line x1="120" y1="80" x2="260" y2="200"/><line x1="260" y1="60" x2="120" y2="180"/>
+      </g>
+      <g stroke="var(--or)" stroke-width="2.2" fill="none"><polygon points="640,100 740,90 780,150 700,190 620,160"/></g>
+      <line x1="340" y1="130" x2="620" y2="150" stroke="var(--hv)" stroke-width="2.6" stroke-dasharray="8 6"/>
+      <path data-blink="1" d="M480 118 L470 140 L477 140 L473 158 L487 134 L480 134 L485 118 Z" fill="var(--hv)"/>
+      <text x="480" y="106" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)" font-weight="650">Bridge k · F<tspan font-size="8" dy="3">k</tspan></text>
+      <g fill="var(--ink)"><circle cx="260" cy="60" r="5"/><circle cx="260" cy="200" r="5"/><circle cx="60" cy="130" r="5"/></g>
+      <circle cx="340" cy="130" r="7" fill="var(--hv)"/>
+      <text x="352" y="116" font-family="var(--mono)" font-size="10.5" fill="var(--hv)">b<tspan font-size="8" dy="3">k</tspan><tspan dy="-3"> · loses F</tspan><tspan font-size="8" dy="3">k</tspan></text>
+      <g stroke="var(--mv)" stroke-width="2.6" fill="none">
+        <path data-grow=".15,.55" data-head="1" d="M152 88 L318 122"/><path data-grow=".15,.55" data-head="1" d="M152 172 L318 138"/>
+      </g>
+      <g fill="var(--mv)"><circle cx="120" cy="80" r="10"/><circle cx="120" cy="180" r="10"/></g>
+      <g font-family="var(--mono)" font-size="10" font-weight="700" fill="var(--surface)" text-anchor="middle"><text x="120" y="84">G</text><text x="120" y="184">G</text></g>
+      <text x="60" y="62" font-family="var(--mono)" font-size="10.5" fill="var(--mv)" font-weight="650">−α₁·F<tspan font-size="8" dy="3">k</tspan></text>
+      <text x="60" y="212" font-family="var(--mono)" font-size="10.5" fill="var(--mv)" font-weight="650">−α₂·F<tspan font-size="8" dy="3">k</tspan></text>
+      <g fill="var(--or)"><circle cx="740" cy="90" r="8"/><circle cx="700" cy="190" r="8"/></g>
+      <g fill="var(--surface)"><circle cx="740" cy="90" r="3"/><circle cx="700" cy="190" r="3"/></g>
+      <g font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)" text-anchor="middle">
+        <text x="200" y="244">Generators compensate with weights α</text><text x="200" y="262">Branch flows then shift via PTDF</text>
+        <text x="700" y="244">Balances itself if it has generation</text><text x="700" y="262">Otherwise it loses supply</text>
+      </g>
+    </svg>
+    <figcaption><b>Two response components.</b> Each balanced transaction from boundary bus <i>b<sub>k</sub></i> to a participating bus <i>g</i> is mapped to branch-flow changes through PTDF; the α weights combine those transactions into the selected balancing policy. Operation of the separated island requires its own assessment.</figcaption>
+  </figure>
+
+  <div class="formula">ISDF<sub>l,k</sub><sup>(α)</sup> = Σ<sub>g</sub> α<sub>g</sub> · PTDF<sub>l,(b<sub>k</sub>→g)</sub> &nbsp;&nbsp;&nbsp; ΔF<sub>l</sub> = ISDF<sub>l,k</sub><sup>(α)</sup> · F<sub>k</sub>
+    <span class="doc"><b>Meaning:</b> PTDF<sub>l,(b<sub>k</sub>→g)</sub> represents the flow change on branch <i>l</i> caused by a balanced transaction that injects at boundary bus <i>b<sub>k</sub></i> and withdraws at participating bus <i>g</i>. The α-weighted sum, with Σα<sub>g</sub> = 1, represents the selected balancing policy. This transaction-based form is consistent with the PTDF definition in Section 5.1; α is an operating assumption, not a fixed network parameter, and must be consistent between the screening model and the solver used for comparison.</span></div>
+
+  <h3>Applicability of the factors</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Factor</th><th>Quantity represented</th><th>Applicability</th><th>Additional assumption</th></tr></thead>
+    <tbody>
+      <tr><td><b>PTDF</b></td><td>Branch-flow change caused by a transfer</td><td>Reference topology and balanced transaction are defined</td><td>Source–sink pair; a balanced transfer is slack-independent</td></tr>
+      <tr><td><b>LODF</b></td><td>Flow redistribution after one branch outage</td><td>The outage does not split the network</td><td>Pre-contingency state</td></tr>
+      <tr><td><b>GLODF</b></td><td>Flow redistribution after a group outage</td><td>The group outage does not split the network</td><td>Interaction matrix; k = 1 reduces to LODF</td></tr>
+      <tr><td><b>ISDF<sup>(α)</sup></b></td><td>Response of the retained network after islanding</td><td>Connected components and power imbalance are known</td><td><b>Balancing policy α</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="key mv">The factors share a linear foundation but have different applicability conditions. A zero denominator or singular matrix requires structural analysis before a connected-network expression can be used.</div>
+  <p class="transition"><strong>Formula selection must follow the post-contingency structural classification.</strong> Each calculation requires the removed equipment set, the surviving connected components and the assumption used to resolve any power imbalance.</p>
+</section>
+
+<section id="s6">
+  <span class="num">Part III · Selecting the right physical model</span>
+  <h2>6. Selecting the model from post-contingency topology</h2>
+
+  <p>After identifying the disconnected equipment, the first question is whether the topology remains connected or separates into multiple components. Losing generation or load is not the same as islanding: an outage set can remove an injection while the remaining transmission backbone stays connected. Connectivity must therefore be classified first, followed by the balancing requirement within each component.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="Model-selection diagram: determine whether the protection-induced outage set separates the network, then treat branch-flow redistribution and injection balancing for each case">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <g font-family="var(--sans)" font-size="13.5" text-anchor="middle">
+        <rect x="280" y="18" width="300" height="42" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="430" y="44" fill="var(--ink)" font-weight="650">Protection-induced outage set</text>
+        <g stroke="var(--ink-3)" stroke-width="1.3" fill="none" marker-end="url(#ar)">
+          <path d="M430 60 L430 88"/><path d="M320 136 L320 158 L215 158 L215 178"/><path d="M540 136 L540 158 L645 158 L645 178"/>
+        </g>
+        <rect x="245" y="90" width="370" height="46" fill="var(--surface)" stroke="var(--ink-3)"/>
+        <text x="430" y="118" fill="var(--ink)">Does the outage set <tspan font-weight="650">disconnect the network</tspan>?</text>
+        <text x="310" y="154" text-anchor="end" fill="var(--mv)" font-size="12" font-weight="650">No</text>
+        <text x="550" y="154" text-anchor="start" fill="var(--hv)" font-size="12" font-weight="650">Yes</text>
+        <rect x="40" y="180" width="350" height="92" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="2"/>
+        <text x="215" y="204" fill="var(--mv)" font-weight="650">Network remains connected</text>
+        <text x="215" y="226" fill="var(--ink-2)" font-size="12">LODF/GLODF for branch-flow redistribution</text>
+        <text x="215" y="247" fill="var(--ink-2)" font-size="12">If injection is lost: add injection rebalancing</text>
+        <text x="215" y="264" fill="var(--ink-2)" font-size="11">For one branch, GLODF reduces to LODF</text>
+        <rect x="470" y="180" width="350" height="92" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="2"/>
+        <text x="645" y="204" fill="var(--hv)" font-weight="650">Network separates into components</text>
+        <text x="645" y="226" fill="var(--ink-2)" font-size="12">Identify injections and lost boundary exchange</text>
+        <text x="645" y="247" fill="var(--ink-2)" font-size="12">Article-defined ISDF for the retained network</text>
+        <text x="645" y="264" fill="var(--ink-2)" font-size="11">Assess and balance each island separately</text>
+      </g>
+    </svg>
+    <figcaption><b>Check connectivity first, then determine the balancing requirement.</b> A lost injection on a still-connected network is combined with LODF/GLODF; island-specific treatment begins only when the topology separates into multiple components.</figcaption>
+  </figure>
+
+  <p>In the DC model, loss of connectivity makes the interaction matrix singular. Isolating an empty connection node must be distinguished from separating a component with injections. The tolerance for zero injection and the balancing convention must be explicit and consistent between sensitivities and the label-generating solver.</p>
+
+  <p>The frequency of each case depends on substation topology, radial branches and switch states. Network-specific statistics are needed to organise the calculation.</p>
+  <p class="transition"><strong>The small network below illustrates the model-selection rule directly.</strong> It separates the effects of connectivity, injections and disconnection scope before the method is extended to a larger system.</p>
+</section>
+
+<section id="s7">
+  <span class="num">Part III · Selecting the right physical model</span>
+  <h2>7. Contingency classification on a small network</h2>
+  <p>Select an element to inspect the disconnected zone, separated component and corresponding calculation method. This interactive illustration uses the topology and injection assumptions of the example network.</p>
+
+  <div class="interactive-figure">
+    <div class="interactive-figure-grid">
+      <div><svg id="sv" viewBox="0 0 620 470" role="img" aria-label="Interactive miniature grid"></svg></div>
+      <div class="panel">
+        <div class="hd">Mechanism</div>
+        <div class="co" id="co">—</div>
+        <div id="ly" style="font-size:13.5px;color:var(--ink-2);margin-bottom:12px"></div>
+        <div class="hd" style="margin-top:16px">Structural checks</div>
+        <div id="qs"></div>
+        <div class="hint" id="hint">Pick any element. Elements in the same protection zone light up together:
+        that is what actually leaves service.</div>
+      </div>
+    </div>
+    <div class="leg">
+      <span><i style="background:var(--ink-3)"></i>Element</span>
+      <span><i style="background:var(--hv)"></i>Zone removed</span>
+      <span><i style="background:var(--or)"></i>Part split off</span>
+      <span>● node · ◎ node with load · ○ T: tap point, no breaker</span>
+    </div>
+  </div>
+
+  <p>L8 and L9 are both dead-end branches whose removal isolates a node. The node behind L8 has load; the node behind L9 has no injection. The connectivity change is similar, but the balancing treatment differs.</p>
+  <p class="transition"><strong>This example assumes that the disconnected zone is already known.</strong> In an operational model, that information should not be inferred from the bus-branch diagram; it must be traced through node-breaker connectivity and the actual states of switching devices.</p>
+</section>
+
+<section id="s8">
+  <span class="num">Part III · Selecting the right physical model</span>
+  <h2>8. Contingency propagation and the final outage set in a node-breaker model</h2>
+
+  <p>The node-breaker model represents circuit breakers, disconnectors and busbar sections explicitly. The interactive illustration below does more than determine disconnection scope: it describes <strong>contingency propagation at the topology and protection layer</strong>. Starting from the faulted element, the traversal passes through devices that cannot isolate the fault, stops at boundary breakers and carries out elements inside the same protection zone. The result is the final outage set, which need not contain only the initiating element.</p>
+  <div class="key mv"><b>Processing chain:</b> Initial contingency → Topology and protection propagation → Final outage set → Connectivity classification → LODF / GLODF / islanding → AC load-flow verification.</div>
+  <p>Three layers must remain distinct. <strong>Contingency propagation</strong> determines which elements actually leave service. <strong>LODF, GLODF or the islanding model</strong> provides a rapid assessment of the electrical consequences of that set. <strong>AC load flow</strong> confirms the final steady state under the adopted network model and operating limits. The illustration can be stepped through or played automatically; its DC calculation uses S<sub>base</sub> = 100 MVA to expose the mechanism.</p>
+</section>
+</div><!-- /wrap: the interactive illustration breaks out wider -->
+
+<div class="wide">
+<div id="nb">
+  <div class="tabs" id="nbTabs" role="group" aria-label="Scenario"></div>
+  <div class="ctl">
+    <button id="nbPlay" aria-pressed="false">▶ Play</button>
+    <button id="nbStep">Step ▸</button>
+    <button id="nbBack">◂ Back</button>
+    <button id="nbReset">Reset</button>
+    <button id="nbAll">Show result</button>
+    <label for="nbSpeed">Speed</label>
+    <select id="nbSpeed"><option value="2600">Very slow</option><option value="1700" selected>Slow</option><option value="1000">Medium</option><option value="500">Fast</option></select>
+    <span class="stage" id="nbStage"></span>
+  </div>
+  <div class="grid">
+    <div>
+      <svg id="nbSvg" viewBox="0 0 1000 610" role="img" aria-label="Node-breaker diagram of the selected scenario"></svg>
+      <div class="legend">
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" fill="currentColor"/></svg>Breaker</span>
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/></svg>Fictitious breaker</span>
+        <span><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="4" y1="16" x2="16" y2="4" stroke="currentColor" stroke-width="2"/></svg>Disconnector</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--hv)"><rect x="3" y="3" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6L14 14M6 14L14 6" stroke="currentColor" stroke-width="2"/></svg>Boundary breaker: opens</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--mv)"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="4" y1="16" x2="16" y2="4" stroke="currentColor" stroke-width="2"/></svg>Passed through</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--or)"><circle cx="10" cy="10" r="5" fill="currentColor"/></svg>Node visited</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--hv)"><line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="3" stroke-dasharray="5 3"/></svg>Out of service</span>
+        <span><svg viewBox="0 0 20 20" style="color:var(--isl)"><line x1="1" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="3" stroke-dasharray="5 3"/></svg>Islanded part</span>
+        <span><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"/><text x="10" y="14" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor">G</text></svg>Generator</span>
+        <span><svg viewBox="0 0 20 20"><polygon points="3,5 17,5 10,17" fill="none" stroke="currentColor" stroke-width="2"/></svg>Load</span>
+      </div>
+    </div>
+    <div id="nbLog" aria-live="polite"></div>
+  </div>
+</div>
+</div>
+
+<div class="wrap">
+<section style="padding-top:10px">
+  <h3 style="margin-top:0">Traversal rules by equipment type</h3>
+  <div class="tw rules"><table>
+    <thead><tr><th colspan="2">Meets</th><th>State</th><th>Decision</th><th>Consequence</th><th>Why (physics)</th></tr></thead>
+    <tbody>
+      <tr class="go"><td class="sym"><svg viewBox="0 0 30 30"><rect x="3" y="12" width="24" height="6" rx="1.5" fill="currentColor"/></svg></td><td><b>Busbar / internal connection</b></td><td>Always connected</td><td><span class="badge b-go">PASS</span></td><td>Keep exploring everything attached</td><td>A busbar is one electrical node; it cannot interrupt anything</td></tr>
+      <tr class="go"><td class="sym"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><line x1="8.5" y1="21.5" x2="21.5" y2="8.5" stroke="currentColor" stroke-width="2.4"/></svg></td><td><b>Disconnector</b></td><td>Closed</td><td><span class="badge b-go">PASS</span></td><td>Spread to the other side</td><td>In this model, it is not treated as a fault-interrupting boundary</td></tr>
+      <tr class="go"><td class="sym"><svg viewBox="0 0 30 30"><rect x="6" y="6" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="4 3"/></svg></td><td><b>Fictitious breaker</b></td><td>Closed</td><td><span class="badge b-go">PASS</span></td><td>Treated as a disconnector</td><td>An artefact of model conversion, not a device that can open</td></tr>
+      <tr class="stop"><td class="sym"><svg viewBox="0 0 30 30"><rect x="6" y="6" width="18" height="18" fill="currentColor"/></svg></td><td><b>Real breaker</b></td><td>Closed</td><td><span class="badge b-stop">STOP · OPEN</span></td><td>Becomes a zone boundary and opens to clear the fault</td><td>It can interrupt fault current</td></tr>
+      <tr class="stop"><td class="sym"><svg viewBox="0 0 30 30"><rect x="6" y="6" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"/><line x1="4" y1="26" x2="26" y2="4" stroke="currentColor" stroke-width="2"/></svg></td><td><b>Any switch</b></td><td>Already open</td><td><span class="badge b-stop">STOP</span></td><td>Nothing more to open</td><td>That path is already broken</td></tr>
+      <tr class="lost"><td class="sym"><svg viewBox="0 0 30 30"><line x1="3" y1="15" x2="27" y2="15" stroke="currentColor" stroke-width="3" stroke-dasharray="6 4"/></svg></td><td><b>End of another line or transformer</b></td><td>Attached without a breaker</td><td><span class="badge b-lost">DRAGGED OUT</span> <span class="badge b-go">CONTINUE</span></td><td>That element leaves service; explore on from its far end</td><td>It sits inside the zone with no breaker in between</td></tr>
+      <tr class="lost"><td class="sym"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="10" fill="none" stroke="currentColor" stroke-width="2.4"/><text x="15" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">G</text></svg></td><td><b>Generator / load</b></td><td>Attached to the zone</td><td><span class="badge b-lost">DRAGGED OUT</span></td><td>Its power is lost and must be compensated</td><td>It loses voltage with the zone</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:14px;color:var(--ink-2)">In the illustrative model, nodes connected by closed switches are merged into buses. Components disconnected from the slack are excluded from the DC calculation, so their violations and ability to operate independently are not assessed. The imbalance is allocated to the remaining generators in proportion to maximum output. These are assumptions of the calculation.</p>
+  <div class="key hv"><strong>Load flow does not describe contingency propagation; it solves the steady state only after the final outage set has been determined.</strong></div>
+  <div class="key or"><b>Scope of the illustration.</b> Propagation here is based on the node-breaker model and electrical isolation logic. In operation, an outage may propagate through functional dependencies that cannot be inferred from electrical topology alone, including auxiliary supply, cooling, control power, automation and interlocking. These relationships require a separate dependency-model layer.</div>
+  <p class="transition"><strong>Once the disconnection scope is traceable and used consistently in simulation, inputs and labels describe the same event.</strong> The question then changes from whether the sensitivity map runs to how well it screens, and which risks it can miss.</p>
+</section>
+
+<!-- ═══════════════════ PART IV ═══════════════════ -->
+<section id="s9">
+  <span class="num">Part IV · Verification and transferability</span>
+  <h2>9. Designing and evaluating the sensitivity map</h2>
+
+  <p>The sensitivity map should be evaluated through screening performance and processing cost. Key choices include pair thresholds, electrical relationships, contingency features and the ranking unit.</p>
+
+  <div class="claims">
+    <div class="claim"><div class="t">Sparsity</div><h4>Pair thresholds and missed-contingency risk</h4>
+      <p>Pair thresholds reduce processing but may discard useful information. Measure their effect on recall and missed-case severity alongside memory use and processing time.</p></div>
+    <div class="claim"><div class="t">Physics vs topology</div><h4>Electrical coupling and graph distance</h4>
+      <p>Graph distance does not fully describe electrical interaction. Distant elements may share a transmission corridor, while nearby branches may have low mutual sensitivity. Pair selection should account for impedances and transmission paths.</p></div>
+    <div class="claim"><div class="t">Coverage</div><h4>Evaluating a wider map</h4>
+      <p>Adding structural neighbours increases pair count and memory use. Since the model also uses contingency features such as loading and margins, the benefit of additional pairs must be measured on the same evaluation data.</p></div>
+    <div class="claim"><div class="t">The unit</div><h4>Ranking physical events</h4>
+      <p>A three-element zone can occupy three top-K positions if its elements are ranked separately. Grouping by zone avoids duplicates and aligns the sensitivity map, labels and simulation cases.</p></div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 860 240" role="img" aria-label="Electrical versus graph distance: two elements far apart on the graph are coupled through a shared corridor; two feeders on the same busbar are neighbours but decoupled">
+      <g font-family="var(--sans)" font-size="12.5" font-weight="650" text-anchor="middle">
+        <text x="220" y="28" fill="var(--hv)">Far on the graph, strongly coupled</text>
+        <text x="645" y="28" fill="var(--mv)">Same busbar, barely coupled</text>
+      </g>
+      <line x1="430" y1="15" x2="430" y2="230" stroke="var(--rule)" stroke-dasharray="4 4"/>
+      <line x1="40" y1="170" x2="400" y2="120" stroke="var(--hv)" stroke-width="5" opacity=".28"/>
+      <polyline points="40,170 80,120 120,170 160,120 200,170 240,120 280,170 320,120 360,170 400,120" stroke="var(--ink-3)" stroke-width="2" fill="none"/>
+      <line x1="40" y1="170" x2="80" y2="120" stroke="var(--hv)" stroke-width="4"/>
+      <line x1="360" y1="170" x2="400" y2="120" stroke="var(--hv)" stroke-width="4"/>
+      <g fill="var(--ink)"><circle cx="40" cy="170" r="4"/><circle cx="80" cy="120" r="4"/><circle cx="120" cy="170" r="4"/><circle cx="160" cy="120" r="4"/><circle cx="200" cy="170" r="4"/><circle cx="240" cy="120" r="4"/><circle cx="280" cy="170" r="4"/><circle cx="320" cy="120" r="4"/><circle cx="360" cy="170" r="4"/><circle cx="400" cy="120" r="4"/></g>
+      <text x="220" y="98" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--hv)">Shared corridor</text>
+      <text x="48" y="192" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">k</text>
+      <text x="392" y="192" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--hv)">l</text>
+      <text x="220" y="218" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Eight hops apart, one parallel corridor: a large sensitivity</text>
+      <rect x="520" y="56" width="250" height="84" fill="var(--surface-2)" stroke="var(--rule)"/>
+      <text x="645" y="80" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--ink-2)">One busbar</text>
+      <line x1="545" y1="100" x2="745" y2="100" stroke="var(--ink)" stroke-width="5"/>
+      <line x1="590" y1="100" x2="590" y2="182" stroke="var(--mv)" stroke-width="3"/>
+      <line x1="700" y1="100" x2="700" y2="182" stroke="var(--mv)" stroke-width="3"/>
+      <circle cx="590" cy="188" r="7" fill="var(--mv)"/><circle cx="700" cy="188" r="7" fill="var(--mv)"/>
+      <text x="604" y="192" font-family="var(--mono)" font-size="11" fill="var(--mv)">Feeder a</text>
+      <text x="714" y="192" font-family="var(--mono)" font-size="11" fill="var(--mv)">Feeder b</text>
+      <text x="645" y="218" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">One hop apart, each feeds its own load: near-zero sensitivity</text>
+    </svg>
+    <figcaption><b>Distance and sensitivity.</b> On the left, parallel transmission paths create significant interaction. On the right, separate feeders have low interaction under the example’s balancing assumptions.</figcaption>
+  </figure>
+
+  <h3>Limits of the linear approximation</h3>
+  <p>Three factors require attention when using sensitivities for screening:</p>
+  <ul class="point-grid three">
+    <li><b>DC approximation.</b> The model does not fully represent losses, reactive power or voltage magnitudes. Compare it with AC results; learned correction is useful only to the extent demonstrated by data and evaluation.</li>
+    <li><b>Topology changes.</b> Maintenance outages can reduce alternative paths and change sensitivities. Update or revalidate the map when operating topology changes significantly.</li>
+    <li><b>Voltage and current limits.</b> Active-power sensitivities cover only part of the assessment. Where voltage or reactive power is a major constraint, additional models and indicators are needed.</li>
+  </ul>
+
+  <h3>Events requiring separate modelling</h3>
+  <p>The traversal rules do not cover every protection mechanism. Busbar faults, breaker failure and common-mode events require their own initiating conditions and rules. A breaker failure can require wider backup isolation, while two circuits on one tower can fail together.</p>
+
+  <div class="key">Extending the contingency list requires corresponding protection rules, disconnection scopes and balancing assumptions for each event type.</div>
+  <p class="transition"><strong>A threshold calibrated on one topology does not automatically transfer to another.</strong> Mesh density, breaker arrangements and the share of radial branches change both the mix of contingency mechanisms and the acceptable sparsity of the map.</p>
+</section>
+
+<section id="s10">
+  <span class="num">Part IV · Verification and transferability</span>
+  <h2>10. Application across transmission networks</h2>
+
+  <p>The classification procedure can be applied to different networks when connectivity, switch types and states, and generation–load data are available. Islanding must be checked even when pre-contingency exchange is zero.</p>
+
+  <figure>
+    <svg viewBox="0 0 860 230" role="img" aria-label="Three stylised grid types and the corresponding share of the two mechanisms">
+      <g font-family="var(--sans)" font-size="12.5" text-anchor="middle">
+        <text x="150" y="30" fill="var(--ink)" font-weight="650">Densely meshed, fully breakered</text>
+        <text x="430" y="30" fill="var(--ink)" font-weight="650">Many tapped lines</text>
+        <text x="710" y="30" fill="var(--ink)" font-weight="650">Radial, few loops</text>
+      </g>
+      <g stroke="var(--ink-3)" stroke-width="1.8" fill="none">
+        <polygon points="100,60 200,60 220,120 180,160 120,160 80,120"/><line x1="100" y1="60" x2="180" y2="160"/><line x1="200" y1="60" x2="120" y2="160"/>
+        <line x1="380" y1="60" x2="480" y2="60"/><line x1="430" y1="60" x2="430" y2="110"/><line x1="380" y1="140" x2="480" y2="140"/><line x1="430" y1="140" x2="430" y2="110"/><line x1="380" y1="60" x2="380" y2="140"/><line x1="480" y1="60" x2="480" y2="140"/>
+        <line x1="710" y1="55" x2="710" y2="100"/><line x1="710" y1="100" x2="660" y2="140"/><line x1="710" y1="100" x2="760" y2="140"/><line x1="660" y1="140" x2="640" y2="170"/><line x1="760" y1="140" x2="780" y2="170"/><line x1="760" y1="140" x2="740" y2="170"/>
+      </g>
+      <g fill="var(--surface)" stroke="var(--hv)" stroke-width="2"><circle cx="430" cy="60" r="5"/><circle cx="430" cy="140" r="5"/></g>
+      <g font-family="var(--sans)" font-size="12" text-anchor="middle">
+        <rect x="60" y="185" width="180" height="16" fill="var(--mv)"/><rect x="240" y="185" width="20" height="16" fill="var(--hv)"/>
+        <text x="150" y="216" fill="var(--ink-2)">GLODF ≫ ISDF</text>
+        <rect x="340" y="185" width="140" height="16" fill="var(--mv)"/><rect x="480" y="185" width="60" height="16" fill="var(--hv)"/>
+        <text x="430" y="216" fill="var(--ink-2)">Large group share</text>
+        <rect x="620" y="185" width="70" height="16" fill="var(--mv)"/><rect x="690" y="185" width="130" height="16" fill="var(--hv)"/>
+        <text x="710" y="216" fill="var(--ink-2)">ISDF dominates</text>
+      </g>
+    </svg>
+    <figcaption><b>Contingency categories by network structure.</b> The bars are illustrative. Application requires statistics from the topology and switch states of the network being assessed.</figcaption>
+  </figure>
+
+  <p>A bus-branch model supports sensitivity calculation but usually lacks the detail needed to derive protection scope. When exchanging this representation, include zone mappings or contingency lists derived from the node-breaker model. Bus injections and balancing assumptions must also be consistent.</p>
+  <p class="transition"><strong>Differences between networks do not change the requirement for internal consistency.</strong> The event, model and verification method must represent the same physical state. When AI is introduced, computational speed cannot substitute for evidence of reliability.</p>
+</section>
+
+<!-- ═══════════════════ PART V ═══════════════════ -->
+<section id="s11">
+  <span class="num">Part V · AI in the operational workflow</span>
+  <h2>11. AI for contingency ranking and screening</h2>
+
+  <p>AI can rank contingencies to prioritise AC calculations within the available time. The ranking feeds verification; it is not a security conclusion. The workflow must specify how uncomputed cases are handled and when full assessment is required.</p>
+
+  <figure>
+    <svg viewBox="0 0 1000 340" role="img" aria-label="Screening pipeline: the operating state and the contingency list go through a physics prior and a learned ranker; higher-risk cases are prioritised for detailed AC verification under a safety policy; confirmed violations go to the operator">
+      <defs><marker id="sp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <g stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#sp)">
+        <path d="M200 76 L236 90"/><path d="M200 174 L236 160"/>
+        <path d="M440 84 L476 110"/><path d="M440 166 L476 140"/>
+        <path d="M650 125 L686 125"/><path d="M860 162 L860 190"/>
+      </g>
+      <path class="pulse-path" d="M200 76 L238 91 L440 84 L478 111 L650 125 L688 125" fill="none" stroke="none" data-n="3" data-dur="4" data-color="var(--mv)" data-r="3"/>
+      <path class="pulse-path" d="M200 174 L238 159 L440 166 L478 139 L650 125 L688 125" fill="none" stroke="none" data-n="3" data-dur="4" data-color="var(--lv)" data-r="3"/>
+      <g font-family="var(--sans)" font-size="12.5" text-anchor="middle">
+        <rect x="20" y="40" width="180" height="72" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="110" y="64" fill="var(--ink)" font-weight="650">Operating state</text>
+        <text x="110" y="83" fill="var(--ink-2)" font-size="11.5">Snapshot or forecast</text>
+        <text x="110" y="100" fill="var(--ink-2)" font-size="11.5">Node-breaker topology</text>
+        <rect x="20" y="138" width="180" height="72" fill="var(--surface-2)" stroke="var(--rule)"/>
+        <text x="110" y="162" fill="var(--ink)" font-weight="650">Contingency list</text>
+        <text x="110" y="181" fill="var(--ink-2)" font-size="11.5">~10,000 zones</text>
+        <text x="110" y="198" fill="var(--ink-2)" font-size="11.5">One per protection zone</text>
+        <rect x="240" y="50" width="200" height="66" fill="var(--mv-w)" stroke="var(--mv)" stroke-width="1.6"/>
+        <text x="340" y="73" fill="var(--mv)" font-weight="650">Physics prior</text>
+        <text x="340" y="91" fill="var(--ink-2)" font-size="11.5">GLODF / ISDF · linear, cheap</text>
+        <text x="340" y="107" fill="var(--ink-2)" font-size="11">A severity score per zone</text>
+        <rect x="240" y="134" width="200" height="66" fill="var(--lv-w)" stroke="var(--lv)" stroke-width="1.6"/>
+        <text x="340" y="157" fill="var(--lv)" font-weight="650">Learned ranker</text>
+        <text x="340" y="175" fill="var(--ink-2)" font-size="11.5">Sparse attention on the map</text>
+        <text x="340" y="191" fill="var(--ink-2)" font-size="11">Learns what physics misses</text>
+        <line x1="340" y1="116" x2="340" y2="134" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <rect x="480" y="88" width="170" height="74" fill="var(--surface)" stroke="var(--ink-3)"/>
+        <text x="565" y="113" fill="var(--ink)" font-weight="650">Ranked list</text>
+        <text x="565" y="132" fill="var(--ink-2)" font-size="11.5">Prior top ∪ model top</text>
+        <text x="565" y="150" fill="var(--ink-2)" font-size="11">In seconds</text>
+        <rect x="690" y="88" width="290" height="74" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.6"/>
+        <text x="835" y="113" fill="var(--hv)" font-weight="650">Full AC power flow</text>
+        <text x="835" y="132" fill="var(--ink-2)" font-size="11.5">Top-K receives AC verification first</text>
+        <text x="835" y="150" fill="var(--ink-2)" font-size="11">The remainder follows a safety policy</text>
+        <rect x="740" y="192" width="240" height="56" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+        <text x="860" y="216" fill="var(--ink)" font-weight="650">Confirmed violations</text>
+        <text x="860" y="235" fill="var(--ink-2)" font-size="11.5">To the operator, with remedies</text>
+      </g>
+      <text x="20" y="278" font-family="var(--mono)" font-size="11" fill="var(--ink-3)">COST OF ONE SECURITY ASSESSMENT (schematic)</text>
+      <g font-family="var(--sans)" font-size="12" fill="var(--ink-2)">
+        <text x="20" y="302">Simulate everything</text>
+        <rect x="240" y="291" width="740" height="14" fill="var(--ink-3)" opacity=".55"/>
+        <text x="20" y="326">Screen, then prioritise AC by risk</text>
+        <rect x="240" y="315" width="14" height="14" fill="var(--mv)"/>
+        <rect x="254" y="315" width="80" height="14" fill="var(--hv)" opacity=".8"/>
+        <text x="344" y="326" font-size="11.5">One inference pass + K full simulations</text>
+      </g>
+    </svg>
+    <figcaption><b>Combining physics and learned rankings.</b> Cases from both lists are merged, deduplicated and prioritised for AC verification. Top-K is a calculation order, not an automatic boundary for discarding every remaining contingency.</figcaption>
+  </figure>
+
+  <p>In TSO deployment, screening requires an approved safety policy: a validated screening criterion, monitoring for topology and data drift, a fallback to a full sweep or equivalent assessment, and an explicit treatment of every case not yet evaluated by AC within the current decision window. “Outside top-K” must never be interpreted as “secure”.</p>
+
+  <h3>Combining with a physics-based method</h3>
+  <p>A learned ranker can lose accuracy on topologies or operating states outside its training data. Sensitivities recomputed on the current topology provide an independent basis, but remain limited by linear assumptions and data quality. Part of the AC budget can be reserved for highly ranked physics-based cases, with the remainder selected by the learned model. Evaluate the combination through recall, missed-case severity and total processing time.</p>
+
+  <h3>Screening evaluation criteria</h3>
+  <ul class="point-grid">
+    <li><b>Recall at fixed K.</b> Measure the share of AC-violating contingencies retained in the selected top-K. Track false positives as well, since they consume calculation time that could be allocated to other cases.</li>
+    <li><b>Evaluation by snapshot.</b> Report performance for individual operating states, including the worst cases. Average performance alone does not characterise operational risk.</li>
+    <li><b>Severity.</b> Distinguish violation levels, such as 101% and 140% loading. Report severe missed contingencies separately.</li>
+    <li><b>Matched comparison.</b> Compare learned, physics-based and combined methods on the same data and simulation budget. Select thresholds on validation data before test evaluation.</li>
+  </ul>
+
+  <div class="key lv">AI supports verification priorities. Security conclusions depend on appropriate calculations, operating limits and the scope of assessed contingencies. Operators retain decision authority.</div>
+  <p class="transition"><strong>In this workflow, AI allocates verification priority and does not produce the security conclusion.</strong> Saved computation can then be used to assess additional forecast states, outage plans and remedial actions.</p>
+</section>
+
+<section id="s12">
+  <span class="num">Part V · AI in the operational workflow</span>
+  <h2>12. From broad N-1 screening to detailed studies</h2>
+
+  <div class="key mv"><strong>N-1 is the baseline security criterion, not the limit of the analytical scope.</strong> Its value lies in systematic coverage across many operating states, followed by a focused allocation of resources to physically credible multiple contingencies and cases requiring more detailed models.</div>
+  <p>Reducing the cost of each assessment allows more forecast states, outage plans and remedial actions to be examined. N-1 results expose margins, overload risk, critical contingencies and candidate remedial actions. Combined with contingency-propagation logic, they can also identify outage sets linked by topology, protection or functional dependency, instead of blindly enumerating every N-2 or N-3 combination.</p>
+
+  <div class="case-grid" aria-label="Three levels of security-analysis use">
+    <article class="case-card"><span class="case-label">Level 1 · Breadth</span><h3>N-1 assessment across operating states</h3><p>Run frequently across many grid states and contingencies to monitor margins, overload risk, critical events and remedial actions that may be available.</p></article>
+    <article class="case-card"><span class="case-label">Level 2 · Selective escalation</span><h3>Physically credible N-k events</h3><p>Prioritise dependent outages, common-mode events, breaker failure, islanding and outage sets produced by propagation rather than enumerating every combination indiscriminately.</p></article>
+    <article class="case-card"><span class="case-label">Level 3 · Depth</span><h3>Verification and detailed studies</h3><p>Use AC calculations to confirm the steady state of prioritised cases; send high-severity, low-margin or dynamically sensitive cases to RMS and EMT studies under separate selection criteria.</p></article>
+  </div>
+
+  <div class="formula">Broad N-1 screening → Physically credible N-k / propagated outage sets → AC verification → RMS / EMT for critical cases</div>
+
+  <figure>
+    <svg viewBox="0 0 860 300" role="img" aria-label="Operational horizons from day-ahead to real time; fast steady-state screening allows many scenarios to be assessed for anticipation, and filters the dangerous cases that feed dynamic and electromagnetic transient studies">
+      <defs><marker id="hz" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker></defs>
+      <line x1="40" y1="60" x2="820" y2="60" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#hz)"/>
+      <g font-family="var(--mono)" font-size="11" fill="var(--ink-2)" text-anchor="middle">
+        <line x1="110" y1="54" x2="110" y2="66" stroke="var(--ink-3)"/><text x="110" y="44">Week-ahead</text>
+        <line x1="290" y1="54" x2="290" y2="66" stroke="var(--ink-3)"/><text x="290" y="44">Day-ahead</text>
+        <line x1="480" y1="54" x2="480" y2="66" stroke="var(--ink-3)"/><text x="480" y="44">Intraday</text>
+        <line x1="680" y1="54" x2="680" y2="66" stroke="var(--ink-3)"/><text x="680" y="44">Real time</text>
+      </g>
+      <g font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)" text-anchor="middle">
+        <text x="110" y="84">Outage planning</text>
+        <text x="290" y="84">Ensembles · coordination</text>
+        <text x="480" y="84">Re-assessment</text>
+        <text x="680" y="84">Every few minutes</text>
+      </g>
+      <g stroke="var(--lv)" stroke-width="1.2" opacity=".75">
+        <line x1="200" y1="110" x2="200" y2="190"/><line x1="220" y1="110" x2="220" y2="190"/><line x1="240" y1="110" x2="240" y2="190"/><line x1="260" y1="110" x2="260" y2="190"/><line x1="280" y1="110" x2="280" y2="190"/><line x1="300" y1="110" x2="300" y2="190"/><line x1="320" y1="110" x2="320" y2="190"/><line x1="340" y1="110" x2="340" y2="190"/><line x1="360" y1="110" x2="360" y2="190"/><line x1="380" y1="110" x2="380" y2="190"/>
+      </g>
+      <text x="290" y="208" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--lv)" font-weight="650">Many scenarios, each fully screened</text>
+      <text x="290" y="224" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Wind, solar, load, exchanges, outages</text>
+      <path d="M430 150 L520 150" stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#hz)"/>
+      <rect x="524" y="118" width="130" height="64" fill="var(--hv-w)" stroke="var(--hv)" stroke-width="1.6"/>
+      <text x="589" y="142" text-anchor="middle" font-family="var(--sans)" font-size="12.5" fill="var(--hv)" font-weight="650">Dangerous cases</text>
+      <text x="589" y="160" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">Few, well chosen</text>
+      <text x="589" y="174" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-2)">(state × contingency)</text>
+      <path d="M654 140 L700 118" stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#hz)"/>
+      <path d="M654 162 L700 190" stroke="var(--ink-3)" stroke-width="1.4" fill="none" marker-end="url(#hz)"/>
+      <rect x="702" y="96" width="150" height="46" fill="var(--surface)" stroke="var(--ink-3)"/>
+      <text x="777" y="116" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">Dynamic (RMS) studies</text>
+      <text x="777" y="132" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Transient &amp; voltage stability</text>
+      <rect x="702" y="168" width="150" height="46" fill="var(--surface)" stroke="var(--ink-3)"/>
+      <text x="777" y="188" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink)" font-weight="650">EMT studies</text>
+      <text x="777" y="204" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--ink-2)">Converter-dominated areas</text>
+      <g font-family="var(--mono)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">
+        <text x="290" y="262">Cheap per case</text><text x="589" y="262">The filter</text><text x="777" y="262">Expensive per case</text>
+      </g>
+      <line x1="200" y1="272" x2="820" y2="272" stroke="var(--rule)"/>
+      <text x="510" y="290" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="var(--ink-2)">Steady-state screening is the gate between breadth (many states) and depth (detailed physics)</text>
+    </svg>
+    <figcaption><b>Assessing more operating states.</b> Screening supports a broader set of steady-state scenarios and selection of cases for more detailed study. Dynamic analysis needs additional selection criteria.</figcaption>
+  </figure>
+
+  <div class="topic-grid" aria-label="Three operational applications">
+    <article class="topic-card">
+      <h3>Assessing forecast scenarios</h3>
+      <p>Wind and solar output, demand and exchanges create a range of possible operating states. N-1 analysis across scenarios identifies conditions that lead to overloads and actions that reduce the risk. Operators can prepare topology changes, redispatch or phase-shifter settings before those actions are needed.</p>
+    </article>
+    <article class="topic-card">
+      <h3>Coordination between operators</h3>
+      <p>In a combined regional model, element and contingency counts grow while processing deadlines remain constrained. Screening can support day-ahead and intraday updates. Operators need consistent contingency lists, limits, protection models and balancing assumptions to use the results jointly.</p>
+    </article>
+    <article class="topic-card">
+      <h3>Selecting cases for RMS and EMT studies</h3>
+      <p>Steady-state analysis checks the post-contingency operating point under specified assumptions. It does not establish stability during the transition to that point. RMS and EMT studies require generator, load, controller and protection dynamics. Steady-state results can inform case selection, but dynamic instability can occur without steady-state overloads. Steady-state N-1 screening should therefore not be the sole criterion for excluding dynamic-study cases.</p>
+    </article>
+  </div>
+
+  <h3>Extending the assessment scope</h3>
+  <ul class="point-grid three">
+    <li><b>Dependent and multiple contingencies.</b> N-2, N-3, breaker failure, islanding and common-mode events increase the case count rapidly. Priority should be given to credible, physically connected events; screening performance must be evaluated separately for each event class.</li>
+    <li><b>Planning and outage schedules.</b> Assessing maintenance plans across generation–load states helps identify higher-risk periods.</li>
+    <li><b>Explaining results.</b> Rankings should identify at-risk elements, estimated effects and calculation assumptions so operators can review them.</li>
+  </ul>
+
+  <h3>Validation scope and current limitations</h3>
+  <div class="key or"><b>Four levels of evidence should be kept distinct.</b> PTDF, LODF, GLODF and component-wise power balancing are established theory. The article’s contribution is to organise GLODF and its article-defined ISDF within one selection logic driven by the protection-induced outage set, then use that structure to build a sparse interaction space for screening. The figures and numerical examples check the internal consistency of the reasoning on illustrative networks; they do not establish performance on a real TSO grid. Operational use requires validation across real snapshots and topologies, threshold calibration, error measurement against AC results, out-of-distribution testing, and a safety case with a defined fallback.</div>
+
+  <div class="close">
+    <h2>Conclusion</h2>
+    <p>The credibility of N-1 security analysis depends first on how the network event is represented, rather than on the solver or AI model alone. An equipment fault becomes a meaningful computational case only when the protection response, disconnected equipment set and resulting network structure are represented consistently. On that basis, LODF treats the loss of one branch while the network remains connected; GLODF extends the calculation to a group of simultaneously disconnected elements; and ISDF describes the response of the retained network when the event removes a boundary power exchange and requires an explicit balancing policy.</p>
+    <p>The framework is not intended to replace AC simulation with a linear formula. Its purpose is to include the physical structure of the event in screening, reduce the computational space and preserve traceability of retained relationships, applied factors and governing assumptions. A learned model may use that information to rank contingencies; its output has operational value only after verification on the current topology, assessment of missed-case risk and placement under operator authority.</p>
+    <p><strong>In the proposed analysis architecture, the physical model defines the event and interaction space; AI performs the prioritisation task within that space.</strong> This separation of functions allows the learned model to be evaluated independently and integrated as an auditable component of the security-analysis process.</p>
+    <p>N-1 is therefore the baseline layer that provides breadth, not the final limit of the analysis. Its screening results support anticipation across more operating states, selection of physically credible multiple contingencies, and allocation of AC, RMS or EMT studies to the cases that require the corresponding depth of verification.</p>
+    <p>To move this approach from a research model into an operational and auditable workflow, five principles must remain consistent throughout:</p>
+    <ul style="margin-bottom:0">
+      <li><b>Define the disconnection scope.</b> Contingency lists, sensitivities and simulation labels must use the same set of removed equipment.</li>
+      <li><b>Check topology before selecting the formula.</b> Use LODF/GLODF within their applicability conditions; for islanding, identify components and balancing assumptions before calculating the response.</li>
+      <li><b>Retain node-breaker information.</b> When exporting a bus-branch model, preserve zone mappings and contingency lists so disconnection scopes remain traceable.</li>
+      <li><b>Verify the value of AI.</b> Measure recall, missed-case severity and processing time by snapshot against a physics-based method under matched conditions.</li>
+      <li><b>Extend assessment with appropriate checks.</b> Use saved computation for additional scenarios and remedial actions, and select dynamic-study cases using suitable criteria.</li>
+    </ul>
+  </div>
+
+  <h3>Selected references</h3>
+  <ol class="references">
+    <li>European Commission, <a href="https://eur-lex.europa.eu/eli/reg/2017/1485/oj">Regulation (EU) 2017/1485 establishing a guideline on electricity transmission system operation</a>, especially Articles 33–35 and 72–75.</li>
+    <li>NERC, <a href="https://www.nerc.com/standards/reliability-standards/top/top-001-6">TOP-001-6 — Transmission Operations</a> and <a href="https://www.nerc.com/standards/reliability-standards/iro/iro-008-3">IRO-008-3 — Reliability Coordinator Operational Analyses and Real-time Assessments</a>, on operational assessments, pre-/post-contingency states and the methodology for determining SOL exceedances.</li>
+    <li>R. D. Zimmerman and C. E. Murillo-Sánchez, <a href="https://www.pserc.cornell.edu/matpower/MATPOWER-manual.pdf">MATPOWER User’s Manual</a>, Linear Shift Factors and PTDF/LODF functions.</li>
+    <li>T. Güler, G. Gross and M. Liu, <a href="https://documents.pserc.wisc.edu/documents/publications/papers/2006_general_publications/guler_generalized_lodf.pdf">“Generalized Line Outage Distribution Factors”</a>, <i>IEEE Transactions on Power Systems</i>, 22(2), 2007.</li>
+    <li>L. Guo et al., <a href="https://alessandrozocca.github.io/assets/pdf/guo2021b.pdf">“Line Failure Localization of Power Networks — Part II: Cut Set Outages”</a>, <i>IEEE Transactions on Power Systems</i>, DOI 10.1109/TPWRS.2021.3068048.</li>
+    <li>PowSyBl, <a href="https://powsybl.readthedocs.io/projects/pypowsybl/en/stable/reference/network/node_breaker_topology.html">Node-breaker topology reference</a>, for nodes, switches and internal connections.</li>
+  </ol>
+</section>
+
+<aside class="author-box" aria-label="About the author">
+  <h4>Van Tuan Dang</h4>
+  <p>Researching AI/ML and digital grid architecture, with a focus on physics-informed machine learning, operational digital twins, decision support, and agentic AI systems for critical infrastructure.</p>
+</aside>
+
+<footer>
+
+
+  <p>© Van Tuan Dang · <a href="../blog.html">All articles</a></p>
+</footer>
+</div>
+
+<script>
+/* ═══ FIGURE: three outcomes on one base grid ═══ */
+(function(){
+  const N={A:[50,75],B:[200,75],T:[125,75],C:[50,205],D:[200,205],E:[125,145],F:[275,150]};
+  const Ed=[["A","T"],["T","B"],["T","E"],["A","C"],["C","D"],["D","B"],["C","E"],["E","D"],["D","F"]];
+  const panels=[
+    {t:"1 · one element trips", cut:[["A","C"]], hot:[["C","E"],["E","D"],["D","B"]], isl:[], note:"flow goes around, a few branches pick up load"},
+    {t:"2 · a whole zone trips", cut:[["A","T"],["T","B"],["T","E"]], hot:[], isl:[], note:"three branches out, grid still connected"},
+    {t:"3 · part of the grid splits off", cut:[["D","F"]], hot:[], isl:["F"], note:"F becomes an island, the balance is lost"}
+  ];
+  const same=(e,x)=>(e[0]===x[0]&&e[1]===x[1])||(e[0]===x[1]&&e[1]===x[0]);
+  let s="";
+  panels.forEach((p,i)=>{
+    const ox=i*300;
+    s+=`<text x="${ox+150}" y="34" text-anchor="middle" font-family="var(--sans)" font-size="13" font-weight="650" fill="var(--ink)">${p.t}</text>`;
+    Ed.forEach(e=>{
+      const a=N[e[0]],b=N[e[1]];
+      const cut=p.cut.some(x=>same(e,x)), hot=p.hot.some(x=>same(e,x)), isl=p.isl.includes(e[0])||p.isl.includes(e[1]);
+      const col=cut?"var(--hv)":(hot?"var(--or)":(isl?"var(--or)":"var(--ink-3)"));
+      s+=`<line x1="${ox+a[0]}" y1="${a[1]}" x2="${ox+b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${cut?5:(hot?4:2.2)}" ${cut?'stroke-dasharray="8 5" opacity=".85"':''}/>`;
+    });
+    for(const k in N){const [x,y]=N[k]; const isl=p.isl.includes(k);
+      const brk=k!=="T"; const load=(k==="F"||k==="E");
+      const col=isl?"var(--or)":"var(--ink)";
+      if(!brk) s+=`<circle cx="${ox+x}" cy="${y}" r="7" fill="var(--surface)" stroke="${p.cut.length>1?'var(--hv)':col}" stroke-width="2.2"/>`;
+      else if(load) s+=`<circle cx="${ox+x}" cy="${y}" r="7" fill="${col}"/><circle cx="${ox+x}" cy="${y}" r="3" fill="var(--surface)"/>`;
+      else s+=`<circle cx="${ox+x}" cy="${y}" r="5.5" fill="${col}"/>`;
+    }
+    if(i===2) s+=`<text x="${ox+275}" y="185" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--or)" font-weight="650">−12 MW</text>`;
+    if(i===1) s+=`<text x="${ox+125}" y="58" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--hv)">No breaker</text>`;
+    s+=`<text x="${ox+150}" y="280" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink-2)">${p.note}</text>`;
+    if(i<2) s+=`<line x1="${ox+300}" y1="20" x2="${ox+300}" y2="295" stroke="var(--rule)" stroke-dasharray="4 4"/>`;
+  });
+  document.getElementById("kb").innerHTML=s;
+})();
+
+/* ═══ FIGURE ANIMATIONS: data-grow / data-head / data-appear / data-blink / .pulse-path (SMIL; static under reduced motion) ═══ */
+(function(){
+  const NS = "http://www.w3.org/2000/svg";
+  const still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+  const anim = (el, attr, values, keyTimes, dur) => mk("animate", { attributeName: attr, values, keyTimes, dur: dur + "s", repeatCount: "indefinite", calcMode: "linear" }, el);
+  const f = x => Math.min(0.999, Math.max(0.001, x)).toFixed(3);
+  document.querySelectorAll("svg.anim-svg").forEach(svg => {
+    const T = +(svg.dataset.cycle || 7);
+    svg.querySelectorAll("[data-grow]").forEach(p => {
+      const [a, b] = p.dataset.grow.split(",").map(Number);
+      const L = p.getTotalLength(), end = p.getPointAtLength(L), pre = p.getPointAtLength(Math.max(0, L - 1));
+      const col = p.getAttribute("stroke") || p.parentNode.getAttribute("stroke"), w = +(p.getAttribute("stroke-width") || p.parentNode.getAttribute("stroke-width") || 2.5);
+      if (p.dataset.head) {
+        const ang = Math.atan2(end.y - pre.y, end.x - pre.x), s = 4 + w * 1.6;
+        const P = (d, o) => [end.x + Math.cos(ang + o) * d, end.y + Math.sin(ang + o) * d];
+        const tip = P(s * 0.9, 0), l = P(s * 0.9, Math.PI - 0.5), r = P(s * 0.9, Math.PI + 0.5);
+        const head = mk("polygon", { points: [tip, l, r].map(q => q.map(v => v.toFixed(1)).join(",")).join(" "), fill: col, stroke: "none" }, p.parentNode);
+        if (!still) anim(head, "opacity", "0;0;1;1;0;0", `0;${f(b - 0.01)};${f(b)};0.9;0.97;1`, T);
+      }
+      if (still) return;
+      p.setAttribute("pathLength", "1"); p.setAttribute("stroke-dasharray", "1 1");
+      anim(p, "stroke-dashoffset", "1;1;0;0", `0;${f(a)};${f(b)};1`, T);
+      anim(p, "opacity", "1;1;0;0", "0;0.9;0.97;1", T);
+    });
+    if (still) return;
+    svg.querySelectorAll("[data-appear]").forEach(e => { const a = +e.dataset.appear; anim(e, "opacity", "0;0;1;1;0;0", `0;${f(a)};${f(Math.min(a + 0.05, 0.89))};0.9;0.97;1`, T); });
+    svg.querySelectorAll("[data-blink]").forEach(e => anim(e, "opacity", "1;0.25;1", "0;0.5;1", 0.9));
+    svg.querySelectorAll(".pulse-path").forEach(p => {
+      const n = +(p.dataset.n || 3), dur = +(p.dataset.dur || 3), r = p.dataset.r || 3.4, col = p.dataset.color || "var(--hv)";
+      for (let i = 0; i < n; i++) {
+        const c = mk("circle", { r, fill: col, opacity: "0", class: "pulse" });
+        const b = -(i * dur / n).toFixed(3) + "s";
+        mk("animateMotion", { dur: dur + "s", repeatCount: "indefinite", path: p.getAttribute("d"), begin: b }, c);
+        mk("animate", { attributeName: "opacity", values: "0;1;1;0", keyTimes: "0;0.08;0.9;1", dur: dur + "s", repeatCount: "indefinite", begin: b }, c);
+        p.parentNode.insertBefore(c, p.nextSibling);
+      }
+    });
+  });
+})();
+
+/* ═══ SECTION 7: interactive miniature grid ═══ */
+(function(){
+const N = {
+  A:{x:90, y:170,l:0,br:1}, B:{x:330,y:110,l:0,br:1}, T:{x:210,y:150,l:0,br:0},
+  S:{x:210,y:52, l:1,br:1}, C:{x:160,y:300,l:0,br:1}, D:{x:340,y:280,l:0,br:1},
+  E:{x:110,y:412,l:1,br:1}, F:{x:398,y:392,l:0,br:1},
+  G:{x:500,y:300,l:0,br:1}, H:{x:576,y:220,l:1,br:1}, I:{x:566,y:392,l:0,br:1}
+};
+const B = [
+  {id:"L1",a:"A",b:"T"},{id:"L2",a:"T",b:"B"},{id:"L3",a:"T",b:"S"},
+  {id:"L4",a:"A",b:"C"},{id:"L5",a:"B",b:"D"},{id:"L6",a:"C",b:"D"},
+  {id:"L7",a:"C",b:"S"},{id:"L8",a:"C",b:"E"},{id:"L9",a:"D",b:"F"},
+  {id:"L10",a:"D",b:"G"},{id:"L11",a:"G",b:"H"},{id:"L12",a:"H",b:"I"},{id:"L13",a:"I",b:"G"}
+];
+const BL = {L1:[146,152,"middle"],L2:[262,120,"middle"],L3:[220,104,"start"],L4:[110,240,"end"],L5:[347,199,"start"],L6:[250,308,"middle"],L7:[172,212,"end"],L8:[124,354,"end"],L9:[380,334,"start"],L10:[420,280,"middle"],L11:[528,252,"end"],L12:[582,310,"start"],L13:[524,360,"end"]};
+const NL = {C:[146,306,"end"],D:[352,274,"start"],E:[96,418,"end"],F:[410,398,"start"],I:[578,398,"start"],T:[222,172,"start"]};
+const by = id => B.find(b=>b.id===id);
+function zones(){
+  const p={}; B.forEach(b=>p[b.id]=b.id);
+  const f=x=>{while(p[x]!==x)x=p[x]=p[p[x]];return x};
+  const u=(x,y)=>{const a=f(x),b=f(y); if(a!==b)p[a]=b};
+  for(const n in N){ if(N[n].br) continue;
+    const inc=B.filter(b=>b.a===n||b.b===n);
+    for(let i=1;i<inc.length;i++) u(inc[0].id, inc[i].id);
+  }
+  const z={}; B.forEach(b=>{const r=f(b.id); (z[r]=z[r]||[]).push(b.id)});
+  return z;
+}
+const Z = zones();
+const zoneOf = id => Object.values(Z).find(v=>v.includes(id));
+function comps(rem){
+  const adj={}, live=new Set();
+  rem.forEach(b=>{live.add(b.a);live.add(b.b);(adj[b.a]=adj[b.a]||[]).push(b.b);(adj[b.b]=adj[b.b]||[]).push(b.a)});
+  const seen=new Set(), out=[];
+  for(const s of live){ if(seen.has(s))continue;
+    const st=[s], c=new Set(); seen.add(s);
+    while(st.length){const x=st.pop(); c.add(x);(adj[x]||[]).forEach(y=>{if(!seen.has(y)){seen.add(y);st.push(y)}})}
+    const e=rem.filter(b=>c.has(b.a)&&c.has(b.b)).length;
+    out.push({nodes:c, n:c.size, e, cyc:e>=c.size});
+  }
+  return out;
+}
+function classify(zid){
+  const zone = zoneOf(zid);
+  const rem = B.filter(b=>!zone.includes(b.id));
+  const live = new Set(); rem.forEach(b=>{live.add(b.a);live.add(b.b)});
+  const touched=new Set(); zone.forEach(i=>{touched.add(by(i).a);touched.add(by(i).b)});
+  const orph=[...touched].filter(n=>!live.has(n));
+  const cs = comps(rem).sort((a,b)=>b.n-a.n);
+  const vo = cs.length>1;
+  const orphLoad = orph.filter(n=>N[n].l);
+  let co, ly, mau="mv";
+  if(vo){ const iles=cs.slice(1);
+    co="ISDF"; mau="hv";
+    ly="The grid splits into "+cs.length+" parts. The detached part "+(iles.some(c=>c.cyc)?"contains a loop: it must balance itself as a sub-grid.":"is a dead end: the lost load is known immediately.");
+  } else if(orphLoad.length){
+    co="ISDF"; mau="hv";
+    ly="Node "+orphLoad.join(", ")+" is isolated while carrying load: real power leaves the balance.";
+  } else if(orph.length){
+    co = zone.length>1 ? "GLODF" : "LODF";
+    ly="Node "+orph.join(", ")+" is isolated but carries no load, so no power is lost. "+(zone.length>1?"The group is removed and the remaining grid redistributes flows.":"One element leaves service and the remaining grid redistributes flows.");
+  } else {
+    co = zone.length>1 ? "GLODF" : "LODF";
+    ly = zone.length>1 ? zone.length+" elements lost at once, grid still connected: group sensitivity." : "One element lost, grid still connected: classical sensitivity.";
+  }
+  return {zone, orph, orphLoad, vo, cs, co, ly, mau};
+}
+function draw(sel){
+  const r = sel ? classify(sel) : null;
+  const inZ = r ? new Set(r.zone) : new Set();
+  const iles = r && r.vo ? r.cs.slice(1) : [];
+  const ileN = new Set(); iles.forEach(c=>c.nodes.forEach(n=>ileN.add(n)));
+  let s = "";
+  B.forEach(b=>{
+    const p=N[b.a], q=N[b.b];
+    const on = inZ.has(b.id);
+    const ile = !on && ileN.has(b.a) && ileN.has(b.b);
+    const col = on ? "var(--hv)" : (ile ? "var(--or)" : "var(--ink-3)");
+    s += `<line class="br" data-id="${b.id}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${col}" stroke-width="${on?6:(ile?3.5:2.4)}" ${on?'stroke-dasharray="9 5"':''}/>`;
+    s += `<line class="br" data-id="${b.id}" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="transparent" stroke-width="16"/>`;
+    const [lx,ly,la]=BL[b.id];
+    s += `<text x="${lx}" y="${ly}" text-anchor="${la}" font-size="10.5" font-family="var(--mono)" fill="${on?'var(--hv)':'var(--ink-3)'}" pointer-events="none">${b.id}</text>`;
+  });
+  for(const n in N){
+    const d=N[n], orph = r && r.orph.includes(n);
+    const col = orph ? "var(--hv)" : (ileN.has(n) ? "var(--or)" : "var(--ink)");
+    if(!d.br){ s+=`<circle cx="${d.x}" cy="${d.y}" r="8" fill="var(--surface)" stroke="${col}" stroke-width="2.5"/>`; }
+    else if(d.l){ s+=`<circle cx="${d.x}" cy="${d.y}" r="8" fill="${col}"/><circle cx="${d.x}" cy="${d.y}" r="3.4" fill="var(--surface)"/>`; }
+    else { s+=`<circle cx="${d.x}" cy="${d.y}" r="6" fill="${col}"/>`; }
+    const [nx,ny,na]=NL[n]||[d.x,d.y-14,"middle"];
+    s+=`<text x="${nx}" y="${ny}" font-size="12.5" font-family="var(--mono)" fill="${col}" text-anchor="${na}">${n}</text>`;
+  }
+  document.getElementById("sv").innerHTML = s;
+  document.querySelectorAll("#sv .br").forEach(e=>e.onclick=()=>draw(e.dataset.id));
+  if(!r) return;
+  document.getElementById("co").textContent = r.co + (r.zone.length>1 ? " · "+r.zone.length+" elements" : "");
+  document.getElementById("co").style.color = r.mau==="hv" ? "var(--hv)" : "var(--mv)";
+  document.getElementById("ly").textContent = r.ly;
+  const yn=(v,t,f)=>`<span class="${v?'yes':'no'}">${v?t:f}</span>`;
+  document.getElementById("qs").innerHTML =
+    `<div class="q"><b>①</b><span>Does the remaining grid split? ${yn(r.vo,"Yes: "+r.cs.length+" parts","No")}</span></div>`+
+    `<div class="q"><b>②</b><span>Is a loaded node isolated? ${yn(r.orphLoad.length>0,"Yes: "+r.orphLoad.join(","),"No")}</span></div>`+
+    `<div class="q"><b>③</b><span>Is an empty node isolated? ${yn(r.orph.length>r.orphLoad.length,"Yes: "+r.orph.filter(n=>!N[n].l).join(","),"No")}</span></div>`;
+  document.getElementById("hint").textContent = "Protection zone: " + r.zone.length + " element" + (r.zone.length>1?"s":"") + " (" + r.zone.join(", ") + ")" + (r.vo ? " · the detached part is shown in orange." : "");
+}
+draw("L2");
+})();
+
+/* ═══ SECTION 8: node-breaker interactive illustration (small networks, explicit geometry on a 1000 × 610 canvas) ═══ */
+(function(){
+"use strict";
+const SC = [
+{ title:"1 · LODF: one line, grid stays connected", fault:"L_AB",
+  intro:"Line L_AB has a real breaker at each end. Propagation stops at those two breakers, so the zone contains only L_AB. The grid remains connected and the case is evaluated with LODF in the DC model.",
+  nodes:{A:{x:200,y:110,bus:180},B:{x:800,y:110,bus:180},C:{x:500,y:450,bus:200,bl:[110,5,"start"]},
+    a1:{x:260,y:200},b1:{x:740,y:200,lab:[-8,-8,"end"]},a2:{x:140,y:200,lab:[-8,-8,"end"]},c1:{x:440,y:370,lab:[-8,-8,"end"]},b2:{x:860,y:200},c2:{x:560,y:370}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[260,110,260,200],l:[274,159,"start"]},{id:"cbB1",a:"b1",b:"B",t:"CB",g:[740,200,740,110],l:[726,159,"end"]},
+      {id:"cbA2",a:"A",b:"a2",t:"CB",g:[140,110,140,200],l:[126,159,"end"]},{id:"cbB2",a:"B",b:"b2",t:"CB",g:[860,110,860,200],l:[874,159,"start"]},
+      {id:"cbC1",a:"c1",b:"C",t:"CB",g:[440,370,440,450],l:[426,414,"end"]},{id:"cbC2",a:"c2",b:"C",t:"CB",g:[560,370,560,450],l:[574,414,"start"]}],
+  br:[{id:"L_AB",a:"a1",b:"b1",x:0.10,lim:300,kind:"line",p:[[260,200],[740,200]],n:[500,188,"middle"],f:[500,224,"middle"]},
+      {id:"L_AC",a:"a2",b:"c1",x:0.10,lim:250,kind:"line",p:[[140,200],[140,370],[440,370]],n:[152,286,"start"],f:[152,304,"start"]},
+      {id:"L_BC",a:"b2",b:"c2",x:0.10,lim:300,kind:"line",p:[[860,200],[860,370],[560,370]],n:[848,286,"end"],f:[848,304,"end"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:300,Pmax:600,slack:true,s:[200,50],st:[200,110,200,62],l:[216,55,"start"]},
+       {id:"G2",node:"C",kind:"gen",P:100,Pmax:300,s:[500,522],st:[500,450,500,510],l:[516,527,"start"]},
+       {id:"LB",node:"B",kind:"load",P:400,s:[800,52],st:[800,110,800,60],l:[816,56,"start"]}] },
+
+{ title:"2 · GLODF: a disconnector drags a transformer out", fault:"L_AB",
+  intro:"The initiating contingency is a fault on L_AB. On side B, L_AB reaches node m only through disconnector d, which cannot interrupt fault current. Propagation passes through d and carries out transformer T, which has no breaker of its own. One initiating contingency therefore produces the final outage set G = {L_AB, T}. The grid remains connected; GLODF provides a rapid assessment of the simultaneous effect of the full set G before AC load-flow verification.",
+  nodes:{A:{x:200,y:110,bus:180},B:{x:760,y:110,bus:220},C:{x:400,y:450,bus:180,bl:[98,5,"start"]},D:{x:700,y:450,bus:160,bl:[-80,26,"start"]},
+    a1:{x:260,y:200},bt:{x:620,y:200,lab:[0,22,"middle"]},m:{x:700,y:200,lab:[10,22,"start"]},tD:{x:700,y:340,lab:[10,-6,"start"]},a2:{x:140,y:200,lab:[-8,-8,"end"]},
+    c1:{x:340,y:370,lab:[-8,-8,"end"]},b2:{x:840,y:200},c2:{x:440,y:530,lab:[-8,14,"end"]},c3:{x:480,y:370},d1:{x:660,y:370,lab:[8,-8,"start"]}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[260,110,260,200],l:[274,159,"start"]},{id:"d",a:"bt",b:"m",t:"DS",g:[620,200,700,200],l:[660,184,"middle"]},
+      {id:"cbB",a:"m",b:"B",t:"CB",g:[700,200,700,110],l:[686,159,"end"]},{id:"cbtD",a:"tD",b:"D",t:"CB",g:[700,340,700,450],l:[714,399,"start"]},
+      {id:"cbA2",a:"A",b:"a2",t:"CB",g:[140,110,140,200],l:[126,159,"end"]},{id:"cbC1",a:"c1",b:"C",t:"CB",g:[340,370,340,450],l:[326,414,"end"]},
+      {id:"cbB2",a:"B",b:"b2",t:"CB",g:[840,110,840,200],l:[854,159,"start"]},{id:"cbC2",a:"c2",b:"C",t:"CB",g:[440,530,440,450],l:[454,494,"start"]},
+      {id:"cbC3",a:"C",b:"c3",t:"CB",g:[480,450,480,370],l:[494,414,"start"]},{id:"cbD1",a:"d1",b:"D",t:"CB",g:[660,370,660,450],l:[646,414,"end"]}],
+  br:[{id:"L_AB",a:"a1",b:"bt",x:0.10,lim:300,kind:"line",p:[[260,200],[620,200]],n:[440,188,"middle"],f:[440,224,"middle"]},
+      {id:"T",a:"m",b:"tD",x:0.08,lim:250,kind:"trafo",p:[[700,200],[700,340]],n:[680,262,"end"],f:[680,280,"end"]},
+      {id:"L_AC",a:"a2",b:"c1",x:0.10,lim:300,kind:"line",p:[[140,200],[140,370],[340,370]],n:[152,286,"start"],f:[152,304,"start"]},
+      {id:"L_BC",a:"b2",b:"c2",x:0.12,lim:300,kind:"line",p:[[840,200],[840,570],[440,570],[440,530]],n:[640,560,"middle"],f:[640,594,"middle"]},
+      {id:"L_CD",a:"c3",b:"d1",x:0.10,lim:200,kind:"line",p:[[480,370],[660,370]],n:[570,358,"middle"],f:[570,392,"middle"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:350,Pmax:700,slack:true,s:[200,50],st:[200,110,200,62],l:[216,55,"start"]},
+       {id:"G2",node:"C",kind:"gen",P:100,Pmax:300,s:[262,450],st:[310,450,274,450],l:[262,482,"middle"]},
+       {id:"LB",node:"B",kind:"load",P:250,s:[760,52],st:[760,110,760,60],l:[776,56,"start"]},
+       {id:"LD",node:"D",kind:"load",P:200,s:[750,505],st:[750,450,750,496],l:[766,509,"start"]}] },
+
+{ title:"3 · Tee-off, fictitious breaker, lost generator", fault:"L1",
+  intro:"The tap point P has no breaker, so L2 and L3 leave with L1. At substation C, the fictitious breaker f cannot open, so propagation climbs onto busbar C1; through disconnector dg, generator G3 is lost too. It stops at cbA1, cbB1 and the bus coupler cpl. Zone = {L1, L2, L3, G3}: generation is lost but the main grid stays connected, so GLODF applies plus rebalancing.",
+  nodes:{A:{x:180,y:110,bus:180},B:{x:820,y:110,bus:180},C1:{x:430,y:470,bus:120,bl:[-70,5,"end"]},C2:{x:650,y:470,bus:120,bl:[70,5,"start"]},
+    a1:{x:240,y:200},P:{x:450,y:200,lab:[0,-12,"middle"]},b1:{x:760,y:200,lab:[-8,-8,"end"]},pc:{x:450,y:390,lab:[-8,-6,"end"]},gn:{x:390,y:550,lab:[8,18,"start"]},
+    a4:{x:120,y:200,lab:[-8,-8,"end"]},c4:{x:620,y:550,lab:[8,18,"start"]},b5:{x:880,y:200},c5:{x:680,y:390,lab:[8,-6,"start"]}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[240,110,240,200],l:[254,159,"start"]},{id:"cbB1",a:"b1",b:"B",t:"CB",g:[760,200,760,110],l:[746,159,"end"]},
+      {id:"f",a:"pc",b:"C1",t:"FCB",g:[450,390,450,470],l:[464,434,"start"]},{id:"dg",a:"C1",b:"gn",t:"DS",g:[390,470,390,550],l:[376,514,"end"]},
+      {id:"cpl",a:"C1",b:"C2",t:"CB",g:[490,470,590,470],l:[540,454,"middle"]},{id:"cbA4",a:"A",b:"a4",t:"CB",g:[120,110,120,200],l:[106,159,"end"]},
+      {id:"cbC4",a:"c4",b:"C2",t:"CB",g:[620,550,620,470],l:[606,514,"end"]},{id:"cbB5",a:"B",b:"b5",t:"CB",g:[880,110,880,200],l:[894,159,"start"]},
+      {id:"cbC5",a:"c5",b:"C2",t:"CB",g:[680,390,680,470],l:[694,434,"start"]}],
+  br:[{id:"L1",a:"a1",b:"P",x:0.05,lim:300,kind:"line",p:[[240,200],[450,200]],n:[345,188,"middle"],f:[345,224,"middle"]},
+      {id:"L2",a:"P",b:"b1",x:0.05,lim:300,kind:"line",p:[[450,200],[760,200]],n:[605,188,"middle"],f:[605,224,"middle"]},
+      {id:"L3",a:"P",b:"pc",x:0.05,lim:300,kind:"line",p:[[450,200],[450,390]],n:[464,290,"start"],f:[464,308,"start"]},
+      {id:"L4",a:"a4",b:"c4",x:0.10,lim:300,kind:"line",p:[[120,200],[120,590],[620,590],[620,550]],n:[132,390,"start"],f:[132,408,"start"]},
+      {id:"L5",a:"b5",b:"c5",x:0.10,lim:300,kind:"line",p:[[880,200],[880,390],[680,390]],n:[866,290,"end"],f:[866,308,"end"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:300,Pmax:700,slack:true,s:[180,50],st:[180,110,180,62],l:[196,55,"start"]},
+       {id:"G3",node:"gn",kind:"gen",P:150,Pmax:300,s:[322,550],st:[390,550,334,550],l:[306,555,"end"]},
+       {id:"G4",node:"B",kind:"gen",P:100,Pmax:400,s:[820,50],st:[820,110,820,62],l:[836,55,"start"]},
+       {id:"LC",node:"C2",kind:"load",P:550,s:[690,527],st:[690,470,690,518],l:[706,531,"start"]}] },
+
+{ title:"4 · ISDF: substation D is islanded", fault:"L_CD",
+  intro:"L_CD is the only connection between substation D (120 MW load, 40 MW generator) and the grid. The zone contains only L_CD, but removing it islands D. The illustrative calculation covers only the main grid, where the remaining generators cover the imbalance of 40 − 120 = −80 MW; the island requires a separate assessment. The LODF denominator is zero because L_CD is a bridge, so ISDF applies.",
+  nodes:{A:{x:200,y:110,bus:180},B:{x:800,y:110,bus:180},C:{x:500,y:320,bus:180,bl:[100,5,"start"]},D:{x:500,y:520,bus:160,bl:[-90,5,"end"]},
+    a1:{x:260,y:200},b1:{x:740,y:200,lab:[-8,-8,"end"]},a2:{x:140,y:200,lab:[-8,-8,"end"]},c1:{x:440,y:260,lab:[-8,-8,"end"]},
+    b2:{x:860,y:200},c2:{x:560,y:260},c3:{x:500,y:390,lab:[-8,4,"end"]},d1:{x:500,y:450,lab:[-8,4,"end"]}},
+  sw:[{id:"cbA1",a:"A",b:"a1",t:"CB",g:[260,110,260,200],l:[274,159,"start"]},{id:"cbB1",a:"b1",b:"B",t:"CB",g:[740,200,740,110],l:[726,159,"end"]},
+      {id:"cbA2",a:"A",b:"a2",t:"CB",g:[140,110,140,200],l:[126,159,"end"]},{id:"cbB2",a:"B",b:"b2",t:"CB",g:[860,110,860,200],l:[874,159,"start"]},
+      {id:"cbC1",a:"c1",b:"C",t:"CB",g:[440,260,440,320],l:[426,294,"end"]},{id:"cbC2",a:"c2",b:"C",t:"CB",g:[560,260,560,320],l:[574,294,"start"]},
+      {id:"cbC3",a:"C",b:"c3",t:"CB",g:[500,320,500,390],l:[514,359,"start"]},{id:"cbD1",a:"d1",b:"D",t:"CB",g:[500,450,500,520],l:[514,489,"start"]}],
+  br:[{id:"L_AB",a:"a1",b:"b1",x:0.10,lim:300,kind:"line",p:[[260,200],[740,200]],n:[500,188,"middle"],f:[500,224,"middle"]},
+      {id:"L_AC",a:"a2",b:"c1",x:0.10,lim:300,kind:"line",p:[[140,200],[140,260],[440,260]],n:[290,248,"middle"],f:[290,284,"middle"]},
+      {id:"L_BC",a:"b2",b:"c2",x:0.10,lim:300,kind:"line",p:[[860,200],[860,260],[560,260]],n:[710,248,"middle"],f:[710,284,"middle"]},
+      {id:"L_CD",a:"c3",b:"d1",x:0.10,lim:150,kind:"line",p:[[500,390],[500,450]],n:[514,416,"start"],f:[514,434,"start"]}],
+  inj:[{id:"G1",node:"A",kind:"gen",P:300,Pmax:600,slack:true,s:[200,50],st:[200,110,200,62],l:[216,55,"start"]},
+       {id:"G2",node:"B",kind:"gen",P:100,Pmax:300,s:[800,50],st:[800,110,800,62],l:[816,55,"start"]},
+       {id:"LC",node:"C",kind:"load",P:320,s:[440,378],st:[440,320,440,370],l:[426,382,"end"]},
+       {id:"LD",node:"D",kind:"load",P:120,s:[460,577],st:[460,520,460,568],l:[444,581,"end"]},
+       {id:"GD",node:"D",kind:"gen",P:40,Pmax:80,s:[540,577],st:[540,520,540,565],l:[556,582,"start"]}] },
+];
+
+const $ = s => document.querySelector(s);
+const fmt = (x, d = 1) => (Math.round(x * 10 ** d) / 10 ** d).toFixed(d).replace("-", "−");
+let S, k = 0, timer = null;
+
+function propagate(sc) {
+  const ev = [], visited = new Set(), lost = new Set([sc.fault]), boundary = new Set(), q = [];
+  const f = sc.br.find(b => b.id === sc.fault);
+  ev.push({ t: "start", msg: `Fault on <b>${f.id}</b>: the traversal starts from <b>both ends</b> (nodes ${f.a} and ${f.b}).`, lost: [f.id] });
+  q.push(f.a, f.b);
+  while (q.length) {
+    const n = q.shift(); if (visited.has(n)) continue; visited.add(n);
+    ev.push({ t: "visit", node: n, msg: `Visit node <b>${n}</b>${sc.nodes[n].bus ? " (busbar: pass straight through)" : ""}.` });
+    for (const s of sc.sw) {
+      if (s.a !== n && s.b !== n) continue;
+      const o = s.a === n ? s.b : s.a;
+      if (s.open) { ev.push({ t: "sw", sw: s.id, msg: `<span class="badge b-stop">STOP</span> ${s.id} is already open.` }); continue; }
+      if (s.t === "CB") { if (!boundary.has(s.id)) { boundary.add(s.id); ev.push({ t: "sw", sw: s.id, open: true, msg: `<span class="badge b-stop">STOP · OPEN</span> Real breaker <b>${s.id}</b>: a zone boundary, it <b>will open</b>.` }); } }
+      else if (!visited.has(o)) { ev.push({ t: "sw", sw: s.id, pass: true, msg: s.t === "DS" ? `<span class="badge b-go">PASS</span> Disconnector <b>${s.id}</b> (closed) → on to ${o}.` : `<span class="badge b-go">PASS</span> Fictitious breaker <b>${s.id}</b>, treated as a disconnector → on to ${o}.` }); q.push(o); }
+    }
+    for (const b of sc.br) if ((b.a === n || b.b === n) && !lost.has(b.id)) { lost.add(b.id); const o = b.a === n ? b.b : b.a;
+      ev.push({ t: "lost", msg: `<span class="badge b-lost">DRAGGED OUT</span> <b>${b.id}</b> is attached with no breaker in between → it leaves with the zone; continue from its far end (${o}).`, lost: [b.id] }); q.push(o); }
+    for (const i of sc.inj) if (i.node === n && !lost.has(i.id)) { lost.add(i.id);
+      ev.push({ t: "lost", msg: `<span class="badge b-lost">DRAGGED OUT</span> ${i.kind === "gen" ? "Generator" : "Load"} <b>${i.id}</b> (${i.P} MW) is attached to the zone.`, lost: [i.id] }); }
+  }
+  const zoneBr = sc.br.filter(b => lost.has(b.id)).map(b => b.id), zoneInj = sc.inj.filter(i => lost.has(i.id)).map(i => i.id);
+  ev.push({ t: "done", msg: `No node left to visit. <b>Protection zone</b> = {${zoneBr.concat(zoneInj).join(", ")}}; boundary breakers opened: ${[...boundary].join(", ")}.` });
+  return { ev, lost, boundary, zoneBr, zoneInj };
+}
+function buses(sc, openSet, lostSet) {
+  const par = {}; Object.keys(sc.nodes).forEach(n => par[n] = n);
+  const f = x => par[x] === x ? x : (par[x] = f(par[x]));
+  sc.sw.forEach(s => { if (!s.open && !openSet.has(s.id)) par[f(s.a)] = f(s.b); });
+  const busOf = {}; Object.keys(sc.nodes).forEach(n => busOf[n] = f(n));
+  const brs = sc.br.filter(b => !lostSet.has(b.id)).map(b => ({ id: b.id, a: busOf[b.a], b: busOf[b.b], x: b.x })).filter(e => e.a !== e.b);
+  const injs = sc.inj.filter(i => !lostSet.has(i.id)).map(i => ({ ...i, bus: busOf[i.node] }));
+  return { busOf, brs, injs };
+}
+function components(list, brs) {
+  const adj = {}; list.forEach(b => adj[b] = []); brs.forEach(e => { adj[e.a].push(e.b); adj[e.b].push(e.a); });
+  const c = {}; let n = 0; list.forEach(b => { if (c[b] !== undefined) return; const st = [b]; c[b] = n;
+    while (st.length) { const u = st.pop(); adj[u].forEach(v => { if (c[v] === undefined) { c[v] = n; st.push(v); } }); } n++; });
+  return c;
+}
+function dcflow(brs, inj, slackBus) {
+  const bl = Object.keys(inj), idx = {}; let n = 0; bl.forEach(b => { if (b !== slackBus) idx[b] = n++; });
+  const B = Array.from({ length: n }, () => new Array(n).fill(0)), P = new Array(n).fill(0);
+  brs.forEach(e => { const y = 1 / e.x, i = idx[e.a], j = idx[e.b];
+    if (i !== undefined) B[i][i] += y; if (j !== undefined) B[j][j] += y; if (i !== undefined && j !== undefined) { B[i][j] -= y; B[j][i] -= y; } });
+  bl.forEach(b => { if (idx[b] !== undefined) P[idx[b]] = inj[b] / 100; });
+  for (let c = 0; c < n; c++) { let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(B[r][c]) > Math.abs(B[p][c])) p = r;
+    [B[c], B[p]] = [B[p], B[c]]; [P[c], P[p]] = [P[p], P[c]];
+    for (let r = c + 1; r < n; r++) { const m = B[r][c] / B[c][c]; for (let q = c; q < n; q++) B[r][q] -= m * B[c][q]; P[r] -= m * P[c]; } }
+  const th = new Array(n).fill(0); for (let r = n - 1; r >= 0; r--) { let s = P[r]; for (let q = r + 1; q < n; q++) s -= B[r][q] * th[q]; th[r] = s / B[r][r]; }
+  const T = b => b === slackBus ? 0 : th[idx[b]]; const F = {}; brs.forEach(e => F[e.id] = (T(e.a) - T(e.b)) / e.x * 100); return F;
+}
+function balanceAndFlow(net, keep) {
+  const gens = net.injs.filter(i => i.kind === "gen" && keep.has(i.bus)), loads = net.injs.filter(i => i.kind === "load" && keep.has(i.bus));
+  const mismatch = loads.reduce((s, l) => s + l.P, 0) - gens.reduce((s, g) => s + g.P, 0), sumPmax = gens.reduce((s, g) => s + g.Pmax, 0);
+  const Pg = {}; gens.forEach(g => Pg[g.id] = g.P + mismatch * g.Pmax / sumPmax);
+  const inj = {}; keep.forEach(b => inj[b] = 0); gens.forEach(g => inj[g.bus] += Pg[g.id]); loads.forEach(l => inj[l.bus] -= l.P);
+  const slack = gens.find(g => g.slack) || gens.slice().sort((a, b) => b.Pmax - a.Pmax)[0];
+  return { F: dcflow(net.brs.filter(e => keep.has(e.a) && keep.has(e.b)), inj, slack.bus), mismatch, Pg };
+}
+function build(sc) {
+  const pr = propagate(sc), pre = buses(sc, new Set(), new Set()), allB = new Set(Object.values(pre.busOf));
+  const flowPre = balanceAndFlow(pre, allB), post = buses(sc, pr.boundary, pr.lost);
+  const live = new Set(); post.brs.forEach(e => { live.add(e.a); live.add(e.b); }); post.injs.forEach(i => live.add(i.bus));
+  const comp = components([...live], post.brs), sizes = {}; Object.values(comp).forEach(c => sizes[c] = (sizes[c] || 0) + 1);
+  const sl = post.injs.find(i => i.slack); let mainC = sl ? comp[sl.bus] : null, slackMoved = false;
+  if (mainC === null || sizes[mainC] < Math.max(...Object.values(sizes))) { mainC = +Object.keys(sizes).sort((a, b) => sizes[b] - sizes[a])[0]; slackMoved = true; }
+  const mainB = new Set(Object.keys(comp).filter(b => comp[b] === mainC));
+  const islandInj = post.injs.filter(i => !mainB.has(i.bus)), islandBr = post.brs.filter(e => !mainB.has(e.a) || !mainB.has(e.b)).map(e => e.id);
+  const islandNodes = new Set(Object.keys(sc.nodes).filter(n => live.has(post.busOf[n]) && !mainB.has(post.busOf[n])));
+  const flowPost = balanceAndFlow(post, mainB), islanded = islandInj.length > 0 || islandBr.length > 0;
+  const formula = islanded ? (pr.zoneBr.length > 1 ? "group ISDF" : "ISDF") : (pr.zoneBr.length > 1 || pr.zoneInj.length ? "GLODF" : "LODF");
+  const st = pr.ev.map(e => ({ phase: 1, ...e }));
+  st.push({ phase: 2, t: "bus", msg: `<b>Merge nodes into buses</b> (bus view): nodes joined by closed switches become one bus. After opening ${[...pr.boundary].join(", ")} and removing the zone: ${live.size} energised buses (before the contingency: ${allB.size}).` });
+  if (islanded) { const lg = islandInj.filter(i => i.kind === "gen").reduce((s, i) => s + i.P, 0), ll = islandInj.filter(i => i.kind === "load").reduce((s, i) => s + i.P, 0);
+    st.push({ phase: 3, t: "island", msg: `<b>Islanding:</b> ${islandInj.map(i => i.id).join(", ")} no longer reach the slack → this component is excluded from the main-grid DC calculation and requires a separate assessment. Generation lost ${lg} MW, load lost ${ll} MW → imbalance ${fmt(lg - ll, 0)} MW.` }); }
+  else st.push({ phase: 3, t: "island", msg: `<b>No islanding:</b> every bus still reaches the slack.${pr.zoneInj.length ? " The power of " + pr.zoneInj.join(", ") + " is lost with the zone." : ""}` });
+  st.push({ phase: 3, t: "bal", msg: `<b>Rebalancing:</b> imbalance of ${fmt(flowPost.mismatch, 1)} MW shared in proportion to P<sub>max</sub> among ${Object.keys(flowPost.Pg).join(", ")}${slackMoved ? " (slack moved to the largest component)" : ""}.` });
+  st.push({ phase: 4, t: "flow", msg: `<b>Post-contingency DC power flow</b> (B·θ = P). Matching sensitivity mechanism: <b>${formula}</b> (${pr.zoneBr.length} branch${pr.zoneBr.length > 1 ? "es" : ""} in the zone, ${islanded ? "with" : "no"} islanding). Under the illustrative model assumptions, the direct solution is used to check the ${formula} result.` });
+  return { sc, pr, flowPre, flowPost, islandNodes, islandBr, islandInj, formula, st };
+}
+
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, a, parent) { const e = document.createElementNS(NS, tag); for (const k2 in a) e.setAttribute(k2, a[k2]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, anchor, cls, s, style) { const t = el("text", { x, y, "text-anchor": anchor || "start", class: cls }, parent); if (style) t.setAttribute("style", style); t.textContent = s; return t; }
+
+function draw() {
+  const sc = S.sc, svg = $("#nbSvg"); svg.innerHTML = "";
+  const done = S.st.slice(0, k), last = done[done.length - 1];
+  const visited = new Set(done.filter(e => e.t === "visit").map(e => e.node));
+  const opened = new Set(done.filter(e => e.t === "sw" && e.open).map(e => e.sw)), passed = new Set(done.filter(e => e.t === "sw" && e.pass).map(e => e.sw));
+  const lost = new Set(done.flatMap(e => e.lost || [])), ph = last ? last.phase : 0, showIsl = ph >= 3, showPost = ph >= 4;
+  const curNode = last && last.t === "visit" ? last.node : null, curSw = last && last.t === "sw" ? last.sw : null;
+  const gL = el("g", {}, svg), gS = el("g", {}, svg), gN = el("g", {}, svg), gI = el("g", {}, svg), gT = el("g", {}, svg);
+  sc.br.forEach(b => {
+    const isl = showIsl && S.islandBr.includes(b.id), isLost = lost.has(b.id);
+    const color = isLost ? "var(--hv)" : isl ? "var(--isl)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gL);
+    el("polyline", { points: b.p.map(p => p.join(",")).join(" "), fill: "none", stroke: "currentColor", "stroke-width": isLost ? 3.2 : 2.4, "stroke-dasharray": isLost || isl ? "8 6" : "", "stroke-linejoin": "round" }, g);
+    if (b.kind === "trafo") { const [p0, p1] = b.p, mx = (p0[0] + p1[0]) / 2, my = (p0[1] + p1[1]) / 2, v = p0[0] === p1[0];
+      el("circle", { cx: v ? mx : mx - 7, cy: v ? my - 7 : my, r: 10, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g);
+      el("circle", { cx: v ? mx : mx + 7, cy: v ? my + 7 : my, r: 10, fill: "none", stroke: "currentColor", "stroke-width": 2.2 }, g); }
+    txt(gT, b.n[0], b.n[1], b.n[2], "name", b.id, `fill:${color}`);
+    const pre = S.flowPre.F[b.id]; let s = `${fmt(pre, 0)} MW`, cls = "flow";
+    if (showPost) { const post = S.flowPost.F[b.id];
+      if (post !== undefined) { const rho = Math.abs(post) / b.lim; s = `${fmt(pre, 0)} → ${fmt(post, 0)} MW · ρ ${fmt(rho, 2)}`; if (rho > 1) cls = "flow viol"; }
+      else if (isLost) s = `${fmt(pre, 0)} MW → tripped`; else if (isl) s = "in island: not computed"; }
+    txt(gT, b.f[0], b.f[1], b.f[2], cls, s);
+  });
+  sc.sw.forEach(s => {
+    const [x1, y1, x2, y2] = s.g, mx = (x1 + x2) / 2, my = (y1 + y2) / 2, isOpen = opened.has(s.id);
+    const color = isOpen ? "var(--hv)" : passed.has(s.id) ? "var(--mv)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gS);
+    el("line", { x1, y1, x2, y2, stroke: "currentColor", "stroke-width": 2.2 }, g);
+    if (curSw === s.id) el("circle", { cx: mx, cy: my, r: 17, fill: "none", stroke: "var(--or)", "stroke-width": 2.5, "stroke-dasharray": "3 3" }, g);
+    if (s.t === "DS") { el("circle", { cx: mx, cy: my, r: 9, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g);
+      el("line", { x1: mx - 6.5, y1: my + 6.5, x2: mx + 6.5, y2: my - 6.5, stroke: "currentColor", "stroke-width": 2.2 }, g); }
+    else { el("rect", { x: mx - 9, y: my - 9, width: 18, height: 18, fill: s.t === "CB" && !isOpen ? "currentColor" : "var(--surface)", stroke: "currentColor", "stroke-width": 2.2, "stroke-dasharray": s.t === "FCB" ? "4 3" : "" }, g);
+      if (isOpen) el("path", { d: `M${mx - 6},${my - 6}L${mx + 6},${my + 6}M${mx - 6},${my + 6}L${mx + 6},${my - 6}`, stroke: "currentColor", "stroke-width": 2.2 }, g); }
+    txt(gT, s.l[0], s.l[1], s.l[2], "swl", s.id, `fill:${color === "var(--ink)" ? "var(--ink-2)" : color}`);
+  });
+  Object.entries(sc.nodes).forEach(([id, n]) => {
+    const isl = showIsl && S.islandNodes.has(id), v = visited.has(id);
+    const color = v ? "var(--or)" : isl ? "var(--isl)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gN);
+    if (n.bus) { el("rect", { x: n.x - n.bus / 2, y: n.y - 5, width: n.bus, height: 10, rx: 2, fill: "currentColor" }, g);
+      const bl = n.bl || [-n.bus / 2, -12, "start"]; txt(gT, n.x + bl[0], n.y + bl[1], bl[2], "busl", "Busbar " + id, `fill:${color}`);
+      if (curNode === id) el("rect", { x: n.x - n.bus / 2 - 6, y: n.y - 11, width: n.bus + 12, height: 22, rx: 5, fill: "none", stroke: "var(--or)", "stroke-width": 2.5 }, g); }
+    else { el("circle", { cx: n.x, cy: n.y, r: v ? 5.5 : 4, fill: "currentColor" }, g);
+      if (curNode === id) el("circle", { cx: n.x, cy: n.y, r: 14, fill: "none", stroke: "var(--or)", "stroke-width": 2.5 }, g);
+      if (n.lab !== false) { const [dx, dy, an] = n.lab || [8, -8, "start"]; txt(gT, n.x + dx, n.y + dy, an, "nodel", id, v ? "fill:var(--or)" : ""); } }
+  });
+  sc.inj.forEach(i => {
+    const isl = showIsl && S.islandInj.find(j => j.id === i.id), isLost = lost.has(i.id);
+    const color = isLost ? "var(--hv)" : isl ? "var(--isl)" : "var(--ink)";
+    const g = el("g", { style: `color:${color}` }, gI), [cx, cy] = i.s, [x1, y1, x2, y2] = i.st;
+    el("line", { x1, y1, x2, y2, stroke: "currentColor", "stroke-width": 1.8, "stroke-dasharray": isLost || isl ? "5 4" : "" }, g);
+    if (i.kind === "gen") { el("circle", { cx, cy, r: 12, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g); txt(g, cx, cy + 5, "middle", "name", "G", "font-size:14px;fill:currentColor;stroke-width:0"); }
+    else el("polygon", { points: `${cx - 10},${cy - 8} ${cx + 10},${cy - 8} ${cx},${cy + 10}`, fill: "var(--surface)", stroke: "currentColor", "stroke-width": 2.2 }, g);
+    let p = `${i.P} MW`; if (showPost && S.flowPost.Pg[i.id] !== undefined && i.kind === "gen") p = `${i.P} → ${fmt(S.flowPost.Pg[i.id], 0)} MW`;
+    if (showPost && (isLost || isl)) p = `${i.P} MW → lost`;
+    txt(gT, i.l[0], i.l[1], i.l[2], "injl", `${i.id} ${p}${i.slack ? " · slack" : ""}`, `fill:${color}`);
+  });
+}
+
+function renderLog() {
+  const box = $("#nbLog"), cur = S.st.slice(0, k);
+  let h = `<div class="box">${S.sc.intro}</div><ol>`;
+  cur.forEach((e, i) => h += `<li class="${i === k - 1 ? "cur" : ""}">${e.msg}</li>`); h += "</ol>";
+  if (k >= S.st.length) {
+    const L = S.formula === "LODF", Fk = S.flowPre.F[S.sc.fault];
+    const rows = S.sc.br.map(b => { const pre = S.flowPre.F[b.id], post = S.flowPost.F[b.id], rho = post !== undefined ? Math.abs(post) / b.lim : null;
+      return `<tr><td>${b.id}</td><td>${fmt(pre, 1)}</td><td>${post !== undefined ? fmt(post, 1) : (S.pr.lost.has(b.id) ? "tripped" : "island")}</td><td>${post !== undefined ? fmt(post - pre, 1) : "–"}</td>${L ? `<td>${post !== undefined ? fmt((post - pre) / Fk, 3) : "–"}</td>` : ""}<td>${b.lim}</td><td class="${rho > 1 ? "viol" : ""}">${rho !== null ? fmt(rho, 3) : "–"}</td></tr>`; }).join("");
+    const rmax = Math.max(...S.sc.br.map(b => S.flowPost.F[b.id] !== undefined ? Math.abs(S.flowPost.F[b.id]) / b.lim : 0));
+    h += `<div class="box" style="margin-top:10px"><b>Result (${S.formula}).</b> ρ = |F after| / limit; ρ<sub>max</sub> = <b class="${rmax > 1 ? "viol" : ""}">${fmt(rmax, 3)}</b>${rmax > 1 ? " → at least one calculated branch exceeds its limit." : " → no violation on the calculated branches."}</div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Branch</th><th>F before</th><th>F after</th><th>ΔF</th>${L ? "<th>LODF = ΔF / F(k)</th>" : ""}<th>Limit</th><th>ρ</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  box.innerHTML = h;
+  const ph = cur.length ? cur[cur.length - 1].phase : 0;
+  $("#nbStage").textContent = ["Ready", "1 · Propagation", "2 · Bus merge", "3 · Islanding & balance", "4 · DC flow & ρ"][ph] + `  (${k}/${S.st.length})`;
+  const li = box.querySelector("li.cur"); if (li) box.scrollTop = Math.max(0, li.offsetTop - box.clientHeight + li.offsetHeight + 12);
+}
+function show() { draw(); renderLog(); }
+function stop() { if (timer) clearInterval(timer); timer = null; $("#nbPlay").setAttribute("aria-pressed", "false"); $("#nbPlay").textContent = "▶ Play"; }
+function play() { if (k >= S.st.length) k = 0; show(); $("#nbPlay").setAttribute("aria-pressed", "true"); $("#nbPlay").textContent = "❚❚ Pause";
+  timer = setInterval(() => { if (k < S.st.length) { k++; show(); } if (k >= S.st.length) stop(); }, +$("#nbSpeed").value); }
+function load(i) { stop(); S = build(SC[i]); k = 0; document.querySelectorAll("#nbTabs button").forEach((b, j) => b.setAttribute("aria-pressed", String(j === i))); show(); }
+SC.forEach((sc, i) => { const b = document.createElement("button"); b.textContent = sc.title; b.onclick = () => load(i); $("#nbTabs").appendChild(b); });
+$("#nbPlay").onclick = () => timer ? stop() : play();
+$("#nbStep").onclick = () => { stop(); if (k < S.st.length) { k++; show(); } };
+$("#nbBack").onclick = () => { stop(); if (k > 0) { k--; show(); } };
+$("#nbReset").onclick = () => { stop(); k = 0; show(); };
+$("#nbAll").onclick = () => { stop(); k = S.st.length; show(); };
+$("#nbSpeed").onchange = () => { if (timer) { stop(); play(); } };
+load(0); k = S.st.length; show();
+})();
+</script>
+</body>
+</html>
